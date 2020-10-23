@@ -71,6 +71,8 @@ Start by contextualizing your module, describing the main concepts, terms, roles
 
 ### Use case diagram 
 
+![](https://i.imgur.com/6NKFsY4.png)
+
 <!---Create a use-case diagram in UML with all high-level use cases possibly addressed by your module.
 
 Give each use case a concise, results-oriented name. Use cases should reflect the tasks the user needs to be able to accomplish using the system. Include an action verb and a noun. 
@@ -108,27 +110,32 @@ For each user story you should write also the acceptance tests (textually in Ghe
 **Value and effort**.
 At the end, it is good to add a rough indication of the value of the user story to the customers (e.g. [MoSCoW](https://en.wikipedia.org/wiki/MoSCoW_method) method) and the team should add an estimation of the effort to implement it, for example, using t-shirt sizes (XS, S, M, L, XL). -->
 
+#### Participants
 
-#### Attendees and Speakers (hereby mentioned as participants)
+General role, including every participant in the conference, be it attendee, speaker, organizer or sponsor.
 
-This two roles will, in general, have the same actions, although each role will be explicitly identified for each conference.
-
-- As a conference participant, I want to chat in private with other participants, so that I can continue conversations that may have started elsewhere.
-
-- As a conference participant, I want to share my experience and express my opinion about the conference with all the other participants, so that conference networking becomes easier.
-    - As a conference participant, I want to post photos, videos and opinions in a way that everyone in the event can see it, so that I share my experience with all the participants. 
-    - As a conference participant, I want to comment on other participant's posts so that we can discuss meaningful topics.
+- As a conference participant, I want to login in the app using my email and password.
 
 - As a conference participant, I want to keep a personal profile so that other participants can know my basic information, according to what I provided.
-    - As a conference participant, I want to choose which information is displayed on my profile, namely small bio, soft and technical skills, previous experience and education so that I choose what to show other participants.
+    - As a conference participant, I want to choose which information is displayed on my profile, namely small bio, soft and technical skills, previous experience and education so that I choose what to show other users.
     - As a conference participant, I want to change my display name according to the conference I am attending so that it can be different according to its purpose.
     - As a conference participant, I want to insert the nickname of the rest of my social networks in my personal profile so that any participant can later contact me through other platforms.
     - As a conference participant, I want to choose whether or not I want to display my conference history so that other participants can/can't see which conferences I previously attended.
     - As a conference participant, I want to update my personal profile whenever I please, changing the information that was entered when I first signed in, so that I can keep my basic information updated.
-    
+
 - As a conference participant, I want to see the list of all the conference participants, so that I can know who is also attending the conference.
     - As a conference participant, I want to access every participants personal profile so that I can see their basic information.
     - As a conference participant, I want to search in the list of all the conference participants for a specific name, so that I can easily find someone that I am looking for.
+
+#### Attendees (including speakers)
+
+This role includes both attendees or speakers of the conference, since they will have the same funcionalities while using the app.
+
+- As a conference attendee, I want to chat in private with other participants, so that I can continue conversations that may have started elsewhere.
+
+- As a conference attendee, I want to share my experience and express my opinion about the conference with all the other participants, so that conference networking becomes easier.
+    - As a conference attendee, I want to post photos, videos and opinions in a way that everyone in the event can see it, so that I share my experience with all the participants. 
+    - As a conference attendee, I want to comment on other participant's posts so that we can discuss meaningful topics.
 
 #### Organizers
 
