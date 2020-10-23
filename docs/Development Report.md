@@ -41,7 +41,7 @@ A product vision describes the essential of the product and sets the direction t
 
 **We favor a catchy and concise statement, ideally one sentence.**)--->
 
-A social network to enhance communication among conference participants. Connect, chat and share thoughts, photos and experiences. Together, towards mind broadening and empowerment of relationships.
+There is always a time in a conference when you wish you could share a thought, experience, or chat with another participant. ConferenceBook is a social network to enhance this communication. Connecting people, towards mind broadening and empowerment of relationships.
 
 <!---
 To learn more about how to write a good product vision, please see also:
@@ -108,34 +108,52 @@ For each user story you should write also the acceptance tests (textually in Ghe
 **Value and effort**.
 At the end, it is good to add a rough indication of the value of the user story to the customers (e.g. [MoSCoW](https://en.wikipedia.org/wiki/MoSCoW_method) method) and the team should add an estimation of the effort to implement it, for example, using t-shirt sizes (XS, S, M, L, XL). -->
 
-#### Attendees and Speakers (hereby mentioned as participant)
 
-- As a conference participant, I want to chat in private with other participants, so that I can continue conversations that may start elsewhere.
+#### Attendees and Speakers (hereby mentioned as participants)
 
-- As a conference participant, I want to share my experience and express my opinion about the conference with all the other participants, so that conference networking becomes easier and I improve my experience in each conference.
+This two roles will, in general, have the same actions, although each role will be explicitly identified for each conference.
+
+- As a conference participant, I want to chat in private with other participants, so that I can continue conversations that may have started elsewhere.
+
+- As a conference participant, I want to share my experience and express my opinion about the conference with all the other participants, so that conference networking becomes easier.
     - As a conference participant, I want to post photos, videos and opinions in a way that everyone in the event can see it, so that I share my experience with all the participants. 
-    - As a conference participant, I want to be able to comment on other participant's posts so that we can discuss meaningful topics.
+    - As a conference participant, I want to comment on other participant's posts so that we can discuss meaningful topics.
 
-- As a conference participant, I want to keep a personal profile with all my relevant information, so that other participants can see my knowledge, previous experience and all my basic information
-    - As a conference participant, I want to change my display name according to the conference I'm attending so that it can be different according to the purpose of the event.
-    - As a conference participant, I want to be able to insert my nickname of the rest of my social networks so that any participant can later contact me through other platforms.
-    - As a conference participant, I want to be able to choose whether or not I want to display my conference history so that other participants can/can't see which conferences I previously attended.
+- As a conference participant, I want to keep a personal profile so that other participants can know my basic information, according to what I provided.
+    - As a conference participant, I want to choose which information is displayed on my profile, namely small bio, soft and technical skills, previous experience and education so that I choose what to show other participants.
+    - As a conference participant, I want to change my display name according to the conference I am attending so that it can be different according to its purpose.
+    - As a conference participant, I want to insert the nickname of the rest of my social networks in my personal profile so that any participant can later contact me through other platforms.
+    - As a conference participant, I want to choose whether or not I want to display my conference history so that other participants can/can't see which conferences I previously attended.
+    - As a conference participant, I want to update my personal profile whenever I please, changing the information that was entered when I first signed in, so that I can keep my basic information updated.
     
-- As a conference participant, I want to see all the other participants of the same event/conference, so that (to do, tem de ter o "so that")
-    - As a conference participant, I want to be able to access every participants personal profile so that I can see their main interests, previous experience and basic information.
+- As a conference participant, I want to see the list of all the conference participants, so that I can know who is also attending the conference.
+    - As a conference participant, I want to access every participants personal profile so that I can see their basic information.
+    - As a conference participant, I want to search in the list of all the conference participants for a specific name, so that I can easily find someone that I am looking for.
 
 #### Organizers
 
-- As a conference organizer, I want to moderate the public discussion during the conference so that I can avoid unreasonable conversations or comments.
-    - As a conference organizer, I want to moderate sponsors shares about their organizations so that participants are not spammed with too much repetitive information.
+This roll will be assigned to the organizers of each conference. Naturally, they will play an important role in moderating the feed and helping participants with anything they need.
 
-- As a conference organizer, I want to be able to comment on partipants posts so that I can answer participants' doubts regarding tecnhical issues. 
+- As a conference organizer, I want to moderate the public discussion during the conference so that I can avoid unreasonable conversations or comments.
+    - As a conference organizer, I want to moderate sponsors shares about their organizations so that participants are not spammed with repetitive information.
+    - As a conference organizer, I want to delete any post I find relevant so that unsuitable publications do not stay on the conference feed.
+
+- As a conference organizer, I want to comment on participants posts so that I can answer participants' doubts regarding tecnhical issues.
+
+- As a conference organizer, I want to chat in private with other conference organizers so that we can discuss and solve several issues that can appear during the conference.
+
+- As a conference organizer, I want to publish relevant information for everyone present in the conference so that I can release important information throughout the event.
 
 #### Sponsors
 
+This roll will belong to representatives of organizations or institutions that will be present at the event. In this sense, they will have different objectives from the participants and, therefore, different actions.
+
 - As a conference sponsor, I want to answer private questions that are asked by the participants so that I can better engage with possible clients/employees.
 
-- As a conference sponsor, I want to be able to share my organization with all of the participants of the conference.
+- As a conference sponsor, I want to initiate a conversation with organizing members, so that I can clarify doubts related to small problems that may arise.
+
+- As a conference sponsor, I want to share my organization with all of the conference participants.
+    - As a conference sponsor, I want to post photos, videos and informations regarding my institution in a way that everyone in the event can see it, so that I advertise my institution with all the participants.
 
 ### Domain model
 
