@@ -1,4 +1,4 @@
-name: conferecebook
+name: ConfereceBook
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
@@ -24,7 +24,7 @@ dependencies:
   flutter:
     sdk: flutter
   adobe_xd: ^1.0.0+1
-  flutter_launcher_icons: "^0.7.3"
+  flutter_launcher_icons: "^0.8.1"
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -34,6 +34,10 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+flutter_icons:
+  image_path: "icon/icon.png"
+  android: true
+  ios: true
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

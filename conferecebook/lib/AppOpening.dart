@@ -3,19 +3,34 @@ import 'package:adobe_xd/pinned.dart';
 import './Login.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter/widgets.dart';
 
+class SizeConfig {
+  static MediaQueryData _mediaQueryData;
+  static double screenWidth;
+  static double screenHeight;
+  static double blockSizeHorizontal;
+  static double blockSizeVertical;
+
+  void init(BuildContext context) {
+    _mediaQueryData = MediaQuery.of(context);
+    screenWidth = _mediaQueryData.size.width / 412;
+    screenHeight = _mediaQueryData.size.height / 870;
+  }
+}
 class AppOpening extends StatelessWidget {
   AppOpening({
     Key key,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Scaffold(
       backgroundColor: const Color(0xffffffff),
       body: Stack(
         children: <Widget>[
           Transform.translate(
-            offset: Offset(72.0, 122.0),
+            offset: Offset(SizeConfig.screenWidth * 72.0, SizeConfig.screenHeight * 122.0),
             child: Text(
               'Welcome!',
               style: TextStyle(
@@ -29,7 +44,7 @@ class AppOpening extends StatelessWidget {
             ),
           ),
           Transform.translate(
-            offset: Offset(184.0, 624.0),
+            offset: Offset(SizeConfig.screenWidth * 184.0, SizeConfig.screenHeight * 624.0),
             child:
                 // Adobe XD layer: 'arrow_forward-24px' (group)
                 PageLink(
@@ -78,7 +93,7 @@ class AppOpening extends StatelessWidget {
             ),
           ),
           Transform.translate(
-            offset: Offset(140.0, 281.0),
+            offset: Offset(SizeConfig.screenWidth * 140.0, SizeConfig.screenHeight * 281.0),
             child: Container(
               width: 132.0,
               height: 132.0,
@@ -90,7 +105,7 @@ class AppOpening extends StatelessWidget {
             ),
           ),
           Transform.translate(
-            offset: Offset(44.5, 430.0),
+            offset: Offset(SizeConfig.screenWidth * 44.5, SizeConfig.screenHeight * 430.0),
             child: SizedBox(
               width: 324.0,
               child: Text(
@@ -107,7 +122,7 @@ class AppOpening extends StatelessWidget {
             ),
           ),
           Transform.translate(
-            offset: Offset(168.0, 678.0),
+            offset: Offset(SizeConfig.screenWidth * 168.0, SizeConfig.screenHeight * 678.0),
             child:
                 // Adobe XD layer: '✏️ Input text' (text)
                 Text(

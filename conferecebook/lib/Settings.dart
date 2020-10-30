@@ -4,6 +4,21 @@ import './Othereventsoraddone.dart';
 import 'package:adobe_xd/page_link.dart';
 import './HomeFeed.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter/widgets.dart';
+
+class SizeConfig {
+  static MediaQueryData _mediaQueryData;
+  static double screenWidth;
+  static double screenHeight;
+  static double blockSizeHorizontal;
+  static double blockSizeVertical;
+
+  void init(BuildContext context) {
+    _mediaQueryData = MediaQuery.of(context);
+    screenWidth = _mediaQueryData.size.width / 412;
+    screenHeight = _mediaQueryData.size.height / 870;
+  }
+}
 
 class Settings extends StatelessWidget {
   Settings({
@@ -11,6 +26,7 @@ class Settings extends StatelessWidget {
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Scaffold(
       backgroundColor: const Color(0xffffffff),
       body: Stack(
