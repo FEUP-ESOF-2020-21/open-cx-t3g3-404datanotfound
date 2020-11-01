@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import './Login.dart';
@@ -5,6 +7,7 @@ import 'package:adobe_xd/page_link.dart';
 import './CreateProfile2.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/widgets.dart';
+import 'package:image_picker/image_picker.dart';
 
 class SizeConfig {
   static MediaQueryData _mediaQueryData;
@@ -20,214 +23,269 @@ class SizeConfig {
   }
 }
 
-class CreateProfile1 extends StatelessWidget {
-  CreateProfile1({
-    Key key,
-  }) : super(key: key);
+class CreateProfile1 extends StatefulWidget{
   @override
-  Widget build(BuildContext context) {
-    SizeConfig().init(context);
-    return Scaffold(
-      backgroundColor: const Color(0xffffffff),
-      body: Stack(
+  State<StatefulWidget> createState(){
+    return MyProfileState();
+  }
+}
+
+class MyProfileState extends State<CreateProfile1>{
+
+  String _name;
+  String _email;
+  String _password;
+  String _bio;
+  String _city;
+  String _academicBackground;
+  String _currentJob;
+  String _linkedInUrl;
+  PickedFile _imageFile;
+  final ImagePicker _picker = ImagePicker();
+
+  final GlobalKey<FormState> _profileKey=GlobalKey<FormState>();
+
+  Widget _buildName(){
+    return TextFormField(
+      decoration: InputDecoration(
+        labelText: 'Display Name'),
+      validator: (String value){
+        if(value.isEmpty){
+          return 'Name is Required';
+        }
+        return null;
+      },
+      onSaved: (String value){ //only called when form was saved
+        _name=value;
+      },
+    );
+  }
+
+  Widget _buildEmail(){
+    return TextFormField(
+      decoration: InputDecoration(labelText: 'Email Address'),
+      validator: (String value){
+        if(value.isEmpty){
+          return 'Email Address is Required';
+        }
+
+        if(!RegExp(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
+            .hasMatch(value)){
+          return 'Please enter a valid email'; //when email is invalid
+        }
+        return null;
+      },
+      onSaved: (String value){ //only called when form was saved
+        _email=value;
+      },
+    );
+  }
+
+  Widget _buildPassword(){
+    return TextFormField(
+      obscureText: true,
+      decoration: InputDecoration(labelText: 'Password'),
+      keyboardType: TextInputType.visiblePassword,
+      validator: (String value){
+        // ignore: missing_return
+        if(value.isEmpty){
+          return 'Password is Required';
+        }
+        return null;
+      },
+      onSaved: (String value){ //only called when form was saved
+        _password=value;
+      },
+    );
+  }
+
+  Widget _buildBio(){
+    return TextFormField(
+      maxLines: 5,
+      decoration: InputDecoration(labelText: 'Bio'),
+      maxLength: 250,
+      onSaved: (String value){ //only called when form was saved
+        _bio=value;
+      },
+    );
+  }
+
+  Widget _buildCity(){
+    return TextFormField(
+      decoration: InputDecoration(labelText: 'City of Living'),
+
+      onSaved: (String value){ //only called when form was saved
+        _city=value;
+      },
+    );
+  }
+
+  Widget _buildAcademicBackground(){
+    return TextFormField(
+      decoration: InputDecoration(labelText: 'Academic Background'),
+
+      onSaved: (String value){ //only called when form was saved
+        _academicBackground=value;
+      },
+    );
+  }
+
+  Widget _buildCurrentJob(){
+    return TextFormField(
+      decoration: InputDecoration(labelText: 'Current Job'),
+
+      onSaved: (String value){ //only called when form was saved
+        _currentJob=value;
+      },
+    );
+  }
+
+  Widget _buildLinkedInUrl(){
+    return TextFormField(
+      decoration: InputDecoration(labelText: 'LinkedIn Url'),
+      keyboardType: TextInputType.url,
+      onSaved: (String value){ //only called when form was saved
+        _linkedInUrl=value;
+      },
+    );
+  }
+
+  Widget imageProfile(){
+    return Center(
+
+      child: Stack(
+          children: <Widget>[
+            CircleAvatar(
+              radius: 80.0,
+              backgroundImage:_imageFile==null?
+              AssetImage('assets/mark.jpeg') //default image
+                  :FileImage(File(_imageFile.path)),
+            ),
+            Positioned(
+              bottom: 20.0,
+              right: 20.0,
+              child: InkWell(
+                onTap: () {
+                  showModalBottomSheet(
+                    context: context,
+                    builder: ((builder)=> bottomSheet()),
+                  );
+                },
+                child: Icon(
+                  Icons.camera_alt,
+                  color: Colors.deepPurpleAccent,
+                  size: 28.0,
+                ),
+              ),
+            ),
+          ]),
+    );
+  }
+
+  Widget bottomSheet(){
+    return Container(
+      height: 100.0,
+      width:MediaQuery.of(context).size.width,
+      margin: EdgeInsets.symmetric(
+        horizontal: 20,
+        vertical: 20,
+      ),
+      child: Column(
         children: <Widget>[
-          Container(),
-          Container(),
-          Transform.translate(
-            offset: Offset(11.0, 22.0),
-            child:
-                // Adobe XD layer: 'arrow_back-24px' (group)
-                PageLink(
-              links: [
-                PageLinkInfo(
-                  transition: LinkTransition.Fade,
-                  ease: Curves.easeOut,
-                  duration: 0.3,
-                  pageBuilder: () => Login(),
-                ),
-              ],
-              child: SizedBox(
-                width: 45.0,
-                height: 45.0,
-                child: Stack(
-                  children: <Widget>[
-                    Pinned.fromSize(
-                      bounds: Rect.fromLTWH(0.0, 0.0, 45.0, 45.0),
-                      size: Size(45.0, 45.0),
-                      pinLeft: true,
-                      pinRight: true,
-                      pinTop: true,
-                      pinBottom: true,
-                      child: SvgPicture.string(
-                        _svg_2rnm7d,
-                        allowDrawingOutsideViewBox: true,
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                    Pinned.fromSize(
-                      bounds: Rect.fromLTWH(7.5, 7.5, 30.0, 30.0),
-                      size: Size(45.0, 45.0),
-                      pinLeft: true,
-                      pinRight: true,
-                      pinTop: true,
-                      pinBottom: true,
-                      child: SvgPicture.string(
-                        _svg_35bab1,
-                        allowDrawingOutsideViewBox: true,
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+          Text(
+            'Choose Profile Photo',
+            style: TextStyle(
+              fontSize:20.0,
             ),
           ),
-          Container(),
-          Container(),
-          Container(),
-          Transform.translate(
-            offset: Offset(104.0, 549.0),
-            child: Container(
-              width: 204.0,
-              height: 204.0,
-              decoration: BoxDecoration(
-                borderRadius:
-                    BorderRadius.all(Radius.elliptical(9999.0, 9999.0)),
-                image: DecorationImage(
-                  image: const AssetImage(''),
-                  fit: BoxFit.cover,
+          SizedBox(
+            height:20,
+          ),
+          Row( mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                FlatButton.icon(
+                  icon: Icon(Icons.camera),
+                  onPressed: (){
+                    takePhoto(ImageSource.camera);
+                  },
+                  label: Text('Camera'),
                 ),
-                border: Border.all(width: 1.0, color: const Color(0xffffffff)),
-              ),
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(348.0, 764.0),
-            child:
-                // Adobe XD layer: 'arrow_forward-24px' (group)
-                PageLink(
-              links: [
-                PageLinkInfo(
-                  transition: LinkTransition.Fade,
-                  ease: Curves.easeOut,
-                  duration: 0.3,
-                  pageBuilder: () => CreateProfile2(),
+                FlatButton.icon(
+                  icon: Icon(Icons.image),
+                  onPressed: (){
+                    takePhoto(ImageSource.gallery);
+                  },
+                  label: Text('Gallery'),
                 ),
-              ],
-              child: SizedBox(
-                width: 45.0,
-                height: 45.0,
-                child: Stack(
-                  children: <Widget>[
-                    Pinned.fromSize(
-                      bounds: Rect.fromLTWH(0.0, 0.0, 45.0, 45.0),
-                      size: Size(45.0, 45.0),
-                      pinLeft: true,
-                      pinRight: true,
-                      pinTop: true,
-                      pinBottom: true,
-                      child: SvgPicture.string(
-                        _svg_2rnm7d,
-                        allowDrawingOutsideViewBox: true,
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                    Pinned.fromSize(
-                      bounds: Rect.fromLTWH(7.5, 7.5, 30.0, 30.0),
-                      size: Size(45.0, 45.0),
-                      pinLeft: true,
-                      pinRight: true,
-                      pinTop: true,
-                      pinBottom: true,
-                      child: SvgPicture.string(
-                        _svg_2oyv8c,
-                        allowDrawingOutsideViewBox: true,
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(110.0, 41.0),
-            child:
-                // Adobe XD layer: 'Linear/Primary' (group)
-                SizedBox(
-              width: 260.0,
-              height: 7.0,
-              child: Stack(
-                children: <Widget>[
-                  Container(),
-                  Container(),
-                ],
-              ),
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(155.0, 54.0),
-            child: Text(
-              '1/ Profile',
-              style: TextStyle(
-                fontFamily: 'Roboto',
-                fontSize: 10,
-                color: const Color(0xff6200ee),
-                letterSpacing: 0.09375,
-                fontWeight: FontWeight.w300,
-                height: 2.4,
-              ),
-              textAlign: TextAlign.left,
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(348.0, 764.0),
-            child:
-                // Adobe XD layer: 'arrow_forward-24px' (group)
-                SizedBox(
-              width: 45.0,
-              height: 45.0,
-              child: Stack(
-                children: <Widget>[
-                  Pinned.fromSize(
-                    bounds: Rect.fromLTWH(0.0, 0.0, 45.0, 45.0),
-                    size: Size(45.0, 45.0),
-                    pinLeft: true,
-                    pinRight: true,
-                    pinTop: true,
-                    pinBottom: true,
-                    child: SvgPicture.string(
-                      _svg_2rnm7d,
-                      allowDrawingOutsideViewBox: true,
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                  Pinned.fromSize(
-                    bounds: Rect.fromLTWH(7.5, 7.5, 30.0, 30.0),
-                    size: Size(45.0, 45.0),
-                    pinLeft: true,
-                    pinRight: true,
-                    pinTop: true,
-                    pinBottom: true,
-                    child: SvgPicture.string(
-                      _svg_2oyv8c,
-                      allowDrawingOutsideViewBox: true,
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+              ]
           ),
         ],
       ),
     );
   }
-}
 
-const String _svg_2rnm7d =
-    '<svg viewBox="0.0 0.0 45.0 45.0" ><path  d="M 0 0 L 45 0 L 45 45 L 0 45 L 0 0 Z" fill="none" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
-const String _svg_35bab1 =
-    '<svg viewBox="7.5 7.5 30.0 30.0" ><path transform="translate(3.5, 3.5)" d="M 34 17.125 L 11.18124961853027 17.125 L 21.66250038146973 6.643749237060547 L 19 4 L 4 19 L 19 34 L 21.64374923706055 31.35625076293945 L 11.18124961853027 20.875 L 34 20.875 L 34 17.125 Z" fill="#680aee" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
-const String _svg_2oyv8c =
-    '<svg viewBox="7.5 7.5 30.0 30.0" ><path transform="translate(3.5, 3.5)" d="M 19 4 L 16.35625076293945 6.643749237060547 L 26.81875038146973 17.125 L 4 17.125 L 4 20.875 L 26.81875038146973 20.875 L 16.35625076293945 31.35625076293945 L 19 34 L 34 19 L 19 4 Z" fill="#680aee" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
+  void takePhoto(ImageSource source) async{
+    final pickedFile = await _picker.getImage(
+    source: source,
+    );
+    setState((){
+      _imageFile = pickedFile;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context){
+    return Scaffold(
+      appBar: AppBar(title:Text("Create Account"),backgroundColor: Colors.deepPurpleAccent),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(24),
+        child: Form(
+          key: _profileKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              SizedBox(height: 20),
+              _buildName(),
+              SizedBox(height: 20),
+              _buildEmail(),
+              SizedBox(height: 20),
+              _buildPassword(),
+              SizedBox(height: 20),
+              _buildCity(),
+              SizedBox(height: 20),
+              _buildAcademicBackground(),
+              SizedBox(height: 20),
+              _buildCurrentJob(),
+              SizedBox(height: 20),
+              _buildLinkedInUrl(),
+              SizedBox(height: 20),
+              _buildBio(),
+              SizedBox(height: 50),
+              imageProfile(),
+              SizedBox(height: 50),
+              RaisedButton(
+                child: Text(
+                  'Create Account',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+                ),
+                color: Colors.deepPurpleAccent,
+                onPressed: () {
+                  if(!_profileKey.currentState.validate()){
+                    return; //when form is invalid
+                  }
+                  _profileKey.currentState.save(); //save the form - use latter
+
+                  //here is where we should put what we want to do with the data!
+                  print(_name);
+
+                },
+              )
+            ],
+          ),),
+      ),
+    );
+  }
+}
