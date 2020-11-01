@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import './Login.dart';
@@ -29,33 +30,33 @@ class AppOpening extends StatelessWidget {
       backgroundColor: const Color(0xffffffff),
       body: Stack(
         children: <Widget>[
+          Container(),
+          Container(),
           Transform.translate(
-            offset: Offset(SizeConfig.screenWidth * 72.0, SizeConfig.screenHeight * 122.0),
-            child: Text(
-              'Welcome!',
+            offset: Offset(SizeConfig.screenWidth * 168.0, SizeConfig.screenHeight * 678.0),
+            child:
+            // Adobe XD layer: '✏️ Input text' (text)
+            Text(
+              'Let\'s start!',
               style: TextStyle(
                 fontFamily: 'Roboto',
-                fontSize: 60,
+                fontSize: 16,
                 color: const Color(0x99000000),
-                letterSpacing: 0.5625,
-                height: 0.4,
+                letterSpacing: 0.15,
+                height: 1.5,
               ),
               textAlign: TextAlign.left,
             ),
           ),
           Transform.translate(
-            offset: Offset(SizeConfig.screenWidth * 184.0, SizeConfig.screenHeight * 624.0),
-            child:
-                // Adobe XD layer: 'arrow_forward-24px' (group)
-                PageLink(
-              links: [
-                PageLinkInfo(
-                  transition: LinkTransition.Fade,
-                  ease: Curves.easeOut,
-                  duration: 0.3,
-                  pageBuilder: () => Login(),
+            offset: Offset(SizeConfig.screenWidth * 168.0, SizeConfig.screenHeight * 624.0),
+            child: ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                shadowColor: MaterialStateProperty.all<Color>(Colors.white),
+                overlayColor: MaterialStateProperty.all<Color>(Colors.white),
                 ),
-              ],
+
               child: SizedBox(
                 width: 45.0,
                 height: 45.0,
@@ -90,22 +91,40 @@ class AppOpening extends StatelessWidget {
                   ],
                 ),
               ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Login()),
+                );
+              },
             ),
           ),
+          Transform.translate(
+            offset: Offset(SizeConfig.screenWidth * 64.0, SizeConfig.screenHeight * 122.0),
+            child: Text(
+              'Welcome!',
+              style: TextStyle(
+                fontFamily: 'Roboto',
+                fontSize: 60,
+                color: const Color(0x99000000),
+                letterSpacing: 0.5625,
+                height: SizeConfig.screenHeight * 0.4,
+              ),
+              textAlign: TextAlign.left,
+            ),
+          ),
+
           Transform.translate(
             offset: Offset(SizeConfig.screenWidth * 140.0, SizeConfig.screenHeight * 281.0),
-            child: Container(
-              width: 132.0,
-              height: 132.0,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(32.0),
-                color: const Color(0xff680aee),
-                border: Border.all(width: 1.0, color: const Color(0xff680aee)),
-              ),
+            child: Image.asset('images/icon.png',
+                height: 132.0,
+                width: 132.0,
             ),
-          ),
+
+            ),
+
           Transform.translate(
-            offset: Offset(SizeConfig.screenWidth * 44.5, SizeConfig.screenHeight * 430.0),
+            offset: Offset(SizeConfig.screenWidth * 36.5, SizeConfig.screenHeight * 470.0),
             child: SizedBox(
               width: 324.0,
               child: Text(
@@ -115,31 +134,17 @@ class AppOpening extends StatelessWidget {
                   fontSize: 36,
                   color: const Color(0x99000000),
                   letterSpacing: 0.33749999999999997,
-                  height: 0.6666666666666666,
+                  height: SizeConfig.screenHeight * 0.6666666666666666,
                 ),
                 textAlign: TextAlign.center,
               ),
             ),
           ),
-          Transform.translate(
-            offset: Offset(SizeConfig.screenWidth * 168.0, SizeConfig.screenHeight * 678.0),
-            child:
-                // Adobe XD layer: '✏️ Input text' (text)
-                Text(
-              'Let\'s start!',
-              style: TextStyle(
-                fontFamily: 'Roboto',
-                fontSize: 16,
-                color: const Color(0x99000000),
-                letterSpacing: 0.15,
-                height: 1.5,
-              ),
-              textAlign: TextAlign.left,
-            ),
-          ),
         ],
       ),
     );
+
+    return Image(image: AssetImage('graphics/icon.png'));
   }
 }
 

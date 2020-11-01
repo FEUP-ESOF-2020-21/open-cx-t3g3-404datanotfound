@@ -158,7 +158,7 @@ class MyProfileState extends State<CreateProfile1>{
             CircleAvatar(
               radius: 80.0,
               backgroundImage:_imageFile==null?
-              AssetImage('assets/mark.jpeg') //default image
+              AssetImage('images/mark.jpeg') //default image
                   :FileImage(File(_imageFile.path)),
             ),
             Positioned(

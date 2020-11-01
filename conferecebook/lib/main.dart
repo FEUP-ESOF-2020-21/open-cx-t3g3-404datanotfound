@@ -1,13 +1,10 @@
 import 'package:ConfereceBook/AppOpening.dart';
-import 'package:ConfereceBook/Chat.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import './Login.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 import 'MyProfile1.dart';
-
 
 void main() {
   runApp(MyApp());
@@ -22,7 +19,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Login(), //MyProfile1(),
+      home: AppOpening(),
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:ConfereceBook/HomeFeed.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import './CreateProfile1.dart';
@@ -58,7 +59,7 @@ class Login extends StatelessWidget {
         width: 270.0,
         child:
         TextField(
-          obscureText: true,
+          obscureText: false,
           decoration: InputDecoration(
             border: OutlineInputBorder(),
             labelText: 'E-mail',
@@ -68,7 +69,6 @@ class Login extends StatelessWidget {
             fontSize: 16,
             color: const Color(0xff680aee),
             letterSpacing: 0.15,
-            decoration: TextDecoration.underline,
             height: 1,
           ),
           textAlign: TextAlign.left,
@@ -92,7 +92,18 @@ class Login extends StatelessWidget {
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(35.0),
-                        color: const Color(0xff680aee),
+                        gradient: SweepGradient(
+                            startAngle: 0.0,
+                            endAngle: 6.28,
+                            colors: const <Color>[
+                              Colors.orangeAccent,
+                              Colors.red,
+                              Colors.green,
+                              Colors.blueAccent,
+                              Colors.orangeAccent,
+                            ],
+                            stops: const <double>[0.0, 0.25, 0.50, 0.75, 1.0]
+                        ),
                         border: Border.all(
                             width: 1.0, color: const Color(0xff680aee)),
                       ),
@@ -104,19 +115,29 @@ class Login extends StatelessWidget {
           ),
           Transform.translate(
             offset: Offset(SizeConfig.screenWidth * 168.8, SizeConfig.screenHeight * 520.0),
+            child: PageLink(
+              links: [
+                PageLinkInfo(
+                  transition: LinkTransition.Fade,
+                  ease: Curves.easeOut,
+                  duration: 0.3,
+                  pageBuilder: () => HomeFeed(),
+                ),
+              ],
             child: SizedBox(
               width: 88.0,
               child: Text(
                 'LOGIN',
                 style: TextStyle(
                   fontFamily: 'Roboto',
-                  fontSize: 22,
+                  fontSize: 25,
                   color: const Color(0xffffffff),
                   letterSpacing: 1.6909999999999998,
-                  height: 1.4,
+                  height: 1.2,
                 ),
                 textAlign: TextAlign.center,
               ),
+            ),
             ),
           ),
           Transform.translate(
@@ -164,14 +185,9 @@ class Login extends StatelessWidget {
           ),
           Transform.translate(
             offset: Offset(SizeConfig.screenWidth * 164.0, SizeConfig.screenHeight * 134.0),
-            child: Container(
-              width: 85.0,
-              height: 85.0,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(32.0),
-                color: const Color(0xff680aee),
-                border: Border.all(width: 1.0, color: const Color(0xff680aee)),
-              ),
+            child: Image.asset('images/icon.png',
+              height: 90.0,
+              width: 90.0,
             ),
           ),
         ],
