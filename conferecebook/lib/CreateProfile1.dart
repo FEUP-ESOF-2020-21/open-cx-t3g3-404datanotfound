@@ -48,7 +48,9 @@ class MyProfileState extends State<CreateProfile1>{
   Widget _buildName(){
     return TextFormField(
       decoration: InputDecoration(
-        labelText: 'Display Name'),
+          focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: const Color(0xff1A2677))),
+          labelText: 'Display Name'),
       validator: (String value){
         if(value.isEmpty){
           return 'Name is Required';
@@ -63,7 +65,10 @@ class MyProfileState extends State<CreateProfile1>{
 
   Widget _buildEmail(){
     return TextFormField(
-      decoration: InputDecoration(labelText: 'Email Address'),
+      decoration: InputDecoration(
+          focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: const Color(0xff1A2677))),
+          labelText: 'Email Address'),
       validator: (String value){
         if(value.isEmpty){
           return 'Email Address is Required';
@@ -84,7 +89,10 @@ class MyProfileState extends State<CreateProfile1>{
   Widget _buildPassword(){
     return TextFormField(
       obscureText: true,
-      decoration: InputDecoration(labelText: 'Password'),
+      decoration: InputDecoration(
+          focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: const Color(0xff1A2677))),
+          labelText: 'Password'),
       keyboardType: TextInputType.visiblePassword,
       validator: (String value){
         // ignore: missing_return
@@ -102,7 +110,10 @@ class MyProfileState extends State<CreateProfile1>{
   Widget _buildBio(){
     return TextFormField(
       maxLines: 5,
-      decoration: InputDecoration(labelText: 'Bio'),
+      decoration: InputDecoration(
+          focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: const Color(0xff1A2677))),
+          labelText: 'Bio'),
       maxLength: 250,
       onSaved: (String value){ //only called when form was saved
         _bio=value;
@@ -112,7 +123,10 @@ class MyProfileState extends State<CreateProfile1>{
 
   Widget _buildCity(){
     return TextFormField(
-      decoration: InputDecoration(labelText: 'City of Living'),
+      decoration: InputDecoration(
+          focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: const Color(0xff1A2677))),
+          labelText: 'City of Living'),
 
       onSaved: (String value){ //only called when form was saved
         _city=value;
@@ -122,7 +136,10 @@ class MyProfileState extends State<CreateProfile1>{
 
   Widget _buildAcademicBackground(){
     return TextFormField(
-      decoration: InputDecoration(labelText: 'Academic Background'),
+      decoration: InputDecoration(
+          focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: const Color(0xff1A2677))),
+          labelText: 'Academic Background'),
 
       onSaved: (String value){ //only called when form was saved
         _academicBackground=value;
@@ -132,7 +149,10 @@ class MyProfileState extends State<CreateProfile1>{
 
   Widget _buildCurrentJob(){
     return TextFormField(
-      decoration: InputDecoration(labelText: 'Current Job'),
+      decoration: InputDecoration(
+          focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: const Color(0xff1A2677))),
+          labelText: 'Current Job'),
 
       onSaved: (String value){ //only called when form was saved
         _currentJob=value;
@@ -142,7 +162,10 @@ class MyProfileState extends State<CreateProfile1>{
 
   Widget _buildLinkedInUrl(){
     return TextFormField(
-      decoration: InputDecoration(labelText: 'LinkedIn Url'),
+      decoration: InputDecoration(
+          focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: const Color(0xff1A2677))),
+          labelText: 'LinkedIn Url'),
       keyboardType: TextInputType.url,
       onSaved: (String value){ //only called when form was saved
         _linkedInUrl=value;
@@ -173,7 +196,7 @@ class MyProfileState extends State<CreateProfile1>{
                 },
                 child: Icon(
                   Icons.camera_alt,
-                  color: Colors.deepPurpleAccent,
+                  color: const Color(0xff1A2677),
                   size: 28.0,
                 ),
               ),
@@ -236,7 +259,7 @@ class MyProfileState extends State<CreateProfile1>{
   @override
   Widget build(BuildContext context){
     return Scaffold(
-      appBar: AppBar(title:Text("Create Account"),backgroundColor: Colors.deepPurpleAccent),
+      appBar: AppBar(title:Text("Create Account"),backgroundColor: const Color(0xff1A2677)),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(24),
         child: Form(
@@ -244,7 +267,6 @@ class MyProfileState extends State<CreateProfile1>{
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              SizedBox(height: 20),
               _buildName(),
               SizedBox(height: 20),
               _buildEmail(),
@@ -271,7 +293,7 @@ class MyProfileState extends State<CreateProfile1>{
                     fontSize: 16,
                   ),
                 ),
-                color: Colors.deepPurpleAccent,
+                color: const Color(0xff1A2677),
                 onPressed: () {
                   if(!_profileKey.currentState.validate()){
                     return; //when form is invalid
