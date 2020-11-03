@@ -25,6 +25,8 @@ dependencies:
     sdk: flutter
   adobe_xd: ^1.0.0+1
   flutter_launcher_icons: "^0.8.1"
+  sqflite: any
+  path_provider: any
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -34,6 +36,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
 
 flutter_icons:
   image_path: "images/icon.png"

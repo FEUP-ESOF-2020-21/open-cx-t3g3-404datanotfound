@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:async';
+import 'package:ConfereceBook/Database.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import './Login.dart';
@@ -8,6 +9,9 @@ import './CreateProfile2.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:ConfereceBook/Database.dart';
+
+import 'UserModel.dart';
 
 class SizeConfig {
   static MediaQueryData _mediaQueryData;
@@ -300,6 +304,8 @@ class MyProfileState extends State<CreateProfile1>{
                   }
                   _profileKey.currentState.save(); //save the form - use latter
 
+                  var newDBUser = User(username: _name,password: _password);
+                  DBProvider.db.newUser(newDBUser);
                   //here is where we should put what we want to do with the data!
                   print(_name);
 
