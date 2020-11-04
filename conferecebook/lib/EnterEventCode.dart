@@ -4,6 +4,22 @@ import './WelcomeonBoard.dart';
 import 'package:adobe_xd/page_link.dart';
 import './HomeFeed.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter/widgets.dart';
+
+
+class SizeConfig {
+  static MediaQueryData _mediaQueryData;
+  static double screenWidth;
+  static double screenHeight;
+  static double blockSizeHorizontal;
+  static double blockSizeVertical;
+
+  void init(BuildContext context) {
+    _mediaQueryData = MediaQuery.of(context);
+    screenWidth = _mediaQueryData.size.width / 412;
+    screenHeight = _mediaQueryData.size.height / 870;
+  }
+}
 
 class EnterEventCode extends StatelessWidget {
   EnterEventCode({
@@ -11,21 +27,22 @@ class EnterEventCode extends StatelessWidget {
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Scaffold(
       backgroundColor: const Color(0xffffffff),
       body: Stack(
         children: <Widget>[
           Container(
-            width: 412.0,
-            height: 870.0,
+            width: SizeConfig.screenWidth * 412.0,
+            height: SizeConfig.screenHeight * 870.0,
             decoration: BoxDecoration(
               color: const Color(0xff1a2677),
-              border: Border.all(width: 1.0, color: const Color(0xff707070)),
+              border: Border.all(width: SizeConfig.screenWidth * 1.0, color: const Color(0xff707070)),
             ),
           ),
           Container(),
           Transform.translate(
-            offset: Offset(326.0, 402.0),
+            offset: Offset(SizeConfig.screenWidth * 326.0, SizeConfig.screenHeight * 402.0),
             child:
                 // Adobe XD layer: 'arrow_forward-24px' (group)
                 PageLink(
@@ -38,13 +55,13 @@ class EnterEventCode extends StatelessWidget {
                 ),
               ],
               child: SizedBox(
-                width: 35.0,
-                height: 35.0,
+                width: SizeConfig.screenWidth * 35.0,
+                height: SizeConfig.screenHeight * 35.0,
                 child: Stack(
                   children: <Widget>[
                     Pinned.fromSize(
-                      bounds: Rect.fromLTWH(0.0, 0.0, 35.0, 35.0),
-                      size: Size(35.0, 35.0),
+                      bounds: Rect.fromLTWH(0.0, 0.0, SizeConfig.screenWidth * 35.0, SizeConfig.screenHeight * 35.0),
+                      size: Size(SizeConfig.screenWidth * 35.0, SizeConfig.screenHeight * 35.0),
                       pinLeft: true,
                       pinRight: true,
                       pinTop: true,
@@ -56,8 +73,8 @@ class EnterEventCode extends StatelessWidget {
                       ),
                     ),
                     Pinned.fromSize(
-                      bounds: Rect.fromLTWH(5.8, 5.8, 23.3, 23.3),
-                      size: Size(35.0, 35.0),
+                      bounds: Rect.fromLTWH(SizeConfig.screenWidth * 5.8, SizeConfig.screenHeight * 5.8, SizeConfig.screenWidth * 23.3, SizeConfig.screenHeight *23.3),
+                      size: Size(SizeConfig.screenWidth * 35.0, SizeConfig.screenHeight * 35.0),
                       pinLeft: true,
                       pinRight: true,
                       pinTop: true,
@@ -75,21 +92,47 @@ class EnterEventCode extends StatelessWidget {
           ),
           Container(),
           Transform.translate(
-            offset: Offset(60.0, 149.5),
+            offset: Offset(SizeConfig.screenWidth * 60.0, SizeConfig.screenHeight * 149.5),
             child: Text(
               'Here for a new event?',
               style: TextStyle(
                 fontFamily: 'Roboto',
-                fontSize: 58,
+                fontSize: 50,
                 color: const Color(0xffffffff),
                 letterSpacing: 0.54375,
-                height: 1.0344827586206897,
+                height: SizeConfig.screenHeight * 1.0344827586206897,
               ),
               textAlign: TextAlign.left,
             ),
           ),
           Transform.translate(
-            offset: Offset(135.0, 829.0),
+            offset: Offset(SizeConfig.screenWidth * 53.5, SizeConfig.screenHeight * 400.0),
+            child: Container(
+              width: SizeConfig.screenWidth * 290.0,
+              child:
+              TextField(
+                obscureText: false,
+                decoration: InputDecoration(
+                  fillColor: Colors.white,
+                  filled: true,
+                  border: OutlineInputBorder(
+                      borderSide: new BorderSide(color: const Color(0xffffffff))
+                  ),
+                  labelText: 'Event Code',
+                ),
+                style: TextStyle(
+                  fontFamily: 'Roboto',
+                  fontSize: 16,
+                  color: const Color(0xffffffff),
+                  letterSpacing: 0.15,
+                  height: SizeConfig.screenHeight * 1,
+                ),
+                textAlign: TextAlign.left,
+              ),
+            ),
+          ),
+          Transform.translate(
+            offset: Offset(SizeConfig.screenWidth * 135.0, SizeConfig.screenHeight * 829.0),
             child: SizedBox(
               width: 144.0,
               child: Text(
@@ -99,7 +142,7 @@ class EnterEventCode extends StatelessWidget {
                   fontSize: 16,
                   color: const Color(0xffffffff),
                   letterSpacing: 0.15,
-                  height: 1.5,
+                  height: SizeConfig.screenHeight * 1.5,
                 ),
                 textAlign: TextAlign.center,
               ),

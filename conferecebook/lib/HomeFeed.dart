@@ -1,6 +1,6 @@
+import 'package:ConfereceBook/JoinAnEvent.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
-import './Othereventsoraddone.dart';
 import 'package:adobe_xd/page_link.dart';
 import './MyProfile1.dart';
 import './Search.dart';
@@ -100,7 +100,7 @@ class HomeFeed extends StatelessWidget {
                   transition: LinkTransition.Fade,
                   ease: Curves.easeOut,
                   duration: 0.3,
-                  pageBuilder: () => Othereventsoraddone(),
+                  pageBuilder: () => JoinAnEvent(),
                 ),
               ],
               child: SizedBox(

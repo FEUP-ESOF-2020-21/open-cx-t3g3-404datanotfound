@@ -1,9 +1,11 @@
 import 'package:ConfereceBook/HomeFeed.dart';
+import 'package:ConfereceBook/JoinAnEvent.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import './CreateProfile1.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:flutter/widgets.dart';
+
 
 class SizeConfig {
   static MediaQueryData _mediaQueryData;
@@ -39,13 +41,15 @@ class Login extends StatelessWidget {
           child: TextField(
             obscureText: true,
             decoration: InputDecoration(
-              border: OutlineInputBorder(),
+              border: OutlineInputBorder(
+                  borderSide: new BorderSide(color: const Color(0xff1A2677))
+              ),
               labelText: 'Password',
             ),
             style: TextStyle(
               fontFamily: 'Roboto',
               fontSize: 16,
-              color: const Color(0xff680aee),
+              color: const Color(0xff1A2677),
               letterSpacing: 0.15,
               height: 1,
             ),
@@ -61,13 +65,15 @@ class Login extends StatelessWidget {
         TextField(
           obscureText: false,
           decoration: InputDecoration(
-            border: OutlineInputBorder(),
+            border: OutlineInputBorder(
+                borderSide: new BorderSide(color: const Color(0xff1A2677))
+            ),
             labelText: 'E-mail',
           ),
           style: TextStyle(
             fontFamily: 'Roboto',
             fontSize: 16,
-            color: const Color(0xff680aee),
+            color: const Color(0xff1A2677),
             letterSpacing: 0.15,
             height: 1,
           ),
@@ -92,20 +98,9 @@ class Login extends StatelessWidget {
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(35.0),
-                        gradient: SweepGradient(
-                            startAngle: 0.0,
-                            endAngle: 6.28,
-                            colors: const <Color>[
-                              Colors.orangeAccent,
-                              Colors.red,
-                              Colors.green,
-                              Colors.blueAccent,
-                              Colors.orangeAccent,
-                            ],
-                            stops: const <double>[0.0, 0.25, 0.50, 0.75, 1.0]
-                        ),
+                        color: const Color(0xff1A2677),
                         border: Border.all(
-                            width: 1.0, color: const Color(0xff680aee)),
+                            width: 1.0, color: const Color(0xff1A2677)),
                       ),
                     ),
                   ),
@@ -121,7 +116,7 @@ class Login extends StatelessWidget {
                   transition: LinkTransition.Fade,
                   ease: Curves.easeOut,
                   duration: 0.3,
-                  pageBuilder: () => HomeFeed(),
+                  pageBuilder: () => JoinAnEvent(),
                 ),
               ],
             child: SizedBox(
@@ -174,7 +169,7 @@ class Login extends StatelessWidget {
                 style: TextStyle(
                   fontFamily: 'Roboto',
                   fontSize: 16,
-                  color: const Color(0xff680aee),
+                  color: const Color(0xff1A2677),
                   letterSpacing: 0.15,
                   decoration: TextDecoration.underline,
                   height: 1.5,
