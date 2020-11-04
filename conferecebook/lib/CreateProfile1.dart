@@ -1,31 +1,18 @@
 import 'dart:io';
 import 'dart:async';
-import 'package:ConfereceBook/Database.dart';
+
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
-import './Login.dart';
 import 'package:adobe_xd/page_link.dart';
-import './CreateProfile2.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:ConfereceBook/Database.dart';
 
-import 'UserModel.dart';
+import 'db/Database.dart';
+import 'db/UserModel.dart';
+import './Login.dart';
+import './CreateProfile2.dart';
 
-class SizeConfig {
-  static MediaQueryData _mediaQueryData;
-  static double screenWidth;
-  static double screenHeight;
-  static double blockSizeHorizontal;
-  static double blockSizeVertical;
-
-  void init(BuildContext context) {
-    _mediaQueryData = MediaQuery.of(context);
-    screenWidth = _mediaQueryData.size.width / 412;
-    screenHeight = _mediaQueryData.size.height / 870;
-  }
-}
 
 class CreateProfile1 extends StatefulWidget{
   @override
@@ -47,7 +34,7 @@ class MyProfileState extends State<CreateProfile1>{
   PickedFile _imageFile;
   final ImagePicker _picker = ImagePicker();
 
-  final GlobalKey<FormState> _profileKey=GlobalKey<FormState>();
+  final GlobalKey<FormState> _profileKey = GlobalKey<FormState>();
 
   Widget _buildName(){
     return TextFormField(
@@ -62,7 +49,7 @@ class MyProfileState extends State<CreateProfile1>{
         return null;
       },
       onSaved: (String value){ //only called when form was saved
-        _name=value;
+        _name = value;
       },
     );
   }
@@ -85,7 +72,7 @@ class MyProfileState extends State<CreateProfile1>{
         return null;
       },
       onSaved: (String value){ //only called when form was saved
-        _email=value;
+        _email = value;
       },
     );
   }
@@ -106,7 +93,7 @@ class MyProfileState extends State<CreateProfile1>{
         return null;
       },
       onSaved: (String value){ //only called when form was saved
-        _password=value;
+        _password = value;
       },
     );
   }
@@ -120,7 +107,7 @@ class MyProfileState extends State<CreateProfile1>{
           labelText: 'Bio'),
       maxLength: 250,
       onSaved: (String value){ //only called when form was saved
-        _bio=value;
+        _bio = value;
       },
     );
   }
@@ -133,7 +120,7 @@ class MyProfileState extends State<CreateProfile1>{
           labelText: 'City of Living'),
 
       onSaved: (String value){ //only called when form was saved
-        _city=value;
+        _city = value;
       },
     );
   }
@@ -146,7 +133,7 @@ class MyProfileState extends State<CreateProfile1>{
           labelText: 'Academic Background'),
 
       onSaved: (String value){ //only called when form was saved
-        _academicBackground=value;
+        _academicBackground = value;
       },
     );
   }
@@ -159,7 +146,7 @@ class MyProfileState extends State<CreateProfile1>{
           labelText: 'Current Job'),
 
       onSaved: (String value){ //only called when form was saved
-        _currentJob=value;
+        _currentJob = value;
       },
     );
   }
@@ -172,7 +159,7 @@ class MyProfileState extends State<CreateProfile1>{
           labelText: 'LinkedIn Url'),
       keyboardType: TextInputType.url,
       onSaved: (String value){ //only called when form was saved
-        _linkedInUrl=value;
+        _linkedInUrl = value;
       },
     );
   }
@@ -298,21 +285,50 @@ class MyProfileState extends State<CreateProfile1>{
                   ),
                 ),
                 color: const Color(0xff1A2677),
-                onPressed: () {
-                  if(!_profileKey.currentState.validate()){
+                onPressed: () async {
+                  if (!_profileKey.currentState.validate()) {
                     return; //when form is invalid
                   }
+
                   _profileKey.currentState.save(); //save the form - use latter
 
-                  var newDBUser = User(username: _name,password: _password);
-                  DBProvider.db.newUser(newDBUser);
-                  //here is where we should put what we want to do with the data!
-                  print(_name);
+                  var newDBUser = User( //create User after form
+                      email:_email,
+                      password: _password,
+                      displayName: _name,
+                      cityOfLiving: _city,
+                      academicBackground: _academicBackground,
+                      currentJob: _currentJob,
+                      linkedInURL: _linkedInUrl,
+                      bio: _bio
+                  );
 
+                  //DATABASE WORKS!!
+
+                  //init DB if necessary and insert user just created
+                  DBProvider.db.insertUser(newDBUser);
+
+                  //query for the user created, with PRIMARY KEY, and print
+                  print(await DBProvider.db.getUser(newDBUser.email));
+
+                  //EXPERIMENTS (all work):
+                  //print(await DBProvider.db.getAllUsers());
+                  //DBProvider.db.deleteAllUsers();
+                  //print(await DBProvider.db.getLastUser());
+
+                  // TO-DO: handle existing accounts; insert INTERESTS
+                  // TO-DO: insert photo to class User
+                  // TO-DO: with getUser method, evaluate login
+
+                  Navigator.push( //upon pressed, takes user to next page
+                    context,
+                    MaterialPageRoute(builder: (context) => CreateProfile2()),
+                  );
                 },
-              )
+              ),
             ],
-          ),),
+          ),
+            ),
       ),
     );
   }

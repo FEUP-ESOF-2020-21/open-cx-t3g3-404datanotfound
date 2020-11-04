@@ -24,6 +24,8 @@ class MyApp extends StatelessWidget {
   }
 }
 
+
+//What is this?
 const String _svg_2rnm7d =
     '<svg viewBox="0.0 0.0 45.0 45.0" ><path  d="M 0 0 L 45 0 L 45 45 L 0 45 L 0 0 Z" fill="none" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
 const String _svg_2oyv8c =

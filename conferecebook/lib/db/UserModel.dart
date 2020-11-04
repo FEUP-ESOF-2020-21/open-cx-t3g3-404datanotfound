@@ -1,25 +1,47 @@
 import 'dart:convert';
 
+// these fucntions are from a userModel template
 User userFromJson(String str) => User.fromJson(json.decode(str));
-
 String userToJson(User data) => json.encode(data.toJson());
 
-class User{
-  String username;
-  String password;
+class User {
+  final String email;
+  final String password;
 
-  User({
-    this.username,
+  String displayName;
+  String cityOfLiving;
+  String academicBackground;
+  String currentJob;
+  String linkedInURL;
+  String bio;
+
+  User({  //class constructor
+    this.email,
     this.password,
-});
+    this.displayName,
+    this.cityOfLiving = null,
+    this.academicBackground = null,
+    this.currentJob = null,
+    this.linkedInURL = null,
+    this.bio = null,
+  }); //only email, password, name are mandatory
 
-  factory User.fromJson(Map<String, dynamic> json) => User(
-    username: json['username'],
-    password: json['password'],
-  );
+  Map<String, dynamic> toJson() =>
+      {
+        "email": email,
+        "password": password
+      };
 
-  Map<String, dynamic> toJson() => {
-    'username': username,
-    'password': password,
-  };
+  factory User.fromJson(Map<String, dynamic> json) =>
+      User(
+          email: json["email"],
+          password: json["password"]
+      );
+
+  Map<String, dynamic> toMap() {  //to handle maps
+    return {
+      'email': email,
+      'password': password,
+    };
+  }
 }
