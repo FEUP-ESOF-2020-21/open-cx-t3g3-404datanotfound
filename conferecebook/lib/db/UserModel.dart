@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-// these fucntions are from a userModel template
+// these functions are from a userModel template
 User userFromJson(String str) => User.fromJson(json.decode(str));
 String userToJson(User data) => json.encode(data.toJson());
 
@@ -16,9 +16,9 @@ class User {
   String bio;
 
   User({  //class constructor
-    this.email,
-    this.password,
-    this.displayName,
+    this.email = null,
+    this.password = null,
+    this.displayName = null,
     this.cityOfLiving = null,
     this.academicBackground = null,
     this.currentJob = null,
