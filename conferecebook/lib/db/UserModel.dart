@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-// these fucntions are from a userModel template
+// these functions are from a userModel template
 User userFromJson(String str) => User.fromJson(json.decode(str));
 String userToJson(User data) => json.encode(data.toJson());
 
@@ -29,6 +29,7 @@ class User {
     this.interests,
     this.imageFile
   }); //only email, password, name are mandatory. = Null not necessary, already set by language default
+
 
   Map<String, dynamic> toJson() =>
       {

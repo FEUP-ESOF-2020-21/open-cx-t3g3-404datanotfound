@@ -5,6 +5,9 @@ import 'package:adobe_xd/pinned.dart';
 import './CreateProfile1.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:flutter/widgets.dart';
+import 'dart:async';
+import 'db/Database.dart';
+import 'db/UserModel.dart';
 
 
 class SizeConfig {
@@ -25,6 +28,16 @@ class Login extends StatelessWidget {
   Login({
     Key key,
   }) : super(key: key);
+
+  Future<bool> checkLogin(String inputEmail, String inputPassword) async {
+    var user = User();
+    user = await DBProvider.db.getUser(inputEmail);
+    // return true if user not null and inputPassword = SQL's password
+    // return false if user null OR password different OR both
+    return(user != null && user.password == inputPassword);
+
+  }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
