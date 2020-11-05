@@ -31,7 +31,9 @@ class DBProvider {
             academicBackground TEXT,
             currentJob TEXT,
             linkedInURL TEXT,
-            bio TEXT
+            bio TEXT,
+            interests TEXT,
+            imageFile BLOB
           );
         ''');
         },
@@ -50,8 +52,10 @@ class DBProvider {
         academicBackground,
         currentJob,
         linkedInURL,
-        bio
-      ) VALUES (?,?,?,?,?,?,?,?)
+        bio,
+        interests,
+        imageFile
+      ) VALUES (?,?,?,?,?,?,?,?,?,?)
     ''', [
       newUser.email,
       newUser.password,
@@ -60,7 +64,9 @@ class DBProvider {
       newUser.academicBackground,
       newUser.currentJob,
       newUser.linkedInURL,
-      newUser.bio
+      newUser.bio,
+      newUser.interests,
+      newUser.imageFile
         ]); //parameters to substitute '?' in SQLite code
 
     return res;

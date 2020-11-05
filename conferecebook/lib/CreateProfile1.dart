@@ -31,6 +31,7 @@ class MyProfileState extends State<CreateProfile1>{
   String _academicBackground;
   String _currentJob;
   String _linkedInUrl;
+  String _interests;
   PickedFile _imageFile;
   final ImagePicker _picker = ImagePicker();
 
@@ -164,6 +165,20 @@ class MyProfileState extends State<CreateProfile1>{
     );
   }
 
+  Widget _buildInterests(){
+    return TextFormField(
+      maxLines: 5,
+      decoration: InputDecoration(
+          focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: const Color(0xff1A2677))),
+          labelText: 'Interests'),
+      maxLength: 250,
+      onSaved: (String value){ //only called when form was saved
+        _interests = value;
+      },
+    );
+  }
+
   Widget imageProfile(){
     return Center(
 
@@ -273,6 +288,8 @@ class MyProfileState extends State<CreateProfile1>{
               _buildLinkedInUrl(),
               SizedBox(height: 20),
               _buildBio(),
+              SizedBox(height: 20),
+              _buildInterests(),
               SizedBox(height: 50),
               imageProfile(),
               SizedBox(height: 50),
@@ -300,7 +317,8 @@ class MyProfileState extends State<CreateProfile1>{
                       academicBackground: _academicBackground,
                       currentJob: _currentJob,
                       linkedInURL: _linkedInUrl,
-                      bio: _bio
+                      bio: _bio,
+                      interests: _interests
                   );
 
                   //DATABASE WORKS!!
@@ -316,7 +334,7 @@ class MyProfileState extends State<CreateProfile1>{
                   //DBProvider.db.deleteAllUsers();
                   //print(await DBProvider.db.getLastUser());
 
-                  // TO-DO: handle existing accounts; insert INTERESTS
+                  // TO-DO: handle existing accounts; (insert INTERESTS(done))
                   // TO-DO: insert photo to class User
                   // TO-DO: with getUser method, evaluate login
 

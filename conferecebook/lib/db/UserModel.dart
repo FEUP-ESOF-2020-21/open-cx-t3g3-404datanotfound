@@ -14,17 +14,21 @@ class User {
   String currentJob;
   String linkedInURL;
   String bio;
+  String interests;
+  String imageFile;
 
   User({  //class constructor
     this.email,
     this.password,
     this.displayName,
-    this.cityOfLiving = null,
-    this.academicBackground = null,
-    this.currentJob = null,
-    this.linkedInURL = null,
-    this.bio = null,
-  }); //only email, password, name are mandatory
+    this.cityOfLiving,
+    this.academicBackground,
+    this.currentJob,
+    this.linkedInURL,
+    this.bio,
+    this.interests,
+    this.imageFile
+  }); //only email, password, name are mandatory. = Null not necessary, already set by language default
 
   Map<String, dynamic> toJson() =>
       {
