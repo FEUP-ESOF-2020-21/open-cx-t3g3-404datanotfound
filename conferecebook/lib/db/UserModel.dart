@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:image_picker/image_picker.dart';
+
 
 // these functions are from a userModel template
 User userFromJson(String str) => User.fromJson(json.decode(str));

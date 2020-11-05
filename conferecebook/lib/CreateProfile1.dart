@@ -202,8 +202,8 @@ class MyProfileState extends State<CreateProfile1>{
   }
 
   dbToString(){
-
-    for(int i = 0; i < values.length; i++) {
+    _interests = values[0];
+    for(int i = 1; i < values.length; i++) {
       _interests += "," + values[i];
     }
   }// convert array of interests to string so save on DB
@@ -349,7 +349,8 @@ class MyProfileState extends State<CreateProfile1>{
                       currentJob: _currentJob,
                       linkedInURL: _linkedInUrl,
                       bio: _bio,
-                      interests: _interests
+                      interests: _interests,
+                      imageFile: _imageFile.path
                   );
 
                   //DATABASE WORKS!!
