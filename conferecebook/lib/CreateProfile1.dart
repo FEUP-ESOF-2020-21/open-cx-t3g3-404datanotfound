@@ -8,6 +8,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'package:material_tag_editor/tag_editor.dart';
+import 'package:material_tag_editor/tag_editor_layout_delegate.dart';
+import 'package:material_tag_editor/tag_layout.dart';
+import 'package:material_tag_editor/tag_render_layout_box.dart';
+
 import 'db/Database.dart';
 import 'db/UserModel.dart';
 import './Login.dart';
@@ -31,7 +36,8 @@ class MyProfileState extends State<CreateProfile1>{
   String _academicBackground;
   String _currentJob;
   String _linkedInUrl;
-  String _interests;
+  String _interests;// for DB
+  List<String> values = [];// for tags
   PickedFile _imageFile;
   final ImagePicker _picker = ImagePicker();
 
@@ -165,19 +171,42 @@ class MyProfileState extends State<CreateProfile1>{
     );
   }
 
-  Widget _buildInterests(){
-    return TextFormField(
-      maxLines: 5,
-      decoration: InputDecoration(
-          focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: const Color(0xff1A2677))),
-          labelText: 'Interests'),
-      maxLength: 250,
-      onSaved: (String value){ //only called when form was saved
-        _interests = value;
+  onDelete(index) {
+    setState(() {
+      values.removeAt(index);
+    });
+  }// helper method to _buildInterests
+
+  Widget _buildInterests() {
+    return TagEditor(
+      length: values.length,
+      delimeters: [',', ' '],
+      hasAddButton: false,
+      inputDecoration: const InputDecoration(
+        //helperText: 'Add your Interests',
+        hintText: 'Add your Interests',
+        border: InputBorder.none,
+      ),
+      onTagChanged: (newValue) {
+        setState(() {
+          values.add(newValue);
+        });
       },
+      tagBuilder: (context, index) =>
+          _Chip(
+            index: index,
+            label: values[index],
+            onDeleted: onDelete,
+          ),
     );
   }
+
+  dbToString(){
+
+    for(int i = 0; i < values.length; i++) {
+      _interests += "," + values[i];
+    }
+  }// convert array of interests to string so save on DB
 
   Widget imageProfile(){
     return Center(
@@ -292,7 +321,7 @@ class MyProfileState extends State<CreateProfile1>{
               _buildInterests(),
               SizedBox(height: 50),
               imageProfile(),
-              SizedBox(height: 50),
+              SizedBox(height: 20),
               RaisedButton(
                 child: Text(
                   'Create Account',
@@ -308,6 +337,8 @@ class MyProfileState extends State<CreateProfile1>{
                   }
 
                   _profileKey.currentState.save(); //save the form - use latter
+
+                  dbToString(); // convert array of interests to string so save on DB
 
                   var newDBUser = User( //create User after form
                       email:_email,
@@ -346,8 +377,35 @@ class MyProfileState extends State<CreateProfile1>{
               ),
             ],
           ),
-            ),
+        ),
       ),
+    );
+  }
+}
+
+class _Chip extends StatelessWidget {
+  const _Chip({
+    @required this.label,
+    @required this.onDeleted,
+    @required this.index,
+  });
+
+  final String label;
+  final ValueChanged<int> onDeleted;
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    return Chip(
+      labelPadding: const EdgeInsets.only(left: 8.0),
+      label: Text(label),
+      deleteIcon: Icon(
+        Icons.close,
+        size: 18,
+      ),
+      onDeleted: () {
+        onDeleted(index);
+      },
     );
   }
 }
