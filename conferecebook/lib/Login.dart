@@ -1,14 +1,10 @@
-import 'package:ConfereceBook/HomeFeed.dart';
 import 'package:ConfereceBook/JoinAnEvent.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import './CreateProfile1.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:flutter/widgets.dart';
-import 'dart:async';
 import 'db/Database.dart';
-import 'db/UserModel.dart';
-
 
 class SizeConfig {
   static MediaQueryData _mediaQueryData;
@@ -24,23 +20,61 @@ class SizeConfig {
   }
 }
 
-class Login extends StatelessWidget {
-  Login({
-    Key key,
-  }) : super(key: key);
+class MyLogin extends StatefulWidget {
+  MyLogin({Key key}) : super(key: key);
 
-  Future<bool> checkLogin(String inputEmail, String inputPassword) async {
-    var user = User();
-    user = await DBProvider.db.getUser(inputEmail);
+  @override
+  _Login createState() => _Login();
+}
+
+class _Login extends State<MyLogin> {
+  String email;
+  String password;
+  TextEditingController _controllerEmail;
+  TextEditingController _controllerPassword;
+  bool submit = false;
+
+  static Future<bool> checkLogin(String inputEmail, String inputPassword) async {
+    var user = await DBProvider.db.getUser(inputEmail);
+    var password = await DBProvider.db.getPassword(inputEmail);
+    String myPassword = "[{password: " + inputPassword + "}]";
     // return true if user not null and inputPassword = SQL's password
     // return false if user null OR password different OR both
-    return(user != null && user.password == inputPassword);
+    if ((user != null) && (password.toString() == myPassword))
+      return true;
+    else
+      return false;
+  }
 
+  void initState() {
+    super.initState();
+    _controllerEmail = TextEditingController();
+    _controllerPassword = TextEditingController();
+  }
+
+  void dispose() {
+    _controllerEmail.dispose();
+    _controllerPassword.dispose();
+    super.dispose();
+  }
+
+  void move() {
+    this.submit = true;
+    checkLogin(this.email, this.password).then((value){
+      if (this.submit && value) {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (context) => JoinAnEvent()
+        ));
+      } else {
+        this.submit = false;
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+
     return Scaffold(
       backgroundColor: const Color(0xffffffff),
       body: Stack(
@@ -52,12 +86,15 @@ class Login extends StatelessWidget {
         child: Container(
             width: 270.0,
           child: TextField(
+            controller: _controllerPassword,
+            onChanged: (String value) async {
+              this.password = value;
+              },
             obscureText: true,
             decoration: InputDecoration(
-              border: OutlineInputBorder(
-                  borderSide: new BorderSide(color: const Color(0xff1A2677))
-              ),
-              labelText: 'Password',
+              icon: Icon(Icons.lock, color: const Color(0xff1A2677)),
+              hintText: 'Password',
+              border: InputBorder.none,
             ),
             style: TextStyle(
               fontFamily: 'Roboto',
@@ -76,12 +113,15 @@ class Login extends StatelessWidget {
         width: 270.0,
         child:
         TextField(
+          controller: _controllerEmail,
+          onChanged: (String value) async {
+            this.email = value;
+          },
           obscureText: false,
           decoration: InputDecoration(
-            border: OutlineInputBorder(
-                borderSide: new BorderSide(color: const Color(0xff1A2677))
-            ),
-            labelText: 'E-mail',
+            icon: Icon(Icons.person, color: const Color(0xff1A2677)),
+            hintText: 'E-mail',
+            border: InputBorder.none,
           ),
           style: TextStyle(
             fontFamily: 'Roboto',
@@ -123,30 +163,23 @@ class Login extends StatelessWidget {
           ),
           Transform.translate(
             offset: Offset(SizeConfig.screenWidth * 168.8, SizeConfig.screenHeight * 520.0),
-            child: PageLink(
-              links: [
-                PageLinkInfo(
-                  transition: LinkTransition.Fade,
-                  ease: Curves.easeOut,
-                  duration: 0.3,
-                  pageBuilder: () => JoinAnEvent(),
+            child: InkWell(
+              onTap: () {this.move();},
+              child: SizedBox(
+                width: 88.0,
+                child: Text(
+                  'LOGIN',
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontSize: 25,
+                    color: const Color(0xffffffff),
+                    letterSpacing: 1.6909999999999998,
+                    height: 1.2,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-              ],
-            child: SizedBox(
-              width: 88.0,
-              child: Text(
-                'LOGIN',
-                style: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontSize: 25,
-                  color: const Color(0xffffffff),
-                  letterSpacing: 1.6909999999999998,
-                  height: 1.2,
-                ),
-                textAlign: TextAlign.center,
               ),
-            ),
-            ),
+            )
           ),
           Transform.translate(
             offset: Offset(SizeConfig.screenWidth * 53.5, SizeConfig.screenHeight * 613.0),
@@ -198,8 +231,26 @@ class Login extends StatelessWidget {
               width: 90.0,
             ),
           ),
+          Transform.translate(
+            offset: Offset(SizeConfig.screenWidth * 135.0,SizeConfig.screenHeight * 829.0),
+            child: SizedBox(
+              width: SizeConfig.screenWidth * 144.0,
+              child: Text(
+                'ConferenceBook',
+                style: TextStyle(
+                  fontFamily: 'Roboto',
+                  fontSize: 16,
+                  color: const Color(0xff1A2677),
+                  letterSpacing: 0.15,
+                  height:SizeConfig.screenHeight * 1.5,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 }
+

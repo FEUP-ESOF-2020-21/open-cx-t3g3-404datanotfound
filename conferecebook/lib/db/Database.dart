@@ -96,6 +96,20 @@ class DBProvider {
     }
   }
 
+  Future<dynamic> getPassword(String emailUser) async {  //to get a specific user
+    final db = await database;
+    var res = await db.rawQuery('''
+      SELECT password 
+      FROM users 
+      WHERE email = ?    
+    ''', [emailUser]);  //parameter to substitute '?'
+    if (res.length == 0)
+      return null;
+    else {
+      return res; //user queried is returned
+    }
+  }
+
   Future<void> updateUser(User user) async {  //to update user's info
     // Get a reference to the database.
     final db = await database;

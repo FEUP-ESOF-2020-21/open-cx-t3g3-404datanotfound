@@ -42,7 +42,7 @@ class JoinAnEvent extends StatelessWidget {
                     transition: LinkTransition.Fade,
                     ease: Curves.easeOut,
                     duration: 0.3,
-                    pageBuilder: () => Login(),
+                    pageBuilder: () => MyLogin(),
                   ),
                 ],
                 child: SizedBox(

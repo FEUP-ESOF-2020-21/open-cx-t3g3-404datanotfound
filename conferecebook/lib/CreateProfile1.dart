@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:async';
 
+import 'package:ConfereceBook/EnterEventCode.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:adobe_xd/page_link.dart';
@@ -23,15 +24,54 @@ class CreateProfile1 extends StatefulWidget{
 
 class MyProfileState extends State<CreateProfile1>{
 
-  String _name;
-  String _email;
-  String _password;
-  String _bio;
-  String _city;
-  String _academicBackground;
-  String _currentJob;
-  String _linkedInUrl;
-  String _interests;
+  String lastValidatedEmail;
+  String lastRejectedEmail;
+  bool accepted = false;
+
+// this will be called upon user interaction or re-initiation as commented below
+  String validateEmail(String email) {
+    if (email.isEmpty) {
+      accepted = false;
+      return 'Email is required';
+    } else if(!RegExp(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
+        .hasMatch(email)){
+      accepted = false;
+      return 'Please enter a valid email'; //when email is invalid
+    }
+    else if (lastValidatedEmail == email) {
+      accepted = true;
+      return null;
+    } else if (lastRejectedEmail == email) {
+      accepted = false;
+      return "There's already an account with this e-mail";
+    } else {
+      initiateAsyncEmailValidation(email);
+      return "Validation in progress";
+    }
+  }
+
+  Future<void> initiateAsyncEmailValidation(String email) async {
+    var val = await DBProvider.db.getUser(email);
+
+    if (val != null) {
+      lastRejectedEmail = email;
+    } else {
+      lastValidatedEmail = email;
+    }
+    _formKey.currentState.validate(); // this will re-initiate the validation
+  }
+
+  final _formKey = GlobalKey<FormState>();
+
+  String _name = "";
+  String _email = "";
+  String _password = "";
+  String _bio = "";
+  String _city = "";
+  String _academicBackground = "";
+  String _currentJob = "";
+  String _linkedInUrl = "";
+  String _interests = "";
   PickedFile _imageFile;
   final ImagePicker _picker = ImagePicker();
 
@@ -44,6 +84,7 @@ class MyProfileState extends State<CreateProfile1>{
           borderSide: BorderSide(color: const Color(0xff1A2677))),
           labelText: 'Display Name'),
       validator: (String value){
+
         if(value.isEmpty){
           return 'Name is Required';
         }
@@ -55,26 +96,21 @@ class MyProfileState extends State<CreateProfile1>{
     );
   }
 
-  Widget _buildEmail(){
-    return TextFormField(
-      decoration: InputDecoration(
-          focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: const Color(0xff1A2677))),
-          labelText: 'Email Address'),
-      validator: (String value){
-        if(value.isEmpty){
-          return 'Email Address is Required';
-        }
-
-        if(!RegExp(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
-            .hasMatch(value)){
-          return 'Please enter a valid email'; //when email is invalid
-        }
-        return null;
-      },
-      onSaved: (String value){ //only called when form was saved
-        _email = value;
-      },
+  Widget _buildEmail() {
+    return Container(
+      child: Form(key: _formKey,
+          autovalidate: true,
+          child: TextFormField(
+            decoration: InputDecoration(
+                focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: const Color(0xff1A2677))),
+                labelText: 'Email Address'),
+            validator: validateEmail,
+            onSaved: (String value){ //only called when form was saved
+              _email = value;
+            },
+          )
+      ),
     );
   }
 
@@ -307,41 +343,39 @@ class MyProfileState extends State<CreateProfile1>{
                     return; //when form is invalid
                   }
 
-                  _profileKey.currentState.save(); //save the form - use latter
+                  if (accepted) {
+                    _profileKey.currentState
+                        .save(); //save the form - use latter
 
-                  var newDBUser = User( //create User after form
-                      email:_email,
-                      password: _password,
-                      displayName: _name,
-                      cityOfLiving: _city,
-                      academicBackground: _academicBackground,
-                      currentJob: _currentJob,
-                      linkedInURL: _linkedInUrl,
-                      bio: _bio,
-                      interests: _interests
-                  );
+                    var newDBUser = User( //create User after form
+                        email: _email,
+                        password: _password,
+                        displayName: _name,
+                        cityOfLiving: _city,
+                        academicBackground: _academicBackground,
+                        currentJob: _currentJob,
+                        linkedInURL: _linkedInUrl,
+                        bio: _bio,
+                        interests: _interests
+                    );
 
-                  //DATABASE WORKS!!
+                    //DATABASE WORKS!!
+                    DBProvider.db.insertUser(newDBUser);
 
-                  //init DB if necessary and insert user just created
-                  DBProvider.db.insertUser(newDBUser);
+                    //EXPERIMENTS (all work):
+                    //print(await DBProvider.db.getAllUsers());
+                    //DBProvider.db.deleteAllUsers();
+                    //print(await DBProvider.db.getLastUser());
 
-                  //query for the user created, with PRIMARY KEY, and print
-                  print(await DBProvider.db.getUser(newDBUser.email));
+                    // TO-DO: handle existing accounts; (insert INTERESTS(done))
+                    // TO-DO: insert photo to class User
+                    // TO-DO: with getUser method, evaluate login
 
-                  //EXPERIMENTS (all work):
-                  //print(await DBProvider.db.getAllUsers());
-                  //DBProvider.db.deleteAllUsers();
-                  //print(await DBProvider.db.getLastUser());
-
-                  // TO-DO: handle existing accounts; (insert INTERESTS(done))
-                  // TO-DO: insert photo to class User
-                  // TO-DO: with getUser method, evaluate login
-
-                  Navigator.push( //upon pressed, takes user to next page
-                    context,
-                    MaterialPageRoute(builder: (context) => CreateProfile2()),
-                  );
+                    Navigator.push( //upon pressed, takes user to next page
+                      context,
+                      MaterialPageRoute(builder: (context) => MyLogin()),
+                    );
+                  }
                 },
               ),
             ],
