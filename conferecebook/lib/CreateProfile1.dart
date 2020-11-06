@@ -97,7 +97,7 @@ class MyProfileState extends State<CreateProfile1>{
     // configura o  AlertDialog
     AlertDialog alerta = AlertDialog(
       title: Text("Existing account"),
-      content: Text("The email address is already in use by another account."),
+      content: Text("The email address is already in use by another account"),
       actions: [
         okButton,
       ],
@@ -137,6 +137,58 @@ class MyProfileState extends State<CreateProfile1>{
     );
   }
 
+  showAlertDialog3(BuildContext context)
+  {
+    // configura o button
+    Widget okButton = FlatButton(
+      child: Text("OK"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    // configura o  AlertDialog
+    AlertDialog alerta = AlertDialog(
+      title: Text("Invalid E-mail"),
+      content: Text("Please insert a valid email"),
+      actions: [
+        okButton,
+      ],
+    );
+    // exibe o dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alerta;
+      },
+    );
+  }
+
+  showAlertDialog0(BuildContext context)
+  {
+    // configura o button
+    Widget okButton = FlatButton(
+      child: Text("OK"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    // configura o  AlertDialog
+    AlertDialog alerta = AlertDialog(
+      title: Text("Empty field"),
+      content: Text("Please fill the e-mail and password fields"),
+      actions: [
+        okButton,
+      ],
+    );
+    // exibe o dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alerta;
+      },
+    );
+  }
+
   // ignore: missing_return
   Future<String> _register() async {
     // ignore: deprecated_member_use
@@ -161,10 +213,13 @@ class MyProfileState extends State<CreateProfile1>{
       }
 
   } catch (e) {
-    if (e.toString() == '[firebase_auth/email-already-in-use] The email address is already in use by another account.') {
-      return "Email";
-    } else if (e.toString() == '[firebase_auth/weak-password] Password should be at least 6 characters') {
+      print(e.toString());
+    if (e.toString() == '[firebase_auth/weak-password] Password should be at least 6 characters') {
       return "Password";
+    } else if (e.toString() == '[firebase_auth/email-already-in-use] The email address is already in use by another account.') {
+      return "Email";
+    } else if (e.toString() == '[firebase_auth/invalid-email] The email address is badly formatted.') {
+      return "Email format";
     } else {
       return "Other error";
     }
@@ -192,8 +247,8 @@ class MyProfileState extends State<CreateProfile1>{
   String _userEmail;
   FirebaseAuth auth;
 
-  String email;
-  String password;
+  String email = "";
+  String password = "";
 
   @override
   Widget build(BuildContext context) {
@@ -268,11 +323,15 @@ class MyProfileState extends State<CreateProfile1>{
                 onTap: () async {
                   if (_formKey.currentState.validate()) {
                     _register().then((value) {
-                      if (value == "Email") {
+                      if ((this.email == "") || (this.password == "")) {
+                        showAlertDialog0(context);
+                      } else if (value == "Email") {
                         showAlertDialog1(context);
                       } else if (value == "Password") {
                         showAlertDialog2(context);
-                      } else if (value != "ERROR") {
+                      } else if (value == "Email format") {
+                        showAlertDialog3(context);
+                      } else if (value == "Other error"){
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
                             builder: (context) => MyLogin(auth: auth)
                         ));
