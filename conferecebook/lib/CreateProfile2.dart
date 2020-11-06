@@ -5,8 +5,6 @@ import 'package:adobe_xd/page_link.dart';
 import './CreateProfile1.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/widgets.dart';
-import 'package:ConfereceBook/db/UserModel.dart';
-import 'package:ConfereceBook/db/Database.dart';
 
 
 class SizeConfig {
@@ -29,16 +27,6 @@ class CreateProfile2 extends StatelessWidget {
   }) : super(key: key);
 
   Map<String, String> newUser = {};
-  Future _userFuture;
-
-  void initState(){
-    _userFuture = getLastUser();
-  }
-
-  getLastUser() async{
-    final _userData = await DBProvider.db.getAllUsers();
-    return _userData;
-  }
 
 
   @override
@@ -47,7 +35,6 @@ class CreateProfile2 extends StatelessWidget {
       backgroundColor: const Color(0xffffffff),
       appBar: AppBar(title:Text("Create Account"), backgroundColor: const Color(0xff1A2677)),
       body: FutureBuilder(
-        future: _userFuture,
         builder: (_, userData) {
           switch (userData.connectionState) {
             case ConnectionState.none:

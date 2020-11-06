@@ -4,7 +4,9 @@ import 'package:adobe_xd/pinned.dart';
 import './CreateProfile1.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:flutter/widgets.dart';
-import 'db/Database.dart';
+// Import the firebase_core plugin
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SizeConfig {
   static MediaQueryData _mediaQueryData;
@@ -21,121 +23,129 @@ class SizeConfig {
 }
 
 class MyLogin extends StatefulWidget {
-  MyLogin({Key key}) : super(key: key);
+  MyLogin({Key key, this.auth}) : super(key: key);
+
+  final FirebaseAuth auth;
 
   @override
-  _Login createState() => _Login();
+  Login createState() => Login();
 }
 
-class _Login extends State<MyLogin> {
+class Login extends State<MyLogin> {
+
+  Future<bool> check() async {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email,
+          password: password
+      );
+      return true;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        print('No user found for that email.');
+      } else if (e.code == 'wrong-password') {
+        print('Wrong password provided for that user.');
+      }
+      return false;
+    }
+  }
+
+  showAlertDialog(BuildContext context)
+  {
+    // configura o button
+    Widget okButton = FlatButton(
+      child: Text("OK"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    // configura o  AlertDialog
+    AlertDialog alerta = AlertDialog(
+      title: Text("Invalid Login"),
+      content: Text("Invalid Username and/or Password"),
+      actions: [
+        okButton,
+      ],
+    );
+    // exibe o dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alerta;
+      },
+    );
+  }
+
+  FirebaseAuth auth;
   String email;
   String password;
-  TextEditingController _controllerEmail;
-  TextEditingController _controllerPassword;
-  bool submit = false;
-
-  static Future<bool> checkLogin(String inputEmail, String inputPassword) async {
-    var user = await DBProvider.db.getUser(inputEmail);
-    var password = await DBProvider.db.getPassword(inputEmail);
-    String myPassword = "[{password: " + inputPassword + "}]";
-    // return true if user not null and inputPassword = SQL's password
-    // return false if user null OR password different OR both
-    if ((user != null) && (password.toString() == myPassword))
-      return true;
-    else
-      return false;
-  }
-
-  void initState() {
-    super.initState();
-    _controllerEmail = TextEditingController();
-    _controllerPassword = TextEditingController();
-  }
-
-  void dispose() {
-    _controllerEmail.dispose();
-    _controllerPassword.dispose();
-    super.dispose();
-  }
-
-  void move() {
-    this.submit = true;
-    checkLogin(this.email, this.password).then((value){
-      if (this.submit && value) {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (context) => JoinAnEvent()
-        ));
-      } else {
-        this.submit = false;
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
+    auth = widget.auth;
     SizeConfig().init(context);
-
     return Scaffold(
       backgroundColor: const Color(0xffffffff),
       body: Stack(
         children: <Widget>[
           Container(),
           Container(),
-      Transform.translate(
-          offset: Offset(SizeConfig.screenWidth * 53.5, SizeConfig.screenHeight * 400.0),
-        child: Container(
-            width: 270.0,
-          child: TextField(
-            controller: _controllerPassword,
-            onChanged: (String value) async {
-              this.password = value;
-              },
-            obscureText: true,
-            decoration: InputDecoration(
-              icon: Icon(Icons.lock, color: const Color(0xff1A2677)),
-              hintText: 'Password',
-              border: InputBorder.none,
-            ),
-            style: TextStyle(
-              fontFamily: 'Roboto',
-              fontSize: 16,
-              color: const Color(0xff1A2677),
-              letterSpacing: 0.15,
-              height: 1,
-            ),
-            textAlign: TextAlign.left,
-          ),
-        ),
-      ),
-      Transform.translate(
-        offset: Offset(SizeConfig.screenWidth * 53.5, SizeConfig.screenHeight * 300.0),
-        child: Container(
-        width: 270.0,
-        child:
-        TextField(
-          controller: _controllerEmail,
-          onChanged: (String value) async {
-            this.email = value;
-          },
-          obscureText: false,
-          decoration: InputDecoration(
-            icon: Icon(Icons.person, color: const Color(0xff1A2677)),
-            hintText: 'E-mail',
-            border: InputBorder.none,
-          ),
-          style: TextStyle(
-            fontFamily: 'Roboto',
-            fontSize: 16,
-            color: const Color(0xff1A2677),
-            letterSpacing: 0.15,
-            height: 1,
-          ),
-          textAlign: TextAlign.left,
-        ),
-        ),
-      ),
           Transform.translate(
-            offset: Offset(SizeConfig.screenWidth * 132.0, SizeConfig.screenHeight * 504.0),
+            offset: Offset(
+                SizeConfig.screenWidth * 53.5, SizeConfig.screenHeight * 400.0),
+            child: Container(
+              width: 270.0,
+              child: TextField(
+                onChanged: (String value) async {
+                  this.password = value;
+                },
+                obscureText: true,
+                decoration: InputDecoration(
+                  icon: Icon(Icons.lock, color: const Color(0xff1A2677)),
+                  hintText: 'Password',
+                  border: InputBorder.none,
+                ),
+                style: TextStyle(
+                  fontFamily: 'Roboto',
+                  fontSize: 16,
+                  color: const Color(0xff1A2677),
+                  letterSpacing: 0.15,
+                  height: 1,
+                ),
+                textAlign: TextAlign.left,
+              ),
+            ),
+          ),
+          Transform.translate(
+            offset: Offset(
+                SizeConfig.screenWidth * 53.5, SizeConfig.screenHeight * 300.0),
+            child: Container(
+              width: 270.0,
+              child:
+              TextField(
+                onChanged: (String value) async {
+                  this.email = value;
+                },
+                obscureText: false,
+                decoration: InputDecoration(
+                  icon: Icon(Icons.person, color: const Color(0xff1A2677)),
+                  hintText: 'E-mail',
+                  border: InputBorder.none,
+                ),
+                style: TextStyle(
+                  fontFamily: 'Roboto',
+                  fontSize: 16,
+                  color: const Color(0xff1A2677),
+                  letterSpacing: 0.15,
+                  height: 1,
+                ),
+                textAlign: TextAlign.left,
+              ),
+            ),
+          ),
+          Transform.translate(
+            offset: Offset(SizeConfig.screenWidth * 132.0,
+                SizeConfig.screenHeight * 504.0),
             child: SizedBox(
               width: 149.0,
               height: 57.0,
@@ -162,30 +172,42 @@ class _Login extends State<MyLogin> {
             ),
           ),
           Transform.translate(
-            offset: Offset(SizeConfig.screenWidth * 168.8, SizeConfig.screenHeight * 520.0),
-            child: InkWell(
-              onTap: () {this.move();},
-              child: SizedBox(
-                width: 88.0,
-                child: Text(
-                  'LOGIN',
-                  style: TextStyle(
-                    fontFamily: 'Roboto',
-                    fontSize: 25,
-                    color: const Color(0xffffffff),
-                    letterSpacing: 1.6909999999999998,
-                    height: 1.2,
+              offset: Offset(SizeConfig.screenWidth * 168.8,
+                  SizeConfig.screenHeight * 520.0),
+              child: InkWell(
+                onTap: () {
+                  check().then((value) {
+                    if (value) {
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (context) => JoinAnEvent()
+                      ));
+                    } else {
+                      showAlertDialog(context);
+                    }
+                  });
+                },
+                child: SizedBox(
+                  width: 88.0,
+                  child: Text(
+                    'LOGIN',
+                    style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontSize: 25,
+                      color: const Color(0xffffffff),
+                      letterSpacing: 1.6909999999999998,
+                      height: 1.2,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
                 ),
-              ),
-            )
+              )
           ),
           Transform.translate(
-            offset: Offset(SizeConfig.screenWidth * 53.5, SizeConfig.screenHeight * 613.0),
+            offset: Offset(
+                SizeConfig.screenWidth * 53.5, SizeConfig.screenHeight * 613.0),
             child:
-                // Adobe XD layer: '✏️ Input text' (text)
-                Text(
+            // Adobe XD layer: '✏️ Input text' (text)
+            Text(
               'New around here?',
               style: TextStyle(
                 fontFamily: 'Roboto',
@@ -198,16 +220,17 @@ class _Login extends State<MyLogin> {
             ),
           ),
           Transform.translate(
-            offset: Offset(SizeConfig.screenWidth * 53.5, SizeConfig.screenHeight * 636.0),
+            offset: Offset(
+                SizeConfig.screenWidth * 53.5, SizeConfig.screenHeight * 636.0),
             child:
-                // Adobe XD layer: '✏️ Input text' (text)
-                PageLink(
+            // Adobe XD layer: '✏️ Input text' (text)
+            PageLink(
               links: [
                 PageLinkInfo(
                   transition: LinkTransition.Fade,
                   ease: Curves.easeOut,
                   duration: 0.3,
-                  pageBuilder: () => CreateProfile1(),
+                  pageBuilder: () => CreateProfile1(auth: auth),
                 ),
               ],
               child: Text(
@@ -225,14 +248,16 @@ class _Login extends State<MyLogin> {
             ),
           ),
           Transform.translate(
-            offset: Offset(SizeConfig.screenWidth * 164.0, SizeConfig.screenHeight * 134.0),
+            offset: Offset(SizeConfig.screenWidth * 164.0,
+                SizeConfig.screenHeight * 134.0),
             child: Image.asset('images/icon.png',
               height: 90.0,
               width: 90.0,
             ),
           ),
           Transform.translate(
-            offset: Offset(SizeConfig.screenWidth * 135.0,SizeConfig.screenHeight * 829.0),
+            offset: Offset(SizeConfig.screenWidth * 135.0,
+                SizeConfig.screenHeight * 829.0),
             child: SizedBox(
               width: SizeConfig.screenWidth * 144.0,
               child: Text(
@@ -242,7 +267,7 @@ class _Login extends State<MyLogin> {
                   fontSize: 16,
                   color: const Color(0xff1A2677),
                   letterSpacing: 0.15,
-                  height:SizeConfig.screenHeight * 1.5,
+                  height: SizeConfig.screenHeight * 1.5,
                 ),
                 textAlign: TextAlign.center,
               ),

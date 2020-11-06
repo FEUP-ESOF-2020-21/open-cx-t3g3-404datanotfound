@@ -1,26 +1,29 @@
 import 'dart:io';
 import 'dart:async';
 
+import 'package:adobe_xd/pinned.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:material_tag_editor/tag_editor.dart';
 
-import 'db/Database.dart';
-import 'db/UserModel.dart';
 import './Login.dart';
 
 
 class CreateProfile1 extends StatefulWidget{
+  CreateProfile1({Key key, this.auth}) : super(key: key);
+
+  final FirebaseAuth auth;
+
   @override
-  State<StatefulWidget> createState(){
-    return MyProfileState();
-  }
+  State<StatefulWidget> createState() =>
+      MyProfileState();
 }
 
 class MyProfileState extends State<CreateProfile1>{
-
+/*
   String lastValidatedEmail;
   String lastRejectedEmail;
   bool accepted = false;
@@ -34,8 +37,7 @@ class MyProfileState extends State<CreateProfile1>{
         .hasMatch(email)){
       accepted = false;
       return 'Please enter a valid email'; //when email is invalid
-    }
-    else if (lastValidatedEmail == email) {
+    } else if (lastValidatedEmail == email) {
       accepted = true;
       return null;
     } else if (lastRejectedEmail == email) {
@@ -48,8 +50,7 @@ class MyProfileState extends State<CreateProfile1>{
   }
 
   Future<void> initiateAsyncEmailValidation(String email) async {
-    var val = await DBProvider.db.getUser(email);
-
+    var val;
     if (val != null) {
       lastRejectedEmail = email;
     } else {
@@ -60,23 +61,299 @@ class MyProfileState extends State<CreateProfile1>{
 
   final _formKey = GlobalKey<FormState>();
 
-  String _name = "";
-  String _email = "";
-  String _password = "";
-  String _bio = "";
-  String _city = "";
-  String _academicBackground = "";
-  String _currentJob = "";
-  String _linkedInUrl = "";
-  String _interests = "";
+  String _name;
+  String _email;
+  String _password;
+  String _bio;
+  String _city;
+  String _academicBackground;
+  String _currentJob;
+  String _linkedInUrl;
+  String _interests;
 
   List<String> values = [];// for tags
 
   PickedFile _imageFile;
   final ImagePicker _picker = ImagePicker();
 
-  final GlobalKey<FormState> _profileKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _profileKey = GlobalKey<FormState>();*/
 
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  showAlertDialog1(BuildContext context)
+  {
+    // configura o button
+    Widget okButton = FlatButton(
+      child: Text("OK"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    // configura o  AlertDialog
+    AlertDialog alerta = AlertDialog(
+      title: Text("Existing account"),
+      content: Text("The email address is already in use by another account."),
+      actions: [
+        okButton,
+      ],
+    );
+    // exibe o dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alerta;
+      },
+    );
+  }
+
+  showAlertDialog2(BuildContext context)
+  {
+    // configura o button
+    Widget okButton = FlatButton(
+      child: Text("OK"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    // configura o  AlertDialog
+    AlertDialog alerta = AlertDialog(
+      title: Text("Invalid Password"),
+      content: Text("Password should be at least 6 characters"),
+      actions: [
+        okButton,
+      ],
+    );
+    // exibe o dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alerta;
+      },
+    );
+  }
+
+  // ignore: missing_return
+  Future<String> _register() async {
+    // ignore: deprecated_member_use
+    try {
+      // ignore: deprecated_member_use
+      final FirebaseUser user = (await widget.auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      )
+      ).user;
+      if (user != null) {
+        setState(() {
+          _success = true;
+          _userEmail = user.email;
+        });
+        return "";
+      } else {
+        setState(() {
+          _success = true;
+        });
+        return "";
+      }
+
+  } catch (e) {
+    if (e.toString() == '[firebase_auth/email-already-in-use] The email address is already in use by another account.') {
+      return "Email";
+    } else if (e.toString() == '[firebase_auth/weak-password] Password should be at least 6 characters') {
+      return "Password";
+    } else {
+      return "Other error";
+    }
+  }}
+
+  Widget appIcon() {
+    return Scaffold(
+      backgroundColor: const Color(0xffffffff),
+      body: Stack(
+          children: <Widget>[
+    Transform.translate(
+      offset: Offset(SizeConfig.screenWidth * 164.0,
+          SizeConfig.screenHeight * 134.0),
+      child: Image.asset('images/icon.png',
+        height: 90.0,
+        width: 90.0,
+      ),
+    )]));
+  }
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _success;
+  String _userEmail;
+  FirebaseAuth auth;
+
+  String email;
+  String password;
+
+  @override
+  Widget build(BuildContext context) {
+    auth = widget.auth;
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("New Account"),
+        backgroundColor: const Color(0xff1A2677),
+      ),
+      body: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Transform.translate(
+              offset: Offset(
+                  SizeConfig.screenWidth * 53.5, SizeConfig.screenHeight * 300.0),
+              child: Container(
+                width: 270.0,
+                child: TextFormField(
+                  controller: _passwordController,
+                  onChanged: (String value) async {
+                    this.password = value;
+                  },
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    icon: Icon(Icons.lock, color: const Color(0xff1A2677)),
+                    hintText: 'Password',
+                    border: InputBorder.none,
+                  ),
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontSize: 16,
+                    color: const Color(0xff1A2677),
+                    letterSpacing: 0.15,
+                    height: 1,
+                  ),
+                  textAlign: TextAlign.left,
+                ),
+              ),
+            ),
+            Transform.translate(
+              offset: Offset(SizeConfig.screenWidth * 53.5, SizeConfig.screenHeight * 150.0),
+              child: Container(
+            width: 270.0,
+            child: TextFormField(
+                controller: _emailController,
+                onChanged: (String value) async {
+                  this.email = value;
+                },
+                obscureText: false,
+                decoration: InputDecoration(
+                  icon: Icon(Icons.person, color: const Color(0xff1A2677)),
+                  hintText: 'E-mail',
+                  border: InputBorder.none,
+                ),
+                style: TextStyle(
+                  fontFamily: 'Roboto',
+                  fontSize: 16,
+                  color: const Color(0xff1A2677),
+                  letterSpacing: 0.15,
+                  height: 1,
+                ),
+                textAlign: TextAlign.left,
+              ),)),
+            Transform.translate(
+        offset: Offset(SizeConfig.screenWidth / 2, SizeConfig.screenHeight * 300.0),
+        child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              alignment: Alignment.center,
+              child: InkWell(
+                onTap: () async {
+                  if (_formKey.currentState.validate()) {
+                    _register().then((value) {
+                      if (value == "Email") {
+                        showAlertDialog1(context);
+                      } else if (value == "Password") {
+                        showAlertDialog2(context);
+                      } else if (value != "ERROR") {
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                            builder: (context) => MyLogin(auth: auth)
+                        ));
+                      }
+                    });
+                    }
+                  },
+                child: SizedBox(
+                width: 149.0,
+                height: 57.0,
+                child: Stack(
+                  children: <Widget>[
+                    Pinned.fromSize(
+                      bounds: Rect.fromLTWH(0.0, 0.0, 149.0, 57.0),
+                      size: Size(149.0, 57.0),
+                      pinLeft: true,
+                      pinRight: true,
+                      pinTop: true,
+                      pinBottom: true,
+                      child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(35.0),
+                            color: const Color(0xff1A2677),
+                            border: Border.all(
+                                width: 1.0, color: const Color(0xff1A2677)),
+                          ),
+                          child: SizedBox(
+                            width: 88.0,
+                            child: Text(
+                              'REGISTER',
+                              style: TextStyle(
+                                fontFamily: 'Roboto',
+                                fontSize: 20,
+                                color: const Color(0xffffffff),
+                                letterSpacing: 1.6909999999999998,
+                                height: 2,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              ),
+            ),),
+            Container(
+              alignment: Alignment.center,
+              child: Text(_success == null
+                  ? ''
+                  : (_success
+                  ? 'Successfully registered ' + _userEmail
+                  : 'Registration failed')),
+            ),
+            Transform.translate(
+              offset: Offset(SizeConfig.screenWidth * 135.0,
+                  SizeConfig.screenHeight * 460.0),
+              child: SizedBox(
+                width: SizeConfig.screenWidth * 144.0,
+                child: Text(
+                  'ConferenceBook',
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontSize: 16,
+                    color: const Color(0xff1A2677),
+                    letterSpacing: 0.15,
+                    height: SizeConfig.screenHeight * 1.5,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+
+/*
   Widget _buildName(){
     return TextFormField(
       decoration: InputDecoration(
@@ -366,44 +643,16 @@ class MyProfileState extends State<CreateProfile1>{
                     return; //when form is invalid
                   }
 
-
                   if (accepted) {
-                    _profileKey.currentState
-                        .save(); //save the form - use latter
+                    _profileKey.currentState.save(); //save the form - use latter
 
                     dbToString();
-
-                    var newDBUser = User( //create User after form
-                        email: _email,
-                        password: _password,
-                        displayName: _name,
-                        cityOfLiving: _city,
-                        academicBackground: _academicBackground,
-                        currentJob: _currentJob,
-                        linkedInURL: _linkedInUrl,
-                        bio: _bio,
-                        interests: _interests,
-                        imageFile: _imageFile.path
-                    );
-
-                    //DATABASE WORKS!!
-                    DBProvider.db.insertUser(newDBUser);
-
-                    //EXPERIMENTS (all work):
-                    //print(await DBProvider.db.getAllUsers());
-                    //DBProvider.db.deleteAllUsers();
-                    //print(await DBProvider.db.getLastUser());
-
-                    // TO-DO: handle existing accounts; (insert INTERESTS(done))
-                    // TO-DO: insert photo to class User
-                    // TO-DO: with getUser method, evaluate login
 
                     Navigator.push( //upon pressed, takes user to next page
                       context,
                       MaterialPageRoute(builder: (context) => MyLogin()),
                     );
                   }
-
                 },
               ),
             ],
@@ -411,7 +660,7 @@ class MyProfileState extends State<CreateProfile1>{
         ),
       ),
     );
-  }
+  }*/
 }
 
 class _Chip extends StatelessWidget {

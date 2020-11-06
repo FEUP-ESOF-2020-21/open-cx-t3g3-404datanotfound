@@ -1,28 +1,31 @@
-import 'package:ConfereceBook/Login.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:ConfereceBook/Login.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((value) => runApp(MyApp()));
-
 }
 
 class MyApp extends StatelessWidget {
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'ConferenceBook',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyLogin(),
-    );
+    return  MaterialApp(
+            title: 'ConferenceBook',
+            theme: ThemeData(
+              primarySwatch: Colors.blue,
+            ),
+            home: MyLogin(auth: _auth),
+          );
   }
 }
-
 
 
 //What is this?

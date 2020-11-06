@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "658061991213",
+    "firebase_url": "https://conferencebook-564ad.firebaseio.com",
+    "project_id": "conferencebook-564ad",
+    "storage_bucket": "conferencebook-564ad.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:658061991213:android:6d925af42ac3fa8439c7a4",
+        "android_client_info": {
+          "package_name": "com.example.conferecebook"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "658061991213-at7s0s0u1g1eq05ic71a27olu4tqbgqm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGmVltGP9QQI8gnQyz0QamfHX4ng7DjRE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "658061991213-at7s0s0u1g1eq05ic71a27olu4tqbgqm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
