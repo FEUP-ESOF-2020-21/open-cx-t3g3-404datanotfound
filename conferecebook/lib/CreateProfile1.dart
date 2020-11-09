@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:async';
 
+import 'package:ConfereceBook/CreateProfile2.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -23,60 +24,6 @@ class CreateProfile1 extends StatefulWidget{
 }
 
 class MyProfileState extends State<CreateProfile1>{
-/*
-  String lastValidatedEmail;
-  String lastRejectedEmail;
-  bool accepted = false;
-
-// this will be called upon user interaction or re-initiation as commented below
-  String validateEmail(String email) {
-    if (email.isEmpty) {
-      accepted = false;
-      return 'Email is required';
-    } else if(!RegExp(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
-        .hasMatch(email)){
-      accepted = false;
-      return 'Please enter a valid email'; //when email is invalid
-    } else if (lastValidatedEmail == email) {
-      accepted = true;
-      return null;
-    } else if (lastRejectedEmail == email) {
-      accepted = false;
-      return "There's already an account with this e-mail";
-    } else {
-      initiateAsyncEmailValidation(email);
-      return "Validation in progress";
-    }
-  }
-
-  Future<void> initiateAsyncEmailValidation(String email) async {
-    var val;
-    if (val != null) {
-      lastRejectedEmail = email;
-    } else {
-      lastValidatedEmail = email;
-    }
-    _formKey.currentState.validate(); // this will re-initiate the validation
-  }
-
-  final _formKey = GlobalKey<FormState>();
-
-  String _name;
-  String _email;
-  String _password;
-  String _bio;
-  String _city;
-  String _academicBackground;
-  String _currentJob;
-  String _linkedInUrl;
-  String _interests;
-
-  List<String> values = [];// for tags
-
-  PickedFile _imageFile;
-  final ImagePicker _picker = ImagePicker();
-
-  final GlobalKey<FormState> _profileKey = GlobalKey<FormState>();*/
 
   @override
   void dispose() {
@@ -193,12 +140,12 @@ class MyProfileState extends State<CreateProfile1>{
   Future<String> _register() async {
     // ignore: deprecated_member_use
     try {
-      // ignore: deprecated_member_use
-      final FirebaseUser user = (await widget.auth.createUserWithEmailAndPassword(
+      final User user = (await widget.auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       )
       ).user;
+      userId = user.uid;
       if (user != null) {
         setState(() {
           _success = true;
@@ -212,37 +159,39 @@ class MyProfileState extends State<CreateProfile1>{
         return "";
       }
 
-  } catch (e) {
+    } catch (e) {
       print(e.toString());
-    if (e.toString() == '[firebase_auth/weak-password] Password should be at least 6 characters') {
-      return "Password";
-    } else if (e.toString() == '[firebase_auth/email-already-in-use] The email address is already in use by another account.') {
-      return "Email";
-    } else if (e.toString() == '[firebase_auth/invalid-email] The email address is badly formatted.') {
-      return "Email format";
-    } else {
-      return "Other error";
-    }
-  }}
+      if (e.toString() == '[firebase_auth/weak-password] Password should be at least 6 characters') {
+        return "Password";
+      } else if (e.toString() == '[firebase_auth/email-already-in-use] The email address is already in use by another account.') {
+        return "Email";
+      } else if (e.toString() == '[firebase_auth/invalid-email] The email address is badly formatted.') {
+        return "Email format";
+      } else {
+        return "Other error";
+      }
+    }}
 
   Widget appIcon() {
     return Scaffold(
-      backgroundColor: const Color(0xffffffff),
-      body: Stack(
-          children: <Widget>[
-    Transform.translate(
-      offset: Offset(SizeConfig.screenWidth * 164.0,
-          SizeConfig.screenHeight * 134.0),
-      child: Image.asset('images/icon.png',
-        height: 90.0,
-        width: 90.0,
-      ),
-    )]));
+        backgroundColor: const Color(0xffffffff),
+        body: Stack(
+            children: <Widget>[
+              Transform.translate(
+                offset: Offset(SizeConfig.screenWidth * 164.0,
+                    SizeConfig.screenHeight * 134.0),
+                child: Image.asset('images/icon.png',
+                  height: 90.0,
+                  width: 90.0,
+                ),
+              )]));
   }
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  String userId;
   bool _success;
   String _userEmail;
   FirebaseAuth auth;
@@ -291,102 +240,94 @@ class MyProfileState extends State<CreateProfile1>{
               ),
             ),
             Transform.translate(
-              offset: Offset(SizeConfig.screenWidth * 53.5, SizeConfig.screenHeight * 150.0),
-              child: Container(
-            width: 270.0,
-            child: TextFormField(
-                controller: _emailController,
-                onChanged: (String value) async {
-                  this.email = value;
-                },
-                obscureText: false,
-                decoration: InputDecoration(
-                  icon: Icon(Icons.person, color: const Color(0xff1A2677)),
-                  hintText: 'E-mail',
-                  border: InputBorder.none,
-                ),
-                style: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontSize: 16,
-                  color: const Color(0xff1A2677),
-                  letterSpacing: 0.15,
-                  height: 1,
-                ),
-                textAlign: TextAlign.left,
-              ),)),
+                offset: Offset(SizeConfig.screenWidth * 53.5, SizeConfig.screenHeight * 150.0),
+                child: Container(
+                  width: 270.0,
+                  child: TextFormField(
+                    controller: _emailController,
+                    onChanged: (String value) async {
+                      this.email = value;
+                    },
+                    obscureText: false,
+                    decoration: InputDecoration(
+                      icon: Icon(Icons.person, color: const Color(0xff1A2677)),
+                      hintText: 'E-mail',
+                      border: InputBorder.none,
+                    ),
+                    style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontSize: 16,
+                      color: const Color(0xff1A2677),
+                      letterSpacing: 0.15,
+                      height: 1,
+                    ),
+                    textAlign: TextAlign.left,
+                  ),)),
             Transform.translate(
-        offset: Offset(SizeConfig.screenWidth / 2, SizeConfig.screenHeight * 300.0),
-        child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              alignment: Alignment.center,
-              child: InkWell(
-                onTap: () async {
-                  if (_formKey.currentState.validate()) {
-                    _register().then((value) {
-                      if ((this.email == "") || (this.password == "")) {
-                        showAlertDialog0(context);
-                      } else if (value == "Email") {
-                        showAlertDialog1(context);
-                      } else if (value == "Password") {
-                        showAlertDialog2(context);
-                      } else if (value == "Email format") {
-                        showAlertDialog3(context);
-                      } else if (value == "Other error"){
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (context) => MyLogin(auth: auth)
-                        ));
-                      }
-                    });
+              offset: Offset(SizeConfig.screenWidth / 2, SizeConfig.screenHeight * 300.0),
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                alignment: Alignment.center,
+                child: InkWell(
+                  onTap: () async {
+                    if (_formKey.currentState.validate()) {
+                      _register().then((value) {
+                        if ((this.email == "") || (this.password == "")) {
+                          showAlertDialog0(context);
+                        } else if (value == "Email") {
+                          showAlertDialog1(context);
+                        } else if (value == "Password") {
+                          showAlertDialog2(context);
+                        } else if (value == "Email format") {
+                          showAlertDialog3(context);
+                        } else {
+                          Navigator.of(context).pushReplacement(MaterialPageRoute(
+                              builder: (context) => CreateProfile2(auth: auth, userId: userId)
+                          ));
+                        }
+                      });
                     }
                   },
-                child: SizedBox(
-                width: 149.0,
-                height: 57.0,
-                child: Stack(
-                  children: <Widget>[
-                    Pinned.fromSize(
-                      bounds: Rect.fromLTWH(0.0, 0.0, 149.0, 57.0),
-                      size: Size(149.0, 57.0),
-                      pinLeft: true,
-                      pinRight: true,
-                      pinTop: true,
-                      pinBottom: true,
-                      child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(35.0),
-                            color: const Color(0xff1A2677),
-                            border: Border.all(
-                                width: 1.0, color: const Color(0xff1A2677)),
-                          ),
-                          child: SizedBox(
-                            width: 88.0,
-                            child: Text(
-                              'REGISTER',
-                              style: TextStyle(
-                                fontFamily: 'Roboto',
-                                fontSize: 20,
-                                color: const Color(0xffffffff),
-                                letterSpacing: 1.6909999999999998,
-                                height: 2,
+                  child: SizedBox(
+                    width: 149.0,
+                    height: 57.0,
+                    child: Stack(
+                      children: <Widget>[
+                        Pinned.fromSize(
+                          bounds: Rect.fromLTWH(0.0, 0.0, 149.0, 57.0),
+                          size: Size(149.0, 57.0),
+                          pinLeft: true,
+                          pinRight: true,
+                          pinTop: true,
+                          pinBottom: true,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(35.0),
+                              color: const Color(0xff1A2677),
+                              border: Border.all(
+                                  width: 1.0, color: const Color(0xff1A2677)),
+                            ),
+                            child: SizedBox(
+                              width: 88.0,
+                              child: Text(
+                                'REGISTER',
+                                style: TextStyle(
+                                  fontFamily: 'Roboto',
+                                  fontSize: 20,
+                                  color: const Color(0xffffffff),
+                                  letterSpacing: 1.6909999999999998,
+                                  height: 2,
+                                ),
+                                textAlign: TextAlign.center,
                               ),
-                              textAlign: TextAlign.center,
                             ),
                           ),
-                      ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
-              ),
-            ),),
-            Container(
-              alignment: Alignment.center,
-              child: Text(_success == null
-                  ? ''
-                  : (_success
-                  ? 'Successfully registered ' + _userEmail
-                  : 'Registration failed')),
-            ),
+              ),),
             Transform.translate(
               offset: Offset(SizeConfig.screenWidth * 135.0,
                   SizeConfig.screenHeight * 460.0),
@@ -420,7 +361,6 @@ class MyProfileState extends State<CreateProfile1>{
           borderSide: BorderSide(color: const Color(0xff1A2677))),
           labelText: 'Display Name'),
       validator: (String value){
-
         if(value.isEmpty){
           return 'Name is Required';
         }
@@ -431,7 +371,6 @@ class MyProfileState extends State<CreateProfile1>{
       },
     );
   }
-
   Widget _buildEmail() {
     return Container(
       child: Form(key: _formKey,
@@ -449,7 +388,6 @@ class MyProfileState extends State<CreateProfile1>{
       ),
     );
   }
-
   Widget _buildPassword(){
     return TextFormField(
       obscureText: true,
@@ -470,7 +408,6 @@ class MyProfileState extends State<CreateProfile1>{
       },
     );
   }
-
   Widget _buildBio(){
     return TextFormField(
       maxLines: 5,
@@ -484,46 +421,39 @@ class MyProfileState extends State<CreateProfile1>{
       },
     );
   }
-
   Widget _buildCity(){
     return TextFormField(
       decoration: InputDecoration(
           focusedBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: const Color(0xff1A2677))),
           labelText: 'City of Living'),
-
       onSaved: (String value){ //only called when form was saved
         _city = value;
       },
     );
   }
-
   Widget _buildAcademicBackground(){
     return TextFormField(
       decoration: InputDecoration(
           focusedBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: const Color(0xff1A2677))),
           labelText: 'Academic Background'),
-
       onSaved: (String value){ //only called when form was saved
         _academicBackground = value;
       },
     );
   }
-
   Widget _buildCurrentJob(){
     return TextFormField(
       decoration: InputDecoration(
           focusedBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: const Color(0xff1A2677))),
           labelText: 'Current Job'),
-
       onSaved: (String value){ //only called when form was saved
         _currentJob = value;
       },
     );
   }
-
   Widget _buildLinkedInUrl(){
     return TextFormField(
       decoration: InputDecoration(
@@ -536,13 +466,11 @@ class MyProfileState extends State<CreateProfile1>{
       },
     );
   }
-
   onDelete(index) {
     setState(() {
       values.removeAt(index);
     });
   }// helper method to _buildInterests
-
   Widget _buildInterests() {
     return TagEditor(
       length: values.length,
@@ -566,17 +494,14 @@ class MyProfileState extends State<CreateProfile1>{
           ),
     );
   }
-
   dbToString(){
     _interests = values[0];
     for(int i = 1; i < values.length; i++) {
       _interests += "," + values[i];
     }
   }// convert array of interests to string so save on DB
-
   Widget imageProfile(){
     return Center(
-
       child: Stack(
           children: <Widget>[
             CircleAvatar(
@@ -605,7 +530,6 @@ class MyProfileState extends State<CreateProfile1>{
           ]),
     );
   }
-
   Widget bottomSheet(){
     return Container(
       height: 100.0,
@@ -647,7 +571,6 @@ class MyProfileState extends State<CreateProfile1>{
       ),
     );
   }
-
   void takePhoto(ImageSource source) async{
     final pickedFile = await _picker.getImage(
     source: source,
@@ -656,7 +579,6 @@ class MyProfileState extends State<CreateProfile1>{
       _imageFile = pickedFile;
     });
   }
-
   @override
   Widget build(BuildContext context){
     return Scaffold(
@@ -701,12 +623,9 @@ class MyProfileState extends State<CreateProfile1>{
                   if (!_profileKey.currentState.validate()) {
                     return; //when form is invalid
                   }
-
                   if (accepted) {
                     _profileKey.currentState.save(); //save the form - use latter
-
                     dbToString();
-
                     Navigator.push( //upon pressed, takes user to next page
                       context,
                       MaterialPageRoute(builder: (context) => MyLogin()),
