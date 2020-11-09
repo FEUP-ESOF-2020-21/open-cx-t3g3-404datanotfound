@@ -117,6 +117,7 @@ General role, including every participant in the conference, be it attendee, spe
 - As a conference participant, I want to login in the app using my email and password.
 
 - As a conference participant, I want to keep a personal profile so that other participants can know my basic information, according to what I provided.
+    - As a conference participant, I want to create a profile with my email and password, so that I can enter the app.
     - As a conference participant, I want to choose which information is displayed on my profile, namely small bio, soft and technical skills, previous experience and education so that I choose what to show other users.
     - As a conference participant, I want to change my display name according to the conference I am attending so that it can be different according to its purpose.
     - As a conference participant, I want to insert the nickname of the rest of my social networks in my personal profile so that any participant can later contact me through other platforms.
@@ -126,6 +127,8 @@ General role, including every participant in the conference, be it attendee, spe
 - As a conference participant, I want to see the list of all the conference participants, so that I can know who is also attending the conference.
     - As a conference participant, I want to access every participants personal profile so that I can see their basic information.
     - As a conference participant, I want to search in the list of all the conference participants for a specific name, so that I can easily find someone that I am looking for.
+
+- As a conference participant, I want to insert a conference code, so that I can access the conference details and feed.
 
 #### Attendees (including speakers)
 
