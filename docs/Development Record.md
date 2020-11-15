@@ -145,56 +145,60 @@ This roll will belong to representatives of organizations or institutions that w
 
 
 ### User Stories MockUps
-
+<div>
 App Opening
-![AppOpening](MockupImages/AppOpening.png)
-
+<img src="MockupImages/AppOpening.png" width=25% height=25%>
 Login Page
-![LoginPage](MockupImages/Login.png)
-
+<img src="MockupImages/Login.png" width=25% height=25%>
 Join An Event Page
-![JoinAnEvent](MockupImages/JoinAnEvent.png)
+<img src="MockupImages/JoinAnEvent.png" width=25% height=25%>
+</div>
 
 Create Profile Pages
-![CreateProfilePage1](MockupImages/CreateProfile1.png)
-![CreateProfilePage2](MockupImages/CreateProfile2.png)
+<div>
+<img src="MockupImages/CreateProfile1.png" width=25% height=25%>
+<img src="MockupImages/CreateProfile2.png" width=25% height=25%>
+</div>
 
+<div>
 Profile Pages
-![ProfilePage1](MockupImages/MyProfile1.png)
-![ProfilePage2](MockupImages/MyProfile2.png)
+<img src="MockupImages/MyProfile1.png" width=25% height=25%>
+<img src="MockupImages/MyProfile2.png" width=25% height=25%>
+</div>
 
+<div>
 Enter Event Code Page
-![EnterEventCode](MockupImages/EnterEventCode.png)
-
+<img src="MockupImages/EnterEventCode.png" width=25% height=25%>
 Welcome Board Page
-![WelcomeOnBoard](MockupImages/WelcomeOnBoard.png)
-
+<img src="MockupImages/WelcomeOnBoard.png" width=25% height=25%>
 Home Feed Page
-![HomeFeed](MockupImages/HomeFeed.png)
+<img src="MockupImages/HomeFeed.png" width=25% height=25%>
+</div>
 
+<div>
 New Post Page
-![NewPost](MockupImages/NewPost.png)
-
+<img src="MockupImages/NewPost.png" width=25% height=25%>
 Comments Page
-![Comments](MockupImages/Comments.png)
+<img src="MockupImages/Comments.png" width=25% height=25%>
+</div>
 
+<div>
 My Messages Page
-![MyMessages](MockupImages/MyMessages.png)
-
+<img src="MockupImages/MyMessages.png" width=25% height=25%>
 Chat Page
-![Chat](MockupImages/Chat.png)
-
+<img src="MockupImages/Chat.png" width=25% height=25%>
 Add or Change Event Page
-![OtherEventsOrAddOne](MockupImages/OtherEventsOrAddOne.png)
+<img src="MockupImages/OtherEventsOrAddOne.png" width=25% height=25%>
+</div>
 
+<div>
 Notifications Page
-![NotificationsPanel](MockupImages/NotificationsPanel.png)
-
+<img src="MockupImages/NotificationsPanel.png" width=25% height=25%>
 Participants List Page
-![ParticipantsList](MockupImages/SeeAllParticipants.png)
-
+<img src="MockupImages/SeeAllParticipants.png" width=25% height=25%>
 Search Page
-![Search](MockupImages/Search.png)
+<img src="MockupImages/Search.png" width=25% height=25%>
+</div>
 
 ### Domain model
 
