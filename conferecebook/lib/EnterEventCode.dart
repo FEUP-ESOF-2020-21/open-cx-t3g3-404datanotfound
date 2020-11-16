@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import './WelcomeonBoard.dart';
@@ -21,10 +22,23 @@ class SizeConfig {
   }
 }
 
-class EnterEventCode extends StatelessWidget {
-  EnterEventCode({
-    Key key,
-  }) : super(key: key);
+class EnterEventCode extends StatefulWidget {
+  EnterEventCode(
+      {Key key,
+        this.auth,
+      })
+      : super(key: key);
+
+  final FirebaseAuth auth;
+
+  @override
+  State<StatefulWidget> createState() => MyEventCode();
+}
+
+class MyEventCode extends State<EnterEventCode> {
+  Future checkCode() async {
+  }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -145,6 +159,63 @@ class EnterEventCode extends StatelessWidget {
                   height: SizeConfig.screenHeight * 1.5,
                 ),
                 textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+          Transform.translate(
+            offset: Offset(SizeConfig.screenWidth * 120,
+                SizeConfig.screenHeight * 550.0),
+            child: Container(
+              child: InkWell(
+                onTap: () async {
+                  checkCode().then((value) {
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) => HomeFeed(auth: widget.auth)));
+                  });
+                },
+                child: SizedBox(
+                  width: SizeConfig.screenWidth * 149.0,
+                  height: SizeConfig.screenHeight * 57.0,
+                  child: Stack(
+                    children: <Widget>[
+                      Pinned.fromSize(
+                        bounds: Rect.fromLTWH(
+                            0.0,
+                            0.0,
+                            SizeConfig.screenWidth * 149.0,
+                            SizeConfig.screenHeight * 57.0),
+                        size: Size(SizeConfig.screenWidth * 149.0,
+                            SizeConfig.screenHeight * 57.0),
+                        pinLeft: true,
+                        pinRight: true,
+                        pinTop: true,
+                        pinBottom: true,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(35.0),
+                            color: const Color(0xffffffff),
+                            border: Border.all(
+                                width: 1.0, color: const Color(0xffffffff)),
+                          ),
+                          child: SizedBox(
+                            width: SizeConfig.screenWidth * 88.0,
+                            child: Text(
+                              'NEXT',
+                              style: TextStyle(
+                                fontFamily: 'Roboto',
+                                fontSize: 15,
+                                color: const Color(0xff1A2677),
+                                letterSpacing: 1.6909999999999998,
+                                height: 2,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),

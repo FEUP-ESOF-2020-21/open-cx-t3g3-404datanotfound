@@ -36,7 +36,7 @@ class MyProfileState3 extends State<CreateProfile3> {
   String _interests = "";
   List<String> values = []; // for tags
 
-  PickedFile _imageFile;
+  File _imageFile;
   final ImagePicker _picker = ImagePicker();
 
   dbToString() {
@@ -51,7 +51,7 @@ class MyProfileState3 extends State<CreateProfile3> {
   Widget bottomSheet() {
     return Container(
       height: 100.0,
-      width: MediaQuery.of(context).size.width,
+      width: MediaQuery.of(this.context).size.width,
       margin: EdgeInsets.symmetric(
         horizontal: 20,
         vertical: 20,
@@ -93,7 +93,7 @@ class MyProfileState3 extends State<CreateProfile3> {
       source: source,
     );
     setState(() {
-      _imageFile = pickedFile;
+      _imageFile = File(pickedFile.path);
     });
   }
 
@@ -178,12 +178,12 @@ class MyProfileState3 extends State<CreateProfile3> {
                       child: InkWell(
                         onTap: () {
                             dbToString();
-                            if (_imageFile == null) _imageFile = PickedFile('images/mark.jpeg');
+                            if (_imageFile == null) _imageFile = File('images/mark.jpeg');
                             Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
                                     builder: (context) =>
                                         CreateProfile4(auth: widget.auth, userId: userId, name: widget.name, bio: widget.bio, city: widget.city,
-                                        areaOfWork: widget.areaOfWork, currentJob: widget.currentJob, imageFile: _imageFile.path, interests: _interests,)));
+                                        areaOfWork: widget.areaOfWork, currentJob: widget.currentJob, imageFile: _imageFile, interests: _interests,)));
                         },
                         child: SizedBox(
                           width: SizeConfig.screenWidth * 149.0,

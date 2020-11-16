@@ -25,6 +25,7 @@ dependencies:
     sdk: flutter
   firebase_core: ^0.5.1  # add dependency for Firebase Core
   firebase_database: any
+  firebase_storage : any
   firebase_auth: ^0.18.2
   adobe_xd: ^1.0.0+1
   flutter_launcher_icons: "^0.8.1"

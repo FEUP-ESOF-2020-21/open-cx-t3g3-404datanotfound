@@ -1,7 +1,10 @@
 import 'package:ConfereceBook/JoinAnEvent.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:adobe_xd/page_link.dart';
+import 'package:flutter/rendering.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import './MyProfile1.dart';
 import './Search.dart';
 import './NewPost.dart';
@@ -24,10 +27,19 @@ class SizeConfig {
   }
 }
 
-class HomeFeed extends StatelessWidget {
+class HomeFeed extends StatefulWidget {
   HomeFeed({
     Key key,
+    this.auth,
   }) : super(key: key);
+
+  final FirebaseAuth auth;
+
+  @override
+  State<StatefulWidget> createState() => MyHomeFeed();
+}
+
+class MyHomeFeed extends State<HomeFeed> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -36,64 +48,35 @@ class HomeFeed extends StatelessWidget {
       body: Stack(
         children: <Widget>[
           Transform.translate(
-            offset: Offset(34.0, 216.0),
-            child: Container(
-              width: 345.0,
-              height: 161.0,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(32.0),
-                color: const Color(0xffececec),
-              ),
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(34.0, 554.0),
-            child: Container(
-              width: 345.0,
-              height: 307.0,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30.0),
-                color: const Color(0xffececec),
-              ),
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(63.0, 665.0),
-            child: Container(
-              width: 287.0,
-              height: 190.0,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: const AssetImage(''),
-                  fit: BoxFit.fill,
+              offset: Offset(
+                  SizeConfig.screenWidth * 130, SizeConfig.screenHeight * 31),
+              child: IconButton(
+                iconSize: SizeConfig.screenHeight * 35,
+                icon: new Icon(
+                  FontAwesomeIcons.bell,
+                  color: const Color(0xff1A2677),
+                ),
+              )),
+          Container(
+            child: Expanded(
+              child: Align(
+                alignment: FractionalOffset.bottomRight,
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 10.0, right: 10.0),
+                  child: FloatingActionButton(
+                    backgroundColor: const Color(0xff1A2677),
+                    child: Icon(
+                      FontAwesomeIcons.plus,
+                      color: const Color(0xffffffff),
+                    ),
+                  ),
                 ),
               ),
             ),
           ),
           Transform.translate(
-            offset: Offset(34.0, -26.0),
-            child: Container(
-              width: 345.0,
-              height: 232.0,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30.0),
-                color: const Color(0x54ececec),
-              ),
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(34.0, 387.0),
-            child: Container(
-              width: 345.0,
-              height: 127.0,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(32.0),
-                color: const Color(0xffececec),
-              ),
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(27.5, 53.5),
+            offset: Offset(
+                SizeConfig.screenWidth * 27.5, SizeConfig.screenHeight * 53.5),
             child: PageLink(
               links: [
                 PageLinkInfo(
@@ -119,6 +102,7 @@ class HomeFeed extends StatelessWidget {
                         _svg_xapkg0,
                         allowDrawingOutsideViewBox: true,
                         fit: BoxFit.fill,
+                        color: const Color(0xff1A2677),
                       ),
                     ),
                     Pinned.fromSize(
@@ -131,6 +115,7 @@ class HomeFeed extends StatelessWidget {
                         _svg_k4jlvk,
                         allowDrawingOutsideViewBox: true,
                         fit: BoxFit.fill,
+                        color: const Color(0xff1A2677),
                       ),
                     ),
                     Pinned.fromSize(
@@ -144,6 +129,7 @@ class HomeFeed extends StatelessWidget {
                         _svg_2ioq80,
                         allowDrawingOutsideViewBox: true,
                         fit: BoxFit.fill,
+                        color: const Color(0xff1A2677),
                       ),
                     ),
                   ],
@@ -152,82 +138,8 @@ class HomeFeed extends StatelessWidget {
             ),
           ),
           Transform.translate(
-            offset: Offset(315.0, 24.0),
-            child: PageLink(
-              links: [
-                PageLinkInfo(
-                  transition: LinkTransition.Fade,
-                  ease: Curves.easeOut,
-                  duration: 0.3,
-                  pageBuilder: () => MyProfile1(),
-                ),
-              ],
-              child: Container(
-                width: 76.0,
-                height: 76.0,
-                decoration: BoxDecoration(
-                  borderRadius:
-                      BorderRadius.all(Radius.elliptical(9999.0, 9999.0)),
-                  image: DecorationImage(
-                    image: const AssetImage(''),
-                    fit: BoxFit.cover,
-                  ),
-                  border:
-                      Border.all(width: 1.0, color: const Color(0xffffffff)),
-                ),
-              ),
-            ),
-          ),
-          Container(),
-          Container(),
-          Container(),
-          Transform.translate(
-            offset: Offset(328.0, 226.0),
-            child: Container(
-              width: 43.0,
-              height: 43.0,
-              decoration: BoxDecoration(
-                borderRadius:
-                    BorderRadius.all(Radius.elliptical(9999.0, 9999.0)),
-                image: DecorationImage(
-                  image: const AssetImage(''),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(328.0, 564.0),
-            child: Container(
-              width: 43.0,
-              height: 43.0,
-              decoration: BoxDecoration(
-                borderRadius:
-                    BorderRadius.all(Radius.elliptical(9999.0, 9999.0)),
-                image: DecorationImage(
-                  image: const AssetImage(''),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(328.0, 398.0),
-            child: Container(
-              width: 43.0,
-              height: 43.0,
-              decoration: BoxDecoration(
-                borderRadius:
-                    BorderRadius.all(Radius.elliptical(9999.0, 9999.0)),
-                image: DecorationImage(
-                  image: const AssetImage(''),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(79.0, 39.0),
+            offset: Offset(
+                SizeConfig.screenWidth * 79.0, SizeConfig.screenHeight * 39.0),
             child:
                 // Adobe XD layer: 'person_search-24px' (group)
                 PageLink(
@@ -295,7 +207,7 @@ class HomeFeed extends StatelessWidget {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.all(
                                           Radius.elliptical(9999.0, 9999.0)),
-                                      color: const Color(0xff6200ee),
+                                      color: const Color(0xff1A2677),
                                     ),
                                   ),
                                 ),
@@ -310,6 +222,7 @@ class HomeFeed extends StatelessWidget {
                                     _svg_ymt87y,
                                     allowDrawingOutsideViewBox: true,
                                     fit: BoxFit.fill,
+                                    color: const Color(0xff1A2677),
                                   ),
                                 ),
                                 Pinned.fromSize(
@@ -323,6 +236,7 @@ class HomeFeed extends StatelessWidget {
                                     _svg_dgizqb,
                                     allowDrawingOutsideViewBox: true,
                                     fit: BoxFit.fill,
+                                    color: const Color(0xff1A2677),
                                   ),
                                 ),
                               ],
@@ -333,368 +247,6 @@ class HomeFeed extends StatelessWidget {
                     ),
                   ],
                 ),
-              ),
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(134.0, 829.0),
-            child: SizedBox(
-              width: 144.0,
-              child: Text(
-                'ConferenceBook',
-                style: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontSize: 16,
-                  color: const Color(0xffffffff),
-                  letterSpacing: 0.15,
-                  height: 1.5,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(191.9, 237.0),
-            child: SizedBox(
-              width: 124.0,
-              child: Text(
-                'Isabella Smith',
-                style: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontSize: 16,
-                  color: const Color(0xff666666),
-                  letterSpacing: 0.15,
-                  height: 1.5,
-                ),
-                textAlign: TextAlign.right,
-              ),
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(211.1, 410.0),
-            child: SizedBox(
-              width: 104.0,
-              child: Text(
-                'John  Lucas',
-                style: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontSize: 16,
-                  color: const Color(0xff666666),
-                  letterSpacing: 0.15,
-                  height: 1.5,
-                ),
-                textAlign: TextAlign.right,
-              ),
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(195.5, 575.0),
-            child: SizedBox(
-              width: 120.0,
-              child: Text(
-                'Cedric Moody',
-                style: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontSize: 16,
-                  color: const Color(0xff666666),
-                  letterSpacing: 0.15,
-                  height: 1.5,
-                ),
-                textAlign: TextAlign.right,
-              ),
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(34.0, 387.0),
-            child: Container(
-              width: 345.0,
-              height: 127.0,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(32.0),
-                color: const Color(0xffececec),
-              ),
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(328.0, 398.0),
-            child: Container(
-              width: 43.0,
-              height: 43.0,
-              decoration: BoxDecoration(
-                borderRadius:
-                    BorderRadius.all(Radius.elliptical(9999.0, 9999.0)),
-                image: DecorationImage(
-                  image: const AssetImage(''),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(211.1, 410.0),
-            child: SizedBox(
-              width: 104.0,
-              child: Text(
-                'John  Lucas',
-                style: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontSize: 16,
-                  color: const Color(0xff666666),
-                  letterSpacing: 0.15,
-                  height: 1.5,
-                ),
-                textAlign: TextAlign.right,
-              ),
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(275.0, 347.0),
-            child:
-                // Adobe XD layer: 'mode_comment-24px' (group)
-                SizedBox(
-              width: 24.0,
-              height: 24.0,
-              child: Stack(
-                children: <Widget>[
-                  Pinned.fromSize(
-                    bounds: Rect.fromLTWH(0.0, 0.0, 24.0, 24.0),
-                    size: Size(24.0, 24.0),
-                    pinLeft: true,
-                    pinRight: true,
-                    pinTop: true,
-                    pinBottom: true,
-                    child: SvgPicture.string(
-                      _svg_eterkn,
-                      allowDrawingOutsideViewBox: true,
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                  Pinned.fromSize(
-                    bounds: Rect.fromLTWH(2.0, 2.0, 20.0, 20.0),
-                    size: Size(24.0, 24.0),
-                    pinLeft: true,
-                    pinRight: true,
-                    pinTop: true,
-                    pinBottom: true,
-                    child: SvgPicture.string(
-                      _svg_luy4a2,
-                      allowDrawingOutsideViewBox: true,
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Container(),
-          Transform.translate(
-            offset: Offset(310.5, 347.0),
-            child: SizedBox(
-              width: 23.0,
-              child: Text(
-                '57',
-                style: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontSize: 14,
-                  color: const Color(0xff666666),
-                  letterSpacing: 0.13125,
-                  fontWeight: FontWeight.w300,
-                  height: 1.7142857142857142,
-                ),
-                textAlign: TextAlign.right,
-              ),
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(255.5, 348.0),
-            child: SizedBox(
-              width: 15.0,
-              child: Text(
-                '0',
-                style: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontSize: 14,
-                  color: const Color(0xff666666),
-                  letterSpacing: 0.13125,
-                  fontWeight: FontWeight.w300,
-                  height: 1.7142857142857142,
-                ),
-                textAlign: TextAlign.right,
-              ),
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(275.0, 478.0),
-            child:
-                // Adobe XD layer: 'mode_comment-24px' (group)
-                SizedBox(
-              width: 24.0,
-              height: 24.0,
-              child: Stack(
-                children: <Widget>[
-                  Pinned.fromSize(
-                    bounds: Rect.fromLTWH(0.0, 0.0, 24.0, 24.0),
-                    size: Size(24.0, 24.0),
-                    pinLeft: true,
-                    pinRight: true,
-                    pinTop: true,
-                    pinBottom: true,
-                    child: SvgPicture.string(
-                      _svg_eterkn,
-                      allowDrawingOutsideViewBox: true,
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                  Pinned.fromSize(
-                    bounds: Rect.fromLTWH(2.0, 2.0, 20.0, 20.0),
-                    size: Size(24.0, 24.0),
-                    pinLeft: true,
-                    pinRight: true,
-                    pinTop: true,
-                    pinBottom: true,
-                    child: SvgPicture.string(
-                      _svg_luy4a2,
-                      allowDrawingOutsideViewBox: true,
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Container(),
-          Transform.translate(
-            offset: Offset(310.5, 478.0),
-            child: SizedBox(
-              width: 23.0,
-              child: Text(
-                '17',
-                style: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontSize: 14,
-                  color: const Color(0xff666666),
-                  letterSpacing: 0.13125,
-                  fontWeight: FontWeight.w300,
-                  height: 1.7142857142857142,
-                ),
-                textAlign: TextAlign.right,
-              ),
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(255.5, 478.0),
-            child: SizedBox(
-              width: 15.0,
-              child: Text(
-                '0',
-                style: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontSize: 14,
-                  color: const Color(0xff666666),
-                  letterSpacing: 0.13125,
-                  fontWeight: FontWeight.w300,
-                  height: 1.7142857142857142,
-                ),
-                textAlign: TextAlign.right,
-              ),
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(59.5, 269.5),
-            child: Text(
-              'What do you think of this AI application\nfor race cars, in a context of F1, \nsuggested by Dr. Franz Hernandez?',
-              style: TextStyle(
-                fontFamily: 'Roboto',
-                fontSize: 15,
-                color: const Color(0xff686868),
-                letterSpacing: 0.140625,
-                fontWeight: FontWeight.w300,
-                height: 1.5333333333333334,
-              ),
-              textAlign: TextAlign.left,
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(59.5, 435.5),
-            child: Text(
-              'Dr. Franz Hernandez has just delivered a great talk!',
-              style: TextStyle(
-                fontFamily: 'Roboto',
-                fontSize: 15,
-                color: const Color(0xff666666),
-                letterSpacing: 0.140625,
-                fontWeight: FontWeight.w300,
-                height: 1.5333333333333334,
-              ),
-              textAlign: TextAlign.left,
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(52.7, 413.0),
-            child: SizedBox(
-              width: 41.0,
-              child: Text(
-                '17h23',
-                style: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontSize: 12,
-                  color: const Color(0xff666666),
-                  letterSpacing: 0.11249999999999999,
-                  fontWeight: FontWeight.w300,
-                  height: 2,
-                ),
-                textAlign: TextAlign.right,
-              ),
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(52.7, 240.0),
-            child: SizedBox(
-              width: 41.0,
-              child: Text(
-                '17h25',
-                style: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontSize: 12,
-                  color: const Color(0xff666666),
-                  letterSpacing: 0.11249999999999999,
-                  fontWeight: FontWeight.w300,
-                  height: 2,
-                ),
-                textAlign: TextAlign.right,
-              ),
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(63.5, 612.5),
-            child: Text(
-              'I just thought of this to respond to Prof.\nAlberts challenge. What about it?',
-              style: TextStyle(
-                fontFamily: 'Roboto',
-                fontSize: 15,
-                color: const Color(0xff666666),
-                letterSpacing: 0.140625,
-                fontWeight: FontWeight.w300,
-                height: 1.5333333333333334,
-              ),
-              textAlign: TextAlign.left,
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(52.7, 578.0),
-            child: SizedBox(
-              width: 41.0,
-              child: Text(
-                '16h59',
-                style: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontSize: 12,
-                  color: const Color(0xff666666),
-                  letterSpacing: 0.11249999999999999,
-                  fontWeight: FontWeight.w300,
-                  height: 2,
-                ),
-                textAlign: TextAlign.right,
               ),
             ),
           ),
