@@ -89,81 +89,97 @@ Briefly describe each use case mentioning the following:
 
 ### User stories
 
-<!--This section will contain the requirements of the product described as **user stories**, organized in a global **[user story map](https://plan.io/blog/user-story-mapping/)** with **user roles** or **themes**.
+ In the following sections, all user stories are separated by roles, the effort for each of them is defined and they are ordered by importance, according to the MoSCoW method.
 
-For each theme, or role, you may add a small description. User stories should be detailed in the tool you decided to use for project management (e.g. trello or github projects).
-
-A user story is a description of desired functionality told from the perspective of the user or customer. A starting template for the description of a user story is 
-
-*As a < user role >, I want < goal > so that < reason >.*
-
-
-**INVEST in good user stories**. 
-You may add more details after, but the shorter and complete, the better. In order to decide if the user story is good, please follow the [INVEST guidelines](https://xp123.com/articles/invest-in-good-stories-and-smart-tasks/).
-
-**User interface mockups**.
-After the user story text, you should add a draft of the corresponding user interfaces, a simple mockup or draft, if applicable.
-
+<!--
 **Acceptance tests**.
 For each user story you should write also the acceptance tests (textually in Gherkin), i.e., a description of scenarios (situations) that will help to confirm that the system satisfies the requirements addressed by the user story.
-
-**Value and effort**.
-At the end, it is good to add a rough indication of the value of the user story to the customers (e.g. [MoSCoW](https://en.wikipedia.org/wiki/MoSCoW_method) method) and the team should add an estimation of the effort to implement it, for example, using t-shirt sizes (XS, S, M, L, XL). -->
+-->
 
 #### Participants
 
-General role, including every participant in the conference, be it attendee, speaker, organizer or sponsor.
+General role, includes every participant in the conference, be it attendee, speaker, organizer or sponsor.
 
-- As a conference participant, I want to login in the app using my email and password.
-
-- As a conference participant, I want to keep a personal profile so that other participants can know my basic information, according to what I provided.
-    - As a conference participant, I want to create a profile with my email and password, so that I can enter the app.
-    - As a conference participant, I want to choose which information is displayed on my profile, namely small bio, soft and technical skills, previous experience and education so that I choose what to show other users.
-    - As a conference participant, I want to change my display name according to the conference I am attending so that it can be different according to its purpose.
-    - As a conference participant, I want to insert the nickname of the rest of my social networks in my personal profile so that any participant can later contact me through other platforms.
-    - As a conference participant, I want to choose whether or not I want to display my conference history so that other participants can/can't see which conferences I previously attended.
-    - As a conference participant, I want to update my personal profile whenever I please, changing the information that was entered when I first signed in, so that I can keep my basic information updated.
-
-- As a conference participant, I want to see the list of all the conference participants, so that I can know who is also attending the conference.
-    - As a conference participant, I want to access every participants personal profile so that I can see their basic information.
-    - As a conference participant, I want to search in the list of all the conference participants for a specific name, so that I can easily find someone that I am looking for.
-
-- As a conference participant, I want to insert a conference code, so that I can access the conference details and feed.
+| Effort     | Importance    | Description     |
+| :------------- | :----------: | -----------: |
+|  5 | Must Have   | As a conference participant, I want to login in the app using my email and password, so that I can access my personal profile.     |
+|  6 | Must Have   | As a conference participant, I want to create a profile with my email and password, so that I store personal information on the app.    |
+|  6 | Must Have   | As a conference participant, I want to choose which information is displayed on my profile, namely small bio, soft and technical skills, social network nicknames, previous experience and education so that I manage what information is shown to other participants.    |
+|  2 | Must Have   | As a conference participant, I want to change my display name according to the conference I am attending so that I make it suitable for each conference I attend.    |
+|  5 | Must Have   | As a conference participant, I want to see the list of all the conference participants, so that I can know who is also attending the conference.    |
+|  8 | Must Have   | As a conference participant, I want to access every participants personal profile so that I can see if I want to contact them.    |
+|  3 | Must Have   | As a conference participant, I want to search in the list of all the conference participants for a specific name, so that I can easily find someone that I am looking for.    |
+|  3 | Must Have   | As a conference participant, I want to insert a conference code, so that I can access the conference details and feed.    |
+|  9 | Must Have   | As a conference participant, I want to post photos, videos and opinions in a way that everyone in the event can see it, so that I share my experience with all the participants.     |
+|  4 | Must Have   | As a conference participant, I want to comment on other participant's posts so that we can discuss meaningful topics.   |
+|  4 | Could Have   | As a conference participant, I want to choose whether or not I want to display my conference history so that other participants can/can't see which conferences I previously attended.    |
+|  6 | Could Have   | As a conference participant, I want to update my personal profile whenever I please, changing the information that was entered when I first signed in, so that I can keep my basic information updated over time.    |
 
 #### Attendees (including speakers)
 
-This role includes both attendees or speakers of the conference, since they will have the same funcionalities while using the app.
+This role includes both attendees and speakers of the conference, since they will have the same funcionalities while using the app.
 
-- As a conference attendee, I want to chat in private with other participants, so that I can continue conversations that may have started elsewhere.
+| Effort     | Importance    | Description     |
+| :------------- | :----------: | -----------: |
+|  9 | Should Have   | As a conference attendee, I want to chat in private with other participants, so that I can continue conversations that may have started elsewhere.    |
 
-- As a conference attendee, I want to share my experience and express my opinion about the conference with all the other participants, so that conference networking becomes easier.
-    - As a conference attendee, I want to post photos, videos and opinions in a way that everyone in the event can see it, so that I share my experience with all the participants. 
-    - As a conference attendee, I want to comment on other participant's posts so that we can discuss meaningful topics.
 
 #### Organizers
 
 This roll will be assigned to the organizers of each conference. Naturally, they will play an important role in moderating the feed and helping participants with anything they need.
 
-- As a conference organizer, I want to moderate the public discussion during the conference so that I can avoid unreasonable conversations or comments.
-    - As a conference organizer, I want to moderate sponsors shares about their organizations so that participants are not spammed with repetitive information.
-    - As a conference organizer, I want to delete any post I find relevant so that unsuitable publications do not stay on the conference feed.
-
-- As a conference organizer, I want to comment on participants posts so that I can answer participants' doubts regarding tecnhical issues.
-
-- As a conference organizer, I want to chat in private with other conference organizers so that we can discuss and solve several issues that can appear during the conference.
-
-- As a conference organizer, I want to publish relevant information for everyone present in the conference so that I can release important information throughout the event.
+| Effort     | Importance    | Description     |
+| :------------- | :----------: | -----------: |
+|  1 | Should Have   | As a conference organizer, I want to chat in private with other conference organizers so that we can discuss and solve several issues that can appear during the conference.   |
+|  9 | Could Have   | As a conference organizer, I want to moderate sponsors shares about their organizations so that participants are not spammed with repetitive information.    |
+|  4 | Could Have   | As a conference organizer, I want to delete any post or comment I find relevant so that unsuitable publications do not stay on the conference feed.    |
 
 #### Sponsors
 
-This roll will belong to representatives of organizations or institutions that will be present at the event. In this sense, they will have different objectives from the participants and, therefore, different actions.
+This roll will belong to representatives of organizations or institutions that will be present at the event. In this sense, they will have different objectives from the attendees and, therefore, different actions.
 
-- As a conference sponsor, I want to answer private questions that are asked by the participants so that I can better engage with possible clients/employees.
+| Effort     | Importance    | Description     |
+| :------------- | :----------: | -----------: |
+|  1 | Should Have   | As a conference sponsor, I want to answer private questions that are asked by the participants so that I can better engage with possible clients/employees.    |
+|  1 | Should Have   | As a conference sponsor, I want to initiate a conversation with organizing members, so that I can clarify doubts related to small problems that may arise.    |
 
-- As a conference sponsor, I want to initiate a conversation with organizing members, so that I can clarify doubts related to small problems that may arise.
 
-- As a conference sponsor, I want to share my organization with all of the conference participants.
-    - As a conference sponsor, I want to post photos, videos and informations regarding my institution in a way that everyone in the event can see it, so that I advertise my institution with all the participants.
+### User Stories MockUps
+<div>
+<img src="MockupImages/AppOpening.png" width=25% height=25%>
+<img src="MockupImages/Login.png" width=25% height=25%>
+<img src="MockupImages/JoinAnEvent.png" width=25% height=25%>
+</div>
+
+<div>
+<img src="MockupImages/CreateProfile1.png" width=25% height=25%>
+<img src="MockupImages/CreateProfile2.png" width=25% height=25%>
+<img src="MockupImages/MyProfile1.png" width=25% height=25%>
+</div>
+
+<div>
+<img src="MockupImages/MyProfile2.png" width=25% height=25%>
+<img src="MockupImages/EnterEventCode.png" width=25% height=25%>
+<img src="MockupImages/WelcomeOnBoard.png" width=25% height=25%>
+</div>
+
+<div>
+<img src="MockupImages/HomeFeed.png" width=25% height=25%>
+<img src="MockupImages/NewPost.png" width=25% height=25%>
+<img src="MockupImages/Comments.png" width=25% height=25%>
+</div>
+
+<div>
+<img src="MockupImages/MyMessages.png" width=25% height=25%>
+<img src="MockupImages/Chat.png" width=25% height=25%>
+<img src="MockupImages/OtherEventsOrAddOne.png" width=25% height=25%>
+</div>
+
+<div>
+<img src="MockupImages/NotificationsPanel.png" width=25% height=25%>
+<img src="MockupImages/SeeAllParticipants.png" width=25% height=25%>
+<img src="MockupImages/Search.png" width=25% height=25%>
+</div>
 
 ### Domain model
 
@@ -188,6 +204,15 @@ It can be beneficial to present the system both in a horizontal or vertical deco
 * vertical decomposition can define a hierarchy of subsystems that cover all layers of implementation.-->
 
 ### Physical architecture
+
+Our project's physical structure is very simple. The user installs ConferenceBook on their smartphone, and whenever the need to connect with our database arises, it communicates with it via HTTPS requests, where it will store and retrieve all the information needed.
+
+Our project was fully developed using Flutter - an emerging framework for mobile development that supports both iOS and Android - combined with Firebase to store participants data. We used Firebase for our database server because of its easy integration with flutter, as well as simple setup.
+
+#### Deployment Diagram
+
+![Deployment Diagram](DeploymentDiagram.png)
+
 <!--The goal of this subsection is to document the high-level physical structure of the software system (machines, connections, software components installed, and their dependencies) using UML deployment diagrams or component diagrams (separate or integrated), showing the physical structure of the system.
 
 It should describe also the technologies considered and justify the selections made. Examples of technologies relevant for openCX are, for example, frameworks for mobile applications (Flutter vs ReactNative vs ...), languages to program with microbit, and communication with things (beacons, sensors, etc.).-->
