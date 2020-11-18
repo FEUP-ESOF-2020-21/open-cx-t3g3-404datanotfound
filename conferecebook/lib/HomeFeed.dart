@@ -51,6 +51,11 @@ class MyHomeFeed extends State<HomeFeed> {
   String area;
   String job;
   String interests;
+  String facebook;
+  String instagram;
+  String linkedin;
+  String twitter;
+  String github;
 
   @override
   Widget build(BuildContext context) {
@@ -87,15 +92,21 @@ class MyHomeFeed extends State<HomeFeed> {
                     Map<dynamic, dynamic> map7 = snapshot.value;
                     String user = auth.currentUser.uid;
                     this.image = map.values.toList()[0][user]["photo"];
-                    this.name = map2.values.toList()[0][user]["name"];
-                    this.job = map3.values.toList()[0][user]["job"];
-                    this.interests = map4.values.toList()[0][user]["interests"];
-                    this.city = map5.values.toList()[0][user]["city"];
-                    this.bio = map6.values.toList()[0][user]["bio"];
-                    this.area = map7.values.toList()[0][user]["area"];
+                    this.name = map.values.toList()[0][user]["name"];
+                    this.job = map.values.toList()[0][user]["job"];
+                    this.interests = map.values.toList()[0][user]["interests"];
+                    this.city = map.values.toList()[0][user]["city"];
+                    this.bio = map.values.toList()[0][user]["bio"];
+                    this.area = map.values.toList()[0][user]["area"];
+                    this.linkedin = map.values.toList()[0][user]["linkedin"];
+                    this.facebook = map.values.toList()[0][user]["facebook"];
+                    this.instagram = map.values.toList()[0][user]["instagram"];
+                    this.twitter = map.values.toList()[0][user]["twitter"];
+                    this.github = map.values.toList()[0][user]["github"];
                     print(name);
                     Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) => MyProfile(image: image, name: name, job: job, interests: interests, city: city, bio: bio, area: area,)));
+                        MaterialPageRoute(builder: (context) => MyProfile(auth: auth, image: image, name: name, job: job, interests: interests, city: city, bio: bio, area: area,linkedin: linkedin,
+                        facebook: facebook, instagram: instagram, twitter: twitter, github: github)));
                       });
                 },
                 child: Column(

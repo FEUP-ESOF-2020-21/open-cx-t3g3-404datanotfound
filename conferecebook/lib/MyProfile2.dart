@@ -1,5 +1,9 @@
-import 'package:ConfereceBook/MyProfile2.dart';
+import 'dart:core';
+
+import 'package:ConfereceBook/MyProfile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:adobe_xd/pinned.dart';
@@ -7,6 +11,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import './HomeFeed.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/widgets.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_tags/flutter_tags.dart';
 
 class SizeConfig {
   static MediaQueryData _mediaQueryData;
@@ -22,10 +28,8 @@ class SizeConfig {
   }
 }
 
-
-
-class MyProfile extends StatefulWidget {
-  MyProfile({
+class MyProfile2 extends StatefulWidget {
+  MyProfile2({
     Key key,
     this.auth,
     this.image,
@@ -57,10 +61,10 @@ class MyProfile extends StatefulWidget {
   final String github;
 
   @override
-  State<StatefulWidget> createState() => Profile();
+  State<StatefulWidget> createState() => Profile2();
 }
 
-class Profile extends State<MyProfile> {
+class Profile2 extends State<MyProfile2> {
   String image;
   String name;
   String job;
@@ -73,12 +77,26 @@ class Profile extends State<MyProfile> {
   String linkedin;
   String twitter;
   String github;
-  FirebaseAuth auth;
+  List<String> myInterests;
+
+  final GlobalKey<TagsState> _tagStateKey = GlobalKey<TagsState>();
+  // Allows you to get a list of all the ItemTags
+  _getAllItem(){
+    List<Item> lst = _tagStateKey.currentState?.getAllItem;
+    if(lst!=null)
+      lst.where((a) => a.active==true).forEach( ( a) => print(a.title));
+  }
+
+  interestsToString() {
+      if (myInterests.length != 0) interests = "";
+      for (int i = 0; i < myInterests.length; i++) {
+        interests += myInterests[i] + ",";
+      }
+  }
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    auth = widget.auth;
     image = widget.image;
     name = widget.name;
     job = widget.job;
@@ -91,12 +109,14 @@ class Profile extends State<MyProfile> {
     linkedin = widget.linkedin;
     twitter = widget.twitter;
     github = widget.github;
+    myInterests = interests.split(',').toList();
     return Scaffold(
       backgroundColor: const Color(0xffffffff),
       body: Stack(
         children: <Widget>[
           Transform.translate(
-            offset: Offset(SizeConfig.screenWidth *34.0, SizeConfig.screenHeight *150.0),
+            offset: Offset(
+                SizeConfig.screenWidth * 34.0, SizeConfig.screenHeight * 150.0),
             child: Container(
               width: SizeConfig.screenWidth * 345.0,
               height: SizeConfig.screenHeight * 636.0,
@@ -107,7 +127,8 @@ class Profile extends State<MyProfile> {
             ),
           ),
           Transform.translate(
-            offset: Offset(SizeConfig.screenWidth *110.0, SizeConfig.screenHeight *64.0),
+            offset: Offset(
+                SizeConfig.screenWidth * 110.0, SizeConfig.screenHeight * 64.0),
             child: Container(
               width: SizeConfig.screenWidth * 194.0,
               height: SizeConfig.screenHeight * 194.0,
@@ -119,7 +140,8 @@ class Profile extends State<MyProfile> {
             ),
           ),
           Transform.translate(
-            offset: Offset(SizeConfig.screenWidth *158.5, SizeConfig.screenHeight *290.0),
+            offset: Offset(SizeConfig.screenWidth * 158.5,
+                SizeConfig.screenHeight * 290.0),
             child: SizedBox(
               width: SizeConfig.screenWidth * 100.0,
               child: Text(
@@ -149,19 +171,9 @@ class Profile extends State<MyProfile> {
           Container(),
           Container(),
           Transform.translate(
-            offset: Offset(SizeConfig.screenWidth *70, SizeConfig.screenHeight *430),
-            child: Container(
-                child: Text(
-                  bio,
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                )
-            ),),
-          Transform.translate(
-            offset: Offset(SizeConfig.screenWidth *59.5, SizeConfig.screenHeight *376.5),
+            offset: Offset(SizeConfig.screenWidth *130, SizeConfig.screenHeight *350),
             child: Text(
-              'Bio',
+              'Social Media',
               style: TextStyle(
                 fontFamily: 'Roboto',
                 fontSize: 20,
@@ -170,48 +182,13 @@ class Profile extends State<MyProfile> {
                 fontWeight: FontWeight.w500,
                 height: 1,
               ),
-              textAlign: TextAlign.left,
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(SizeConfig.screenWidth *70, SizeConfig.screenHeight *530),
-            child: Container(
-                child: Text(
-                  job,
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                )
-            ),),
-          Transform.translate(
-            offset: Offset(SizeConfig.screenWidth *59.5, SizeConfig.screenHeight *476.5),
-            child: Text(
-              'Job',
-              style: TextStyle(
-                fontFamily: 'Roboto',
-                fontSize: 20,
-                color: const Color(0xff1A2677),
-                letterSpacing: 0.36,
-                fontWeight: FontWeight.w500,
-                height: 1,
-              ),
-              textAlign: TextAlign.left,
-            ),
-          ),
-    Transform.translate(
-    offset: Offset(SizeConfig.screenWidth *70, SizeConfig.screenHeight *630),
-    child: Container(
-            child: Text(
-              area,
               textAlign: TextAlign.center,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontWeight: FontWeight.bold),
-            )
-          ),),
+            ),
+          ),
           Transform.translate(
-            offset: Offset(SizeConfig.screenWidth *59.5, SizeConfig.screenHeight *576.5),
+            offset: Offset(SizeConfig.screenWidth *150, SizeConfig.screenHeight *550),
             child: Text(
-              'Area',
+              'Interests',
               style: TextStyle(
                 fontFamily: 'Roboto',
                 fontSize: 20,
@@ -220,11 +197,142 @@ class Profile extends State<MyProfile> {
                 fontWeight: FontWeight.w500,
                 height: 1,
               ),
-              textAlign: TextAlign.left,
+              textAlign: TextAlign.center,
             ),
           ),
+          Transform.translate(offset: Offset(SizeConfig.screenWidth *80, SizeConfig.screenHeight *600),
+          child: Container(
+            width: SizeConfig.screenWidth *250,
+    child: Tags(
+      key:_tagStateKey,
+      textField: TagsTextField(
+        textStyle: TextStyle(fontSize: 10),
+        constraintSuggestion: true, suggestions: [],
+        onSubmitted: (String str) {
+          // Add item to the data source.
+          setState(() {
+            // required
+            myInterests.add(str);
+          });
+        },
+        //width: double.infinity, padding: EdgeInsets.symmetric(horizontal: 10),
+      ),
+      itemCount: myInterests.length, // required
+      itemBuilder: (int index){
+        final item = myInterests[index];
+
+        return ItemTags(
+          // Each ItemTags must contain a Key. Keys allow Flutter to
+          // uniquely identify widgets.
+          key: Key(index.toString()),
+          index: index, // required
+          title: item,
+          textStyle: TextStyle( fontSize: 10, ),
+          combine: ItemTagsCombine.withTextBefore,
+          image: null, // OR null,
+          icon: ItemTagsIcon(
+            icon: Icons.add,
+          ),// OR null,
+          removeButton: ItemTagsRemoveButton(
+            onRemoved: (){
+              // Remove the item from the data source.
+              setState(() {
+                // required
+                myInterests.removeAt(index);
+              });
+              //required
+              return true;
+            },
+          ), // OR null,
+          onPressed: (item) => print(item),
+          onLongPressed: (item) => print(item),
+        );
+      },
+    ),
+    )),
           Transform.translate(
-            offset: Offset(SizeConfig.screenWidth *80, SizeConfig.screenHeight *250.0),
+            offset: Offset(
+                SizeConfig.screenWidth * 200, SizeConfig.screenHeight * 440.0),
+            child: Container(
+                child: IconButton(
+                    icon: Icon(FontAwesomeIcons.linkedin,
+                        color: const Color(0xff1A2677)),
+                    onPressed: () async {
+                      String url = 'https://linkedin.com/in/' + this.linkedin;
+                      if (await canLaunch(url)) {
+                        await launch(url);
+                      } else {
+                        throw 'Could not launch $url';
+                      }
+                    })),
+          ),
+          Transform.translate(
+            offset: Offset(
+                SizeConfig.screenWidth * 220, SizeConfig.screenHeight * 380.0),
+            child: Container(
+                child: IconButton(
+                    icon: Icon(FontAwesomeIcons.twitter,
+                        color: const Color(0xff1A2677)),
+                    onPressed: () async {
+                      String url = 'https://twitter.com/' + this.twitter;
+                      if (await canLaunch(url)) {
+                        await launch(url);
+                      } else {
+                        throw 'Could not launch $url';
+                      }
+                    })),
+          ),
+          Transform.translate(
+            offset: Offset(
+                SizeConfig.screenWidth * 150, SizeConfig.screenHeight * 440.0),
+            child: Container(
+                child: IconButton(
+                    icon: Icon(FontAwesomeIcons.github,
+                        color: const Color(0xff1A2677)),
+                    onPressed: () async {
+                      String url = 'https://github.com/' + this.github;
+                      if (await canLaunch(url)) {
+                        await launch(url);
+                      } else {
+                        throw 'Could not launch $url';
+                      }
+                    })),
+          ),
+          Transform.translate(
+            offset: Offset(
+                SizeConfig.screenWidth * 170, SizeConfig.screenHeight * 380.0),
+            child: Container(
+                child: IconButton(
+                    icon: Icon(FontAwesomeIcons.instagram,
+                        color: const Color(0xff1A2677)),
+                    onPressed: () async {
+                      String url = 'https://instagram.com/' + this.instagram;
+                      if (await canLaunch(url)) {
+                        await launch(url);
+                      } else {
+                        throw 'Could not launch $url';
+                      }
+                    })),
+          ),
+          Transform.translate(
+            offset: Offset(
+                SizeConfig.screenWidth * 120, SizeConfig.screenHeight * 380.0),
+            child: Container(
+                child: IconButton(
+                    icon: Icon(FontAwesomeIcons.facebook,
+                        color: const Color(0xff1A2677)),
+                    onPressed: () async {
+                      String url = 'https://facebook.com/' + this.facebook;
+                      if (await canLaunch(url)) {
+                        await launch(url);
+                      } else {
+                        throw 'Could not launch $url';
+                      }
+                    })),
+          ),
+          Transform.translate(
+            offset: Offset(
+                SizeConfig.screenWidth * 80, SizeConfig.screenHeight * 250.0),
             child: SizedBox(
               width: 226.0,
               child: Text(
@@ -242,7 +350,8 @@ class Profile extends State<MyProfile> {
             ),
           ),
           Transform.translate(
-            offset: Offset(SizeConfig.screenWidth *350.0, SizeConfig.screenHeight *35),
+            offset: Offset(
+                SizeConfig.screenWidth * 350.0, SizeConfig.screenHeight * 35),
             child: Icon(
               FontAwesomeIcons.pencilAlt,
               color: const Color(0xff1A2677),
@@ -250,7 +359,8 @@ class Profile extends State<MyProfile> {
           ),
           Container(),
           Transform.translate(
-            offset: Offset(SizeConfig.screenWidth *150, SizeConfig.screenHeight *100.0),
+            offset: Offset(
+                SizeConfig.screenWidth * 150, SizeConfig.screenHeight * 100.0),
             child:
                 // Adobe XD layer: 'NoPath' (shape)
                 Container(
@@ -262,33 +372,52 @@ class Profile extends State<MyProfile> {
           ),
           Container(
               child: Column(
-                children: <Widget>[
-                  Container(
-                    child: Expanded(
-                      child: Align(
-                        alignment: FractionalOffset.bottomRight,
-                        child: Padding(
-                          padding: EdgeInsets.only(bottom: 10.0, right: 10.0),
-                          child: FloatingActionButton(
-                            onPressed: () async {
-                              Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(builder: (context) => MyProfile2(auth: auth, image: image, name: name, job: job, interests: interests, city: city, bio: bio, area: area,linkedin: linkedin,
-                                      facebook: facebook, instagram: instagram, twitter: twitter, github: github)));
-                            },
-                            backgroundColor: const Color(0xff1A2677),
-                            child: Icon(
-                              FontAwesomeIcons.arrowRight,
-                              color: const Color(0xffffffff),
-                            ),
-                          ),
+            children: <Widget>[
+              Container(
+                child: Expanded(
+                  child: Align(
+                    alignment: FractionalOffset.bottomLeft,
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: 10.0, left: 10.0),
+                      child: FloatingActionButton(
+                        onPressed: () async {
+                          interestsToString();
+                          FirebaseDatabase.instance.reference().child('Users').child(widget.auth.currentUser.uid).update({interests: interests}).then((value) {
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (context) => MyProfile(
+                                        auth: widget.auth,
+                                        image: image,
+                                        name: name,
+                                        job: job,
+                                        interests: interests,
+                                        city: city,
+                                        bio: bio,
+                                        area: area,
+                                        linkedin: linkedin,
+                                        facebook: facebook,
+                                        instagram: instagram,
+                                        twitter: twitter,
+                                        github: github)));
+
+                          });
+
+                          },
+                        backgroundColor: const Color(0xff1A2677),
+                        child: Icon(
+                          FontAwesomeIcons.arrowLeft,
+                          color: const Color(0xffffffff),
                         ),
                       ),
                     ),
-                  )
-                ],
-              )),
+                  ),
+                ),
+              )
+            ],
+          )),
           Transform.translate(
-            offset: Offset(SizeConfig.screenWidth * 30, SizeConfig.screenHeight *30),
+            offset: Offset(
+                SizeConfig.screenWidth * 30, SizeConfig.screenHeight * 30),
             child:
                 // Adobe XD layer: 'home-24px' (group)
                 PageLink(
@@ -297,7 +426,9 @@ class Profile extends State<MyProfile> {
                   transition: LinkTransition.Fade,
                   ease: Curves.easeOut,
                   duration: 0.3,
-                  pageBuilder: () => HomeFeed(image: image,),
+                  pageBuilder: () => HomeFeed(
+                    image: image,
+                  ),
                 ),
               ],
               child: SizedBox(
