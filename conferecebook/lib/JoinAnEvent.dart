@@ -1,4 +1,5 @@
 import 'package:ConfereceBook/EnterEventCode.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:ConfereceBook/HomeFeed.dart';
@@ -25,7 +26,11 @@ class SizeConfig {
 class JoinAnEvent extends StatelessWidget {
   JoinAnEvent({
     Key key,
+    this.auth,
   }) : super(key: key);
+
+  final FirebaseAuth auth;
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -42,7 +47,7 @@ class JoinAnEvent extends StatelessWidget {
                     transition: LinkTransition.Fade,
                     ease: Curves.easeOut,
                     duration: 0.3,
-                    pageBuilder: () => MyLogin(),
+                    pageBuilder: () => MyLogin(auth: auth,),
                   ),
                 ],
                 child: SizedBox(
@@ -330,7 +335,7 @@ class JoinAnEvent extends StatelessWidget {
                         transition: LinkTransition.Fade,
                         ease: Curves.easeOut,
                         duration: 0.3,
-                        pageBuilder: () => EnterEventCode(),
+                        pageBuilder: () => EnterEventCode(auth: auth,),
                       ),
                     ], child: Text(
                       'New Event',

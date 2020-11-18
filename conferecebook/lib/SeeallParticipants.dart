@@ -1,8 +1,8 @@
+import 'package:ConfereceBook/MyProfile.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import './HomeFeed.dart';
 import 'package:adobe_xd/page_link.dart';
-import './MyProfile1.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/widgets.dart';
 
@@ -582,7 +582,7 @@ class SeeallParticipants extends StatelessWidget {
                   transition: LinkTransition.Fade,
                   ease: Curves.easeOut,
                   duration: 0.3,
-                  pageBuilder: () => MyProfile1(),
+                  pageBuilder: () => MyProfile(),
                 ),
               ],
               child: SizedBox(

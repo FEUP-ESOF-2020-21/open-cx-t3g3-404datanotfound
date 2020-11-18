@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import './WelcomeonBoard.dart';
@@ -36,12 +37,18 @@ class EnterEventCode extends StatefulWidget {
 }
 
 class MyEventCode extends State<EnterEventCode> {
+  FirebaseAuth auth;
+  String image;
+  String userUID;
+
   Future checkCode() async {
   }
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+    auth = widget.auth;
+    userUID = this.auth.currentUser.uid;
     return Scaffold(
       backgroundColor: const Color(0xffffffff),
       body: Stack(
@@ -169,8 +176,13 @@ class MyEventCode extends State<EnterEventCode> {
               child: InkWell(
                 onTap: () async {
                   checkCode().then((value) {
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => HomeFeed(auth: widget.auth)));
+                    FirebaseDatabase.instance.reference().once().then((DataSnapshot snapshot) {
+                      Map<dynamic, dynamic> map = snapshot.value;
+                      this.image = map.values.toList()[0][userUID]["photo"];
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (context) => HomeFeed(auth: this.auth, image: this.image)));
+                    });
+
                   });
                 },
                 child: SizedBox(

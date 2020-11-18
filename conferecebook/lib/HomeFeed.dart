@@ -1,11 +1,12 @@
 import 'package:ConfereceBook/JoinAnEvent.dart';
+import 'package:ConfereceBook/MyProfile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import './MyProfile1.dart';
 import './Search.dart';
 import './NewPost.dart';
 import './NotificationsPanel.dart';
@@ -31,17 +32,30 @@ class HomeFeed extends StatefulWidget {
   HomeFeed({
     Key key,
     this.auth,
+    this.image,
   }) : super(key: key);
 
   final FirebaseAuth auth;
+  final String image;
 
   @override
   State<StatefulWidget> createState() => MyHomeFeed();
 }
 
 class MyHomeFeed extends State<HomeFeed> {
+  FirebaseAuth auth;
+  String image;
+  String name;
+  String city;
+  String bio;
+  String area;
+  String job;
+  String interests;
+
   @override
   Widget build(BuildContext context) {
+    auth = widget.auth;
+    image = widget.image;
     SizeConfig().init(context);
     return Scaffold(
       backgroundColor: const Color(0xffffffff),
@@ -58,22 +72,72 @@ class MyHomeFeed extends State<HomeFeed> {
                 ),
               )),
           Container(
-            child: Expanded(
-              child: Align(
-                alignment: FractionalOffset.bottomRight,
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: 10.0, right: 10.0),
-                  child: FloatingActionButton(
-                    backgroundColor: const Color(0xff1A2677),
-                    child: Icon(
-                      FontAwesomeIcons.plus,
-                      color: const Color(0xffffffff),
+            child: InkWell(
+                onTap: () async {
+                  FirebaseDatabase.instance
+                      .reference()
+                      .once()
+                      .then((DataSnapshot snapshot) {
+                    Map<dynamic, dynamic> map = snapshot.value;
+                    Map<dynamic, dynamic> map2 = snapshot.value;
+                    Map<dynamic, dynamic> map3 = snapshot.value;
+                    Map<dynamic, dynamic> map4 = snapshot.value;
+                    Map<dynamic, dynamic> map5 = snapshot.value;
+                    Map<dynamic, dynamic> map6 = snapshot.value;
+                    Map<dynamic, dynamic> map7 = snapshot.value;
+                    String user = auth.currentUser.uid;
+                    this.image = map.values.toList()[0][user]["photo"];
+                    this.name = map2.values.toList()[0][user]["name"];
+                    this.job = map3.values.toList()[0][user]["job"];
+                    this.interests = map4.values.toList()[0][user]["interests"];
+                    this.city = map5.values.toList()[0][user]["city"];
+                    this.bio = map6.values.toList()[0][user]["bio"];
+                    this.area = map7.values.toList()[0][user]["area"];
+                    print(name);
+                    Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (context) => MyProfile(image: image, name: name, job: job, interests: interests, city: city, bio: bio, area: area,)));
+                      });
+                },
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      child: Expanded(
+                        child: Align(
+                          alignment: FractionalOffset.topRight,
+                          child: Padding(
+                              padding: EdgeInsets.only(top: 25.0, right: 10.0),
+                              child: CircleAvatar(
+                                backgroundImage: NetworkImage(this.image),
+                                radius: 22,
+                              )),
+                        ),
+                      ),
+                    )
+                  ],
+                )),
+          ),
+          Container(
+              child: Column(
+            children: <Widget>[
+              Container(
+                child: Expanded(
+                  child: Align(
+                    alignment: FractionalOffset.bottomRight,
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: 10.0, right: 10.0),
+                      child: FloatingActionButton(
+                        backgroundColor: const Color(0xff1A2677),
+                        child: Icon(
+                          FontAwesomeIcons.plus,
+                          color: const Color(0xffffffff),
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ),
-          ),
+              )
+            ],
+          )),
           Transform.translate(
             offset: Offset(
                 SizeConfig.screenWidth * 27.5, SizeConfig.screenHeight * 53.5),

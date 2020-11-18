@@ -1,7 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import './MyProfile1.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:adobe_xd/pinned.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import './HomeFeed.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/widgets.dart';
@@ -20,22 +21,61 @@ class SizeConfig {
   }
 }
 
-class MyProfile2 extends StatelessWidget {
-  MyProfile2({
+
+
+class MyProfile extends StatefulWidget {
+  MyProfile({
     Key key,
+    this.image,
+    this.name,
+    this.job,
+    this.interests,
+    this.city,
+    this.bio,
+    this.area
   }) : super(key: key);
+
+  final String image;
+  final String name;
+  final String job;
+  final String interests;
+  final String city;
+  final String bio;
+  final String area;
+
+  @override
+  State<StatefulWidget> createState() => Profile();
+}
+
+class Profile extends State<MyProfile> {
+  String image;
+  String name;
+  String job;
+  String interests;
+  String city;
+  String bio;
+  String area;
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+    image = widget.image;
+    name = widget.name;
+    job = widget.job;
+    interests = widget.interests;
+    city = widget.city;
+    bio = widget.bio;
+    area = widget.area;
+    print(name);
+    print(city);
     return Scaffold(
       backgroundColor: const Color(0xffffffff),
       body: Stack(
         children: <Widget>[
           Transform.translate(
-            offset: Offset(34.0, 150.0),
+            offset: Offset(SizeConfig.screenWidth *34.0, SizeConfig.screenHeight *150.0),
             child: Container(
-              width: 345.0,
-              height: 636.0,
+              width: SizeConfig.screenWidth * 345.0,
+              height: SizeConfig.screenHeight * 636.0,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30.0),
                 color: const Color(0x80ececec),
@@ -43,10 +83,10 @@ class MyProfile2 extends StatelessWidget {
             ),
           ),
           Transform.translate(
-            offset: Offset(110.0, 64.0),
+            offset: Offset(SizeConfig.screenWidth *110.0, SizeConfig.screenHeight *64.0),
             child: Container(
-              width: 194.0,
-              height: 194.0,
+              width: SizeConfig.screenWidth * 194.0,
+              height: SizeConfig.screenHeight * 194.0,
               decoration: BoxDecoration(
                 borderRadius:
                     BorderRadius.all(Radius.elliptical(9999.0, 9999.0)),
@@ -55,81 +95,15 @@ class MyProfile2 extends StatelessWidget {
             ),
           ),
           Transform.translate(
-            offset: Offset(18.5, 29.5),
-            child: PageLink(
-              links: [
-                PageLinkInfo(
-                  transition: LinkTransition.Fade,
-                  ease: Curves.easeOut,
-                  duration: 0.3,
-                  pageBuilder: () => MyProfile1(),
-                ),
-              ],
-              child: SvgPicture.string(
-                _svg_ieldpp,
-                allowDrawingOutsideViewBox: true,
-              ),
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(49.0, 729.0),
-            child:
-                // Adobe XD layer: 'arrow_back-24px' (group)
-                PageLink(
-              links: [
-                PageLinkInfo(
-                  transition: LinkTransition.Fade,
-                  ease: Curves.easeOut,
-                  duration: 0.3,
-                  pageBuilder: () => MyProfile1(),
-                ),
-              ],
-              child: SizedBox(
-                width: 45.0,
-                height: 45.0,
-                child: Stack(
-                  children: <Widget>[
-                    Pinned.fromSize(
-                      bounds: Rect.fromLTWH(0.0, 0.0, 45.0, 45.0),
-                      size: Size(45.0, 45.0),
-                      pinLeft: true,
-                      pinRight: true,
-                      pinTop: true,
-                      pinBottom: true,
-                      child: SvgPicture.string(
-                        _svg_2rnm7d,
-                        allowDrawingOutsideViewBox: true,
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                    Pinned.fromSize(
-                      bounds: Rect.fromLTWH(7.5, 7.5, 30.0, 30.0),
-                      size: Size(45.0, 45.0),
-                      pinLeft: true,
-                      pinRight: true,
-                      pinTop: true,
-                      pinBottom: true,
-                      child: SvgPicture.string(
-                        _svg_35bab1,
-                        allowDrawingOutsideViewBox: true,
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(158.5, 119.0),
+            offset: Offset(SizeConfig.screenWidth *158.5, SizeConfig.screenHeight *290.0),
             child: SizedBox(
-              width: 96.0,
+              width: SizeConfig.screenWidth * 100.0,
               child: Text(
-                'Porto\nPortugal',
+                this.city,
                 style: TextStyle(
                   fontFamily: 'Roboto',
-                  fontSize: 20,
-                  color: const Color(0xff666666),
+                  fontSize: 12,
+                  color: const Color(0xff1A2677),
                   letterSpacing: 0.1875,
                   fontWeight: FontWeight.w500,
                   height: 1.2,
@@ -151,13 +125,23 @@ class MyProfile2 extends StatelessWidget {
           Container(),
           Container(),
           Transform.translate(
-            offset: Offset(59.5, 376.5),
+            offset: Offset(SizeConfig.screenWidth *70, SizeConfig.screenHeight *430),
+            child: Container(
+                child: Text(
+                  bio,
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                )
+            ),),
+          Transform.translate(
+            offset: Offset(SizeConfig.screenWidth *59.5, SizeConfig.screenHeight *376.5),
             child: Text(
-              'Interests',
+              'Bio',
               style: TextStyle(
                 fontFamily: 'Roboto',
                 fontSize: 20,
-                color: const Color(0xff670aec),
+                color: const Color(0xff1A2677),
                 letterSpacing: 0.36,
                 fontWeight: FontWeight.w500,
                 height: 1,
@@ -166,15 +150,65 @@ class MyProfile2 extends StatelessWidget {
             ),
           ),
           Transform.translate(
-            offset: Offset(93.7, 274.0),
+            offset: Offset(SizeConfig.screenWidth *70, SizeConfig.screenHeight *530),
+            child: Container(
+                child: Text(
+                  job,
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                )
+            ),),
+          Transform.translate(
+            offset: Offset(SizeConfig.screenWidth *59.5, SizeConfig.screenHeight *476.5),
+            child: Text(
+              'Job',
+              style: TextStyle(
+                fontFamily: 'Roboto',
+                fontSize: 20,
+                color: const Color(0xff1A2677),
+                letterSpacing: 0.36,
+                fontWeight: FontWeight.w500,
+                height: 1,
+              ),
+              textAlign: TextAlign.left,
+            ),
+          ),
+    Transform.translate(
+    offset: Offset(SizeConfig.screenWidth *70, SizeConfig.screenHeight *630),
+    child: Container(
+            child: Text(
+              area,
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            )
+          ),),
+          Transform.translate(
+            offset: Offset(SizeConfig.screenWidth *59.5, SizeConfig.screenHeight *576.5),
+            child: Text(
+              'Area',
+              style: TextStyle(
+                fontFamily: 'Roboto',
+                fontSize: 20,
+                color: const Color(0xff1A2677),
+                letterSpacing: 0.36,
+                fontWeight: FontWeight.w500,
+                height: 1,
+              ),
+              textAlign: TextAlign.left,
+            ),
+          ),
+          Transform.translate(
+            offset: Offset(SizeConfig.screenWidth *80, SizeConfig.screenHeight *250.0),
             child: SizedBox(
               width: 226.0,
               child: Text(
-                'Albert Peralta',
+                this.name,
                 style: TextStyle(
                   fontFamily: 'Roboto',
                   fontSize: 30,
-                  color: const Color(0xff666666),
+                  color: const Color(0xff1A2677),
                   letterSpacing: 0.28125,
                   fontWeight: FontWeight.w500,
                   height: 0.8,
@@ -184,49 +218,27 @@ class MyProfile2 extends StatelessWidget {
             ),
           ),
           Transform.translate(
-            offset: Offset(335.0, 181.0),
-            child: SvgPicture.string(
-              _svg_1n72gt,
-              allowDrawingOutsideViewBox: true,
+            offset: Offset(SizeConfig.screenWidth *350.0, SizeConfig.screenHeight *35),
+            child: Icon(
+              FontAwesomeIcons.pencilAlt,
+              color: const Color(0xff1A2677),
             ),
           ),
           Container(),
           Transform.translate(
-            offset: Offset(192.0, 199.0),
+            offset: Offset(SizeConfig.screenWidth *150, SizeConfig.screenHeight *100.0),
             child:
                 // Adobe XD layer: 'NoPath' (shape)
                 Container(
-              width: 29.0,
-              height: 29.0,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: const AssetImage(''),
-                  fit: BoxFit.fill,
-                ),
+              child: CircleAvatar(
+                backgroundImage: NetworkImage(this.image),
+                radius: 50,
               ),
             ),
           ),
+
           Transform.translate(
-            offset: Offset(107.6, 233.0),
-            child:
-                // Adobe XD layer: '✏️ Input text' (text)
-                SizedBox(
-              width: 197.0,
-              child: Text(
-                'linkedin.com/in/albert_peralta',
-                style: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontSize: 12,
-                  color: const Color(0xbc000000),
-                  letterSpacing: 0.11249999999999999,
-                  height: 2,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(349.3, 24.3),
+            offset: Offset(SizeConfig.screenWidth * 30, SizeConfig.screenHeight *30),
             child:
                 // Adobe XD layer: 'home-24px' (group)
                 PageLink(
@@ -235,41 +247,15 @@ class MyProfile2 extends StatelessWidget {
                   transition: LinkTransition.Fade,
                   ease: Curves.easeOut,
                   duration: 0.3,
-                  pageBuilder: () => HomeFeed(),
+                  pageBuilder: () => HomeFeed(image: image,),
                 ),
               ],
               child: SizedBox(
                 width: 40.0,
                 height: 40.0,
-                child: Stack(
-                  children: <Widget>[
-                    Pinned.fromSize(
-                      bounds: Rect.fromLTWH(0.0, 0.0, 39.7, 39.7),
-                      size: Size(39.7, 39.7),
-                      pinLeft: true,
-                      pinRight: true,
-                      pinTop: true,
-                      pinBottom: true,
-                      child: SvgPicture.string(
-                        _svg_m4odhz,
-                        allowDrawingOutsideViewBox: true,
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                    Pinned.fromSize(
-                      bounds: Rect.fromLTWH(3.3, 5.0, 33.1, 28.1),
-                      size: Size(39.7, 39.7),
-                      pinLeft: true,
-                      pinRight: true,
-                      pinTop: true,
-                      fixedHeight: true,
-                      child: SvgPicture.string(
-                        _svg_lubbn0,
-                        allowDrawingOutsideViewBox: true,
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                  ],
+                child: Icon(
+                  FontAwesomeIcons.home,
+                  color: const Color(0xff1A2677),
                 ),
               ),
             ),

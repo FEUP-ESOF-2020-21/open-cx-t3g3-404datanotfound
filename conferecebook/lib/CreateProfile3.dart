@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:async';
+import 'dart:math';
 
 import 'package:ConfereceBook/CreateProfile4.dart';
 import 'package:adobe_xd/pinned.dart';
@@ -10,6 +11,9 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:ConfereceBook/Login.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:material_tag_editor/tag_editor.dart';
+import 'package:path_provider/path_provider.dart';
+
+import 'package:http/http.dart' as http;
 
 class CreateProfile3 extends StatefulWidget {
   CreateProfile3({Key key, this.auth, this.userId,  this.name,
@@ -97,6 +101,24 @@ class MyProfileState3 extends State<CreateProfile3> {
     });
   }
 
+  Future<File> urlToFile(String imageUrl) async {
+// generate random number.
+    var rng = new Random();
+// get temporary directory of device.
+    Directory tempDir = await getTemporaryDirectory();
+// get temporary path from temporary directory.
+    String tempPath = tempDir.path;
+// create a new file in temporary path with random file name.
+    File file = new File('$tempPath'+ (rng.nextInt(100)).toString() +'.png');
+// call http.get method and pass imageUrl into it to get response.
+    http.Response response = await http.get(imageUrl);
+// write bodyBytes received in response to file.
+    await file.writeAsBytes(response.bodyBytes);
+// now return the file which is created with random name in
+// temporary directory and image bytes from response is written to // that file.
+    return file;
+  }
+
   onDelete(index) {
     setState(() {
       values.removeAt(index);
@@ -126,7 +148,7 @@ class MyProfileState3 extends State<CreateProfile3> {
                       CircleAvatar(
                         radius: 80.0,
                         backgroundImage: _imageFile == null
-                            ? AssetImage('images/mark.jpeg') //default image
+                            ? NetworkImage('https://www.comparably.com/blog/wp-content/uploads/2017/07/mark-zuckerberg-headshot-e1500346016542.jpg') //default image
                             : FileImage(File(_imageFile.path)),
                       ),
                       Positioned(
@@ -178,12 +200,38 @@ class MyProfileState3 extends State<CreateProfile3> {
                       child: InkWell(
                         onTap: () {
                             dbToString();
-                            if (_imageFile == null) _imageFile = File('images/mark.jpeg');
-                            Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        CreateProfile4(auth: widget.auth, userId: userId, name: widget.name, bio: widget.bio, city: widget.city,
-                                        areaOfWork: widget.areaOfWork, currentJob: widget.currentJob, imageFile: _imageFile, interests: _interests,)));
+                            if (_imageFile == null) {
+                              urlToFile(
+                                  'https://www.comparably.com/blog/wp-content/uploads/2017/07/mark-zuckerberg-headshot-e1500346016542.jpg')
+                                  .then((value) {
+                                _imageFile = value;
+                                Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            CreateProfile4(auth: widget.auth,
+                                              userId: userId,
+                                              name: widget.name,
+                                              bio: widget.bio,
+                                              city: widget.city,
+                                              areaOfWork: widget.areaOfWork,
+                                              currentJob: widget.currentJob,
+                                              imageFile: _imageFile,
+                                              interests: _interests,)));
+                              });
+                            } else {
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          CreateProfile4(auth: widget.auth,
+                                            userId: userId,
+                                            name: widget.name,
+                                            bio: widget.bio,
+                                            city: widget.city,
+                                            areaOfWork: widget.areaOfWork,
+                                            currentJob: widget.currentJob,
+                                            imageFile: _imageFile,
+                                            interests: _interests,)));
+                            }
                         },
                         child: SizedBox(
                           width: SizeConfig.screenWidth * 149.0,

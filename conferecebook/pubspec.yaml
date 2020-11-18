@@ -29,7 +29,6 @@ dependencies:
   firebase_auth: ^0.18.2
   adobe_xd: ^1.0.0+1
   flutter_launcher_icons: "^0.8.1"
-  path_provider:
   splashscreen:
   material_tag_editor: ^0.0.4
   font_awesome_flutter: any
@@ -38,6 +37,9 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0
   image_picker: ^0.6.7+12
+
+  http: ^0.12.1
+  path_provider: ^1.6.7
 
 dev_dependencies:
   flutter_test:

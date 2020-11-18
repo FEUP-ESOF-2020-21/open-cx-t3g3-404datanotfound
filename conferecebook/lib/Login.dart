@@ -179,7 +179,7 @@ class Login extends State<MyLogin> {
                   check().then((value) {
                     if (value) {
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) => JoinAnEvent()
+                          builder: (context) => JoinAnEvent(auth: widget.auth)
                       ));
                     } else {
                       showAlertDialog(context);
