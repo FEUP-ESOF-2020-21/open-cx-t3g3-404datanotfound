@@ -297,7 +297,7 @@ class Profile extends State<MyProfile> {
                   transition: LinkTransition.Fade,
                   ease: Curves.easeOut,
                   duration: 0.3,
-                  pageBuilder: () => HomeFeed(image: image,),
+                  pageBuilder: () => HomeFeed(auth: auth, image: image),
                 ),
               ],
               child: SizedBox(

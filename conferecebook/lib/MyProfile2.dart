@@ -1,5 +1,6 @@
 import 'dart:core';
 
+import 'package:ConfereceBook/Login.dart';
 import 'package:ConfereceBook/MyProfile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -80,18 +81,19 @@ class Profile2 extends State<MyProfile2> {
   List<String> myInterests;
 
   final GlobalKey<TagsState> _tagStateKey = GlobalKey<TagsState>();
+
   // Allows you to get a list of all the ItemTags
-  _getAllItem(){
+  _getAllItem() {
     List<Item> lst = _tagStateKey.currentState?.getAllItem;
-    if(lst!=null)
-      lst.where((a) => a.active==true).forEach( ( a) => print(a.title));
+    if (lst != null)
+      lst.where((a) => a.active == true).forEach((a) => print(a.title));
   }
 
   interestsToString() {
-      if (myInterests.length != 0) interests = "";
-      for (int i = 0; i < myInterests.length; i++) {
-        interests += myInterests[i] + ",";
-      }
+    if (myInterests.length != 0) interests = "";
+    for (int i = 0; i < myInterests.length; i++) {
+      interests += myInterests[i] + ",";
+    }
   }
 
   @override
@@ -171,7 +173,8 @@ class Profile2 extends State<MyProfile2> {
           Container(),
           Container(),
           Transform.translate(
-            offset: Offset(SizeConfig.screenWidth *130, SizeConfig.screenHeight *350),
+            offset: Offset(
+                SizeConfig.screenWidth * 130, SizeConfig.screenHeight * 350),
             child: Text(
               'Social Media',
               style: TextStyle(
@@ -186,7 +189,8 @@ class Profile2 extends State<MyProfile2> {
             ),
           ),
           Transform.translate(
-            offset: Offset(SizeConfig.screenWidth *150, SizeConfig.screenHeight *550),
+            offset: Offset(
+                SizeConfig.screenWidth * 150, SizeConfig.screenHeight * 550),
             child: Text(
               'Interests',
               style: TextStyle(
@@ -200,56 +204,64 @@ class Profile2 extends State<MyProfile2> {
               textAlign: TextAlign.center,
             ),
           ),
-          Transform.translate(offset: Offset(SizeConfig.screenWidth *80, SizeConfig.screenHeight *600),
-          child: Container(
-            width: SizeConfig.screenWidth *250,
-    child: Tags(
-      key:_tagStateKey,
-      textField: TagsTextField(
-        textStyle: TextStyle(fontSize: 10),
-        constraintSuggestion: true, suggestions: [],
-        onSubmitted: (String str) {
-          // Add item to the data source.
-          setState(() {
-            // required
-            myInterests.add(str);
-          });
-        },
-        //width: double.infinity, padding: EdgeInsets.symmetric(horizontal: 10),
-      ),
-      itemCount: myInterests.length, // required
-      itemBuilder: (int index){
-        final item = myInterests[index];
+          Transform.translate(
+              offset: Offset(
+                  SizeConfig.screenWidth * 80, SizeConfig.screenHeight * 600),
+              child: Container(
+                width: SizeConfig.screenWidth * 250,
+                child: Tags(
+                  key: _tagStateKey,
+                  textField: TagsTextField(
+                    textStyle: TextStyle(fontSize: 10),
+                    constraintSuggestion: true, suggestions: [],
+                    onSubmitted: (String str) {
+                      // Add item to the data source.
+                      setState(() {
+                        // required
+                        myInterests.add(str);
+                      });
+                    },
+                    //width: double.infinity, padding: EdgeInsets.symmetric(horizontal: 10),
+                  ),
+                  itemCount: myInterests.length, // required
+                  itemBuilder: (int index) {
+                    final item = myInterests[index];
 
-        return ItemTags(
-          // Each ItemTags must contain a Key. Keys allow Flutter to
-          // uniquely identify widgets.
-          key: Key(index.toString()),
-          index: index, // required
-          title: item,
-          textStyle: TextStyle( fontSize: 10, ),
-          combine: ItemTagsCombine.withTextBefore,
-          image: null, // OR null,
-          icon: ItemTagsIcon(
-            icon: Icons.add,
-          ),// OR null,
-          removeButton: ItemTagsRemoveButton(
-            onRemoved: (){
-              // Remove the item from the data source.
-              setState(() {
-                // required
-                myInterests.removeAt(index);
-              });
-              //required
-              return true;
-            },
-          ), // OR null,
-          onPressed: (item) => print(item),
-          onLongPressed: (item) => print(item),
-        );
-      },
-    ),
-    )),
+                    return ItemTags(
+                      // Each ItemTags must contain a Key. Keys allow Flutter to
+                      // uniquely identify widgets.
+                      key: Key(index.toString()),
+                      index: index,
+                      // required
+                      title: item,
+                      textStyle: TextStyle(
+                        fontSize: 10,
+                      ),
+                      combine: ItemTagsCombine.withTextBefore,
+                      image: null,
+                      // OR null,
+                      icon: ItemTagsIcon(
+                        icon: Icons.add,
+                      ),
+                      // OR null,
+                      removeButton: ItemTagsRemoveButton(
+                        onRemoved: () {
+                          // Remove the item from the data source.
+                          setState(() {
+                            // required
+                            myInterests.removeAt(index);
+                          });
+                          //required
+                          return true;
+                        },
+                      ),
+                      // OR null,
+                      onPressed: (item) => print(item),
+                      onLongPressed: (item) => print(item),
+                    );
+                  },
+                ),
+              )),
           Transform.translate(
             offset: Offset(
                 SizeConfig.screenWidth * 200, SizeConfig.screenHeight * 440.0),
@@ -382,7 +394,11 @@ class Profile2 extends State<MyProfile2> {
                       child: FloatingActionButton(
                         onPressed: () async {
                           interestsToString();
-                          FirebaseDatabase.instance.reference().child('Users').child(widget.auth.currentUser.uid).update({interests: interests}).then((value) {
+                          FirebaseDatabase.instance
+                              .reference()
+                              .child('Users')
+                              .child(widget.auth.currentUser.uid)
+                              .update({interests: interests}).then((value) {
                             Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
                                     builder: (context) => MyProfile(
@@ -399,10 +415,8 @@ class Profile2 extends State<MyProfile2> {
                                         instagram: instagram,
                                         twitter: twitter,
                                         github: github)));
-
                           });
-
-                          },
+                        },
                         backgroundColor: const Color(0xff1A2677),
                         child: Icon(
                           FontAwesomeIcons.arrowLeft,
@@ -416,6 +430,34 @@ class Profile2 extends State<MyProfile2> {
             ],
           )),
           Transform.translate(
+              offset: Offset(
+                  SizeConfig.screenWidth * 340, SizeConfig.screenHeight * 790),
+              child: SizedBox.fromSize(
+                size: Size(56, 56), // button width and height
+                child: ClipOval(
+                  child: Material(
+                    color: const Color(0xff1A2677), // button color
+                    child: InkWell(
+                      splashColor: const Color(0xff1A2677), // splash color
+                      onTap: () async {
+                        widget.auth.signOut();
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                            builder: (context) => MyLogin(
+                              auth: widget.auth,
+                            )));
+                      }, // button pressed
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(FontAwesomeIcons.signOutAlt, color: Colors.white,), // icon
+                          Text("LogOut", style: TextStyle(color: Colors.white, fontSize: 10),), // text
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              )),
+          Transform.translate(
             offset: Offset(
                 SizeConfig.screenWidth * 30, SizeConfig.screenHeight * 30),
             child:
@@ -427,6 +469,7 @@ class Profile2 extends State<MyProfile2> {
                   ease: Curves.easeOut,
                   duration: 0.3,
                   pageBuilder: () => HomeFeed(
+                    auth: widget.auth,
                     image: image,
                   ),
                 ),

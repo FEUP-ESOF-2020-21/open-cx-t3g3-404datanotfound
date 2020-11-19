@@ -1,4 +1,5 @@
 import 'package:ConfereceBook/JoinAnEvent.dart';
+import 'package:ConfereceBook/Login.dart';
 import 'package:ConfereceBook/MyProfile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -56,6 +57,7 @@ class MyHomeFeed extends State<HomeFeed> {
   String linkedin;
   String twitter;
   String github;
+  final GlobalKey<ScaffoldState> _scaffoldState = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -63,70 +65,140 @@ class MyHomeFeed extends State<HomeFeed> {
     image = widget.image;
     SizeConfig().init(context);
     return Scaffold(
+      key: _scaffoldState,
+      appBar: AppBar(
+        actions: <Widget>[
+          IconButton(icon: new Icon(FontAwesomeIcons.search, color: const Color(0xffffffff),), onPressed: (){
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (context) => SeeallParticipants()));
+          }),
+          IconButton(icon: new Icon(FontAwesomeIcons.bell, color: const Color(0xffffffff),), onPressed: (){
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (context) => NotificationsPanel()));
+          }),
+          InkWell(
+              onTap: () async {
+                FirebaseDatabase.instance
+                    .reference()
+                    .once()
+                    .then((DataSnapshot snapshot) {
+                  Map<dynamic, dynamic> map = snapshot.value;
+                  Map<dynamic, dynamic> map2 = snapshot.value;
+                  Map<dynamic, dynamic> map3 = snapshot.value;
+                  Map<dynamic, dynamic> map4 = snapshot.value;
+                  Map<dynamic, dynamic> map5 = snapshot.value;
+                  Map<dynamic, dynamic> map6 = snapshot.value;
+                  Map<dynamic, dynamic> map7 = snapshot.value;
+                  String user = auth.currentUser.uid;
+                  this.image = map.values.toList()[0][user]["photo"];
+                  this.name = map.values.toList()[0][user]["name"];
+                  this.job = map.values.toList()[0][user]["job"];
+                  this.interests = map.values.toList()[0][user]["interests"];
+                  this.city = map.values.toList()[0][user]["city"];
+                  this.bio = map.values.toList()[0][user]["bio"];
+                  this.area = map.values.toList()[0][user]["area"];
+                  this.linkedin = map.values.toList()[0][user]["linkedin"];
+                  this.facebook = map.values.toList()[0][user]["facebook"];
+                  this.instagram = map.values.toList()[0][user]["instagram"];
+                  this.twitter = map.values.toList()[0][user]["twitter"];
+                  this.github = map.values.toList()[0][user]["github"];
+                  print(name);
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => MyProfile(
+                          auth: auth,
+                          image: image,
+                          name: name,
+                          job: job,
+                          interests: interests,
+                          city: city,
+                          bio: bio,
+                          area: area,
+                          linkedin: linkedin,
+                          facebook: facebook,
+                          instagram: instagram,
+                          twitter: twitter,
+                          github: github)));
+                });
+              },
+              child: CircleAvatar(
+                backgroundImage: NetworkImage(this.image),
+                radius: 22,
+              )),
+        ],
+        title: Text(""),
+        backgroundColor: const Color(0xff1A2677),
+        leading: IconButton(icon: new Icon(FontAwesomeIcons.bars, color: const Color(0xffffffff),), onPressed: (){
+          _scaffoldState.currentState.openDrawer();
+        }),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            ListTile(),
+            ListTile(
+              title: Text("MyProfile"),
+              onTap: () async {
+                FirebaseDatabase.instance
+                    .reference()
+                    .once()
+                    .then((DataSnapshot snapshot) {
+                  Map<dynamic, dynamic> map = snapshot.value;
+                  Map<dynamic, dynamic> map2 = snapshot.value;
+                  Map<dynamic, dynamic> map3 = snapshot.value;
+                  Map<dynamic, dynamic> map4 = snapshot.value;
+                  Map<dynamic, dynamic> map5 = snapshot.value;
+                  Map<dynamic, dynamic> map6 = snapshot.value;
+                  Map<dynamic, dynamic> map7 = snapshot.value;
+                  String user = auth.currentUser.uid;
+                  this.image = map.values.toList()[0][user]["photo"];
+                  this.name = map.values.toList()[0][user]["name"];
+                  this.job = map.values.toList()[0][user]["job"];
+                  this.interests = map.values.toList()[0][user]["interests"];
+                  this.city = map.values.toList()[0][user]["city"];
+                  this.bio = map.values.toList()[0][user]["bio"];
+                  this.area = map.values.toList()[0][user]["area"];
+                  this.linkedin = map.values.toList()[0][user]["linkedin"];
+                  this.facebook = map.values.toList()[0][user]["facebook"];
+                  this.instagram = map.values.toList()[0][user]["instagram"];
+                  this.twitter = map.values.toList()[0][user]["twitter"];
+                  this.github = map.values.toList()[0][user]["github"];
+                  print(name);
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => MyProfile(
+                          auth: auth,
+                          image: image,
+                          name: name,
+                          job: job,
+                          interests: interests,
+                          city: city,
+                          bio: bio,
+                          area: area,
+                          linkedin: linkedin,
+                          facebook: facebook,
+                          instagram: instagram,
+                          twitter: twitter,
+                          github: github)));
+                });
+              },
+            ),
+            ListTile(
+              title: Text("LogOut"),
+              onTap: () {
+                auth.signOut();
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => MyLogin(
+                        auth: auth,
+                        )));
+              },
+            )
+          ],
+        ),
+      ),
       backgroundColor: const Color(0xffffffff),
       body: Stack(
         children: <Widget>[
-          Transform.translate(
-              offset: Offset(
-                  SizeConfig.screenWidth * 130, SizeConfig.screenHeight * 31),
-              child: IconButton(
-                iconSize: SizeConfig.screenHeight * 35,
-                icon: new Icon(
-                  FontAwesomeIcons.bell,
-                  color: const Color(0xff1A2677),
-                ),
-              )),
-          Container(
-            child: InkWell(
-                onTap: () async {
-                  FirebaseDatabase.instance
-                      .reference()
-                      .once()
-                      .then((DataSnapshot snapshot) {
-                    Map<dynamic, dynamic> map = snapshot.value;
-                    Map<dynamic, dynamic> map2 = snapshot.value;
-                    Map<dynamic, dynamic> map3 = snapshot.value;
-                    Map<dynamic, dynamic> map4 = snapshot.value;
-                    Map<dynamic, dynamic> map5 = snapshot.value;
-                    Map<dynamic, dynamic> map6 = snapshot.value;
-                    Map<dynamic, dynamic> map7 = snapshot.value;
-                    String user = auth.currentUser.uid;
-                    this.image = map.values.toList()[0][user]["photo"];
-                    this.name = map.values.toList()[0][user]["name"];
-                    this.job = map.values.toList()[0][user]["job"];
-                    this.interests = map.values.toList()[0][user]["interests"];
-                    this.city = map.values.toList()[0][user]["city"];
-                    this.bio = map.values.toList()[0][user]["bio"];
-                    this.area = map.values.toList()[0][user]["area"];
-                    this.linkedin = map.values.toList()[0][user]["linkedin"];
-                    this.facebook = map.values.toList()[0][user]["facebook"];
-                    this.instagram = map.values.toList()[0][user]["instagram"];
-                    this.twitter = map.values.toList()[0][user]["twitter"];
-                    this.github = map.values.toList()[0][user]["github"];
-                    print(name);
-                    Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) => MyProfile(auth: auth, image: image, name: name, job: job, interests: interests, city: city, bio: bio, area: area,linkedin: linkedin,
-                        facebook: facebook, instagram: instagram, twitter: twitter, github: github)));
-                      });
-                },
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      child: Expanded(
-                        child: Align(
-                          alignment: FractionalOffset.topRight,
-                          child: Padding(
-                              padding: EdgeInsets.only(top: 25.0, right: 10.0),
-                              child: CircleAvatar(
-                                backgroundImage: NetworkImage(this.image),
-                                radius: 22,
-                              )),
-                        ),
-                      ),
-                    )
-                  ],
-                )),
-          ),
+
           Container(
               child: Column(
             children: <Widget>[
@@ -149,182 +221,7 @@ class MyHomeFeed extends State<HomeFeed> {
               )
             ],
           )),
-          Transform.translate(
-            offset: Offset(
-                SizeConfig.screenWidth * 27.5, SizeConfig.screenHeight * 53.5),
-            child: PageLink(
-              links: [
-                PageLinkInfo(
-                  transition: LinkTransition.Fade,
-                  ease: Curves.easeOut,
-                  duration: 0.3,
-                  pageBuilder: () => JoinAnEvent(),
-                ),
-              ],
-              child: SizedBox(
-                width: 25.0,
-                height: 16.0,
-                child: Stack(
-                  children: <Widget>[
-                    Pinned.fromSize(
-                      bounds: Rect.fromLTWH(0.0, 0.0, 25.0, 1.0),
-                      size: Size(25.0, 16.0),
-                      pinLeft: true,
-                      pinRight: true,
-                      pinTop: true,
-                      fixedHeight: true,
-                      child: SvgPicture.string(
-                        _svg_xapkg0,
-                        allowDrawingOutsideViewBox: true,
-                        fit: BoxFit.fill,
-                        color: const Color(0xff1A2677),
-                      ),
-                    ),
-                    Pinned.fromSize(
-                      bounds: Rect.fromLTWH(0.0, 8.0, 25.0, 1.0),
-                      size: Size(25.0, 16.0),
-                      pinLeft: true,
-                      pinRight: true,
-                      fixedHeight: true,
-                      child: SvgPicture.string(
-                        _svg_k4jlvk,
-                        allowDrawingOutsideViewBox: true,
-                        fit: BoxFit.fill,
-                        color: const Color(0xff1A2677),
-                      ),
-                    ),
-                    Pinned.fromSize(
-                      bounds: Rect.fromLTWH(0.0, 16.0, 25.0, 1.0),
-                      size: Size(25.0, 16.0),
-                      pinLeft: true,
-                      pinRight: true,
-                      pinBottom: true,
-                      fixedHeight: true,
-                      child: SvgPicture.string(
-                        _svg_2ioq80,
-                        allowDrawingOutsideViewBox: true,
-                        fit: BoxFit.fill,
-                        color: const Color(0xff1A2677),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(
-                SizeConfig.screenWidth * 79.0, SizeConfig.screenHeight * 39.0),
-            child:
-                // Adobe XD layer: 'person_search-24px' (group)
-                PageLink(
-              links: [
-                PageLinkInfo(
-                  transition: LinkTransition.Fade,
-                  ease: Curves.easeOut,
-                  duration: 0.3,
-                  pageBuilder: () => SeeallParticipants(),
-                ),
-              ],
-              child: SizedBox(
-                width: 40.0,
-                height: 40.0,
-                child: Stack(
-                  children: <Widget>[
-                    Pinned.fromSize(
-                      bounds: Rect.fromLTWH(0.0, 0.0, 40.0, 40.0),
-                      size: Size(40.0, 40.0),
-                      pinLeft: true,
-                      pinRight: true,
-                      pinTop: true,
-                      pinBottom: true,
-                      child: Stack(
-                        children: <Widget>[
-                          Pinned.fromSize(
-                            bounds: Rect.fromLTWH(0.0, 0.0, 40.0, 40.0),
-                            size: Size(40.0, 40.0),
-                            pinLeft: true,
-                            pinRight: true,
-                            pinTop: true,
-                            pinBottom: true,
-                            child: Container(
-                              decoration: BoxDecoration(),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Pinned.fromSize(
-                      bounds: Rect.fromLTWH(3.3, 7.0, 33.3, 29.7),
-                      size: Size(40.0, 40.0),
-                      pinLeft: true,
-                      pinRight: true,
-                      pinBottom: true,
-                      fixedHeight: true,
-                      child: Stack(
-                        children: <Widget>[
-                          Pinned.fromSize(
-                            bounds: Rect.fromLTWH(0.0, 0.0, 33.3, 29.7),
-                            size: Size(33.3, 29.7),
-                            pinLeft: true,
-                            pinRight: true,
-                            pinTop: true,
-                            pinBottom: true,
-                            child: Stack(
-                              children: <Widget>[
-                                Pinned.fromSize(
-                                  bounds: Rect.fromLTWH(6.7, 0.0, 13.0, 13.0),
-                                  size: Size(33.3, 29.7),
-                                  pinTop: true,
-                                  fixedWidth: true,
-                                  fixedHeight: true,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.elliptical(9999.0, 9999.0)),
-                                      color: const Color(0xff1A2677),
-                                    ),
-                                  ),
-                                ),
-                                Pinned.fromSize(
-                                  bounds: Rect.fromLTWH(0.0, 16.3, 15.9, 10.0),
-                                  size: Size(33.3, 29.7),
-                                  pinLeft: true,
-                                  pinBottom: true,
-                                  fixedWidth: true,
-                                  fixedHeight: true,
-                                  child: SvgPicture.string(
-                                    _svg_ymt87y,
-                                    allowDrawingOutsideViewBox: true,
-                                    fit: BoxFit.fill,
-                                    color: const Color(0xff1A2677),
-                                  ),
-                                ),
-                                Pinned.fromSize(
-                                  bounds: Rect.fromLTWH(16.7, 13.0, 16.7, 16.7),
-                                  size: Size(33.3, 29.7),
-                                  pinRight: true,
-                                  pinBottom: true,
-                                  fixedWidth: true,
-                                  fixedHeight: true,
-                                  child: SvgPicture.string(
-                                    _svg_dgizqb,
-                                    allowDrawingOutsideViewBox: true,
-                                    fit: BoxFit.fill,
-                                    color: const Color(0xff1A2677),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+
         ],
       ),
     );

@@ -1,3 +1,4 @@
+import 'package:ConfereceBook/JoinAnEvent.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,7 +23,8 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
               primarySwatch: Colors.blue,
             ),
-            home: MyLogin(auth: _auth),
+            home:
+            (_auth.currentUser == null) ? MyLogin(auth: _auth) : JoinAnEvent(auth: _auth),
           );
   }
 }
