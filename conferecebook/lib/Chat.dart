@@ -27,7 +27,9 @@ class Chat extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return Scaffold(
+    return new WillPopScope(
+    onWillPop: () async => false,
+    child: new Scaffold(
       backgroundColor: const Color(0xffffffff),
       body: Stack(
         children: <Widget>[
@@ -728,6 +730,7 @@ class Chat extends StatelessWidget {
           ),
         ],
       ),
+    )
     );
   }
 }

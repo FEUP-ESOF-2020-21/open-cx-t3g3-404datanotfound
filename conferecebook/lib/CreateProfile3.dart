@@ -130,7 +130,8 @@ class MyProfileState3 extends State<CreateProfile3> {
   @override
   Widget build(BuildContext context) {
     userId = widget.userId;
-    return Scaffold(
+    return WillPopScope(
+    onWillPop: () async => false, child: Scaffold(
         resizeToAvoidBottomPadding: false,
         appBar: AppBar(
           title: Text("Additional Information 2/3"),
@@ -282,7 +283,7 @@ class MyProfileState3 extends State<CreateProfile3> {
                   ),
                 ],
               ),
-            ));
+            )));
   } // Widget build
 } // StatelessWidget
 

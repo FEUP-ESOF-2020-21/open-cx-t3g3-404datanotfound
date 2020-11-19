@@ -1,11 +1,14 @@
 import 'package:ConfereceBook/EnterEventCode.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:ConfereceBook/HomeFeed.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:http/http.dart';
 
 import 'Login.dart';
 
@@ -23,271 +26,82 @@ class SizeConfig {
   }
 }
 
-class JoinAnEvent extends StatelessWidget {
+class JoinAnEvent extends StatefulWidget {
   JoinAnEvent({
     Key key,
     this.auth,
+    this.map,
   }) : super(key: key);
 
   final FirebaseAuth auth;
+  final Map<dynamic, dynamic> map;
+
+  @override
+  State<StatefulWidget> createState() => JoinEvent();
+
+}
+
+class JoinEvent extends State<JoinAnEvent> {
+
+  FirebaseAuth auth;
+  int numCodes;
+  String code;
+  Map<dynamic, dynamic> map;
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return Scaffold(
+    auth = widget.auth;
+    map = widget.map;
+    auth = widget.auth;
+    numCodes = map.values.toList()[0].length;
+    return WillPopScope(
+    onWillPop: () async => false, child: Scaffold(
       backgroundColor: const Color(0xff1a2677),
       body: Stack(
         children: <Widget>[
-          Transform.translate(offset: Offset(SizeConfig.screenWidth *  0.0, SizeConfig.screenHeight *  25.0),
-              // Adobe XD layer: 'arrow_back-24px' (group)
-              child: // Adobe XD layer: 'arrow_back-24px' (group)
-              PageLink(
-                links: [
-                  PageLinkInfo(
-                    transition: LinkTransition.Fade,
-                    ease: Curves.easeOut,
-                    duration: 0.3,
-                    pageBuilder: () => MyLogin(auth: auth,),
-                  ),
-                ],
-                child: SizedBox(
-                  width: 45.0,
-                  height: 45.0,
-                  child: Stack(
-                    children: <Widget>[
-                      Pinned.fromSize(
-                        bounds: Rect.fromLTWH(0.0, 0.0, 45.0, 45.0),
-                        size: Size(45.0, 45.0),
-                        pinLeft: true,
-                        pinRight: true,
-                        pinTop: true,
-                        pinBottom: true,
-                        child: SvgPicture.string(
-                          '<svg viewBox="0.0 0.0 45.0 45.0" ><path  d="M 0 0 L 45 0 L 45 45 L 0 45 L 0 0 Z" fill="none" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>',
-                          allowDrawingOutsideViewBox: true,
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                      Pinned.fromSize(
-                        bounds: Rect.fromLTWH(7.5, 7.5, 30.0, 30.0),
-                        size: Size(45.0, 45.0),
-                        pinLeft: true,
-                        pinRight: true,
-                        pinTop: true,
-                        pinBottom: true,
-                        child: SvgPicture.string(
-                          '<svg viewBox="7.5 7.5 30.0 30.0" ><path transform="translate(3.5, 3.5)" d="M 34 17.125 L 11.18124961853027 17.125 L 21.66250038146973 6.643749237060547 L 19 4 L 4 19 L 19 34 L 21.64374923706055 31.35625076293945 L 11.18124961853027 20.875 L 34 20.875 L 34 17.125 Z" fill="#ffffff" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>',
-                          allowDrawingOutsideViewBox: true,
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              )),
           Transform.translate(
-            offset: Offset(SizeConfig.screenWidth * 67.5, SizeConfig.screenHeight * 347.5),
-            child: Text(
-              'Your are an Organizer',
-              style: TextStyle(
-                fontFamily: 'Roboto',
-                fontSize: 12,
-                color: const Color(0xff6ad3d2),
-                letterSpacing: 0.140625,
-                height: SizeConfig.screenHeight * 1.5333333333333334,
-              ),
-              textAlign: TextAlign.left,
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(SizeConfig.screenWidth * 66.5, SizeConfig.screenHeight * 319.5),
-            child: Text(
-              'Symbio Wired 2020',
-              style: TextStyle(
-                fontFamily: 'Roboto',
-                fontSize: 17,
-                color: const Color(0xffffffff),
-                letterSpacing: 0.1875,
-                fontWeight: FontWeight.w700,
-                height: SizeConfig.screenHeight * 1.15,
-              ),
-              textAlign: TextAlign.left,
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(SizeConfig.screenWidth * 285.0, SizeConfig.screenHeight * 320.0),
-            child:
-                // Adobe XD layer: 'delete-24px' (group)
-                SizedBox(
-              width: SizeConfig.screenWidth * 25.0,
-              height: SizeConfig.screenHeight * 25.0,
-              child: Stack(
-                children: <Widget>[
-                  Pinned.fromSize(
-                    bounds: Rect.fromLTWH(0.0, 0.0, SizeConfig.screenWidth * 25.0, SizeConfig.screenHeight * 25.0),
-                    size: Size(SizeConfig.screenWidth * 25.0, SizeConfig.screenHeight * 25.0),
-                    pinLeft: true,
-                    pinRight: true,
-                    pinTop: true,
-                    pinBottom: true,
-                    child: SvgPicture.string(
-                      _svg_g7k8u0,
-                      allowDrawingOutsideViewBox: true,
-                      fit: BoxFit.fill,
+            offset: Offset(SizeConfig.screenWidth *  0.0, SizeConfig.screenHeight *  250.0),
+            child: ListView.builder(
+              itemCount: numCodes,
+              itemBuilder: (context, position) {
+                String aux = "id" + (position+1).toString();
+                code = map.values.toList()[0][aux]["name"];
+                String secondcode = map.values.toList()[0][aux]["code"];
+                return Container(
+                  child: Card(
+                    child: new ListTile(
+                      trailing: IconButton(icon: new Icon(FontAwesomeIcons.trash, color: const Color(0xffffffff),), onPressed: (){
+                        // Delete Event
+                      }),
+                      title: Text(code, style: TextStyle(fontSize: 17.0, color: const Color(0xffffffff), fontWeight: FontWeight.bold),),
+                      subtitle: Text('You are a participant', style: TextStyle(fontSize: 10.0, color: const Color(0xffffffff), fontWeight: FontWeight.bold),),
+                      onTap: (){
+                        FirebaseDatabase.instance
+                            .reference()
+                            .once()
+                            .then((DataSnapshot snapshot) {
+                          Map<dynamic, dynamic> map = snapshot.value;
+                          String image = map.values.toList()[1][auth.currentUser.uid]["photo"];
+                          Navigator.of(context).pushReplacement(MaterialPageRoute(
+                              builder: (context) =>
+                                  HomeFeed(auth: this.auth, image: image, code: secondcode)));
+                        });
+                      },
                     ),
-                  ),
-                  Pinned.fromSize(
-                    bounds: Rect.fromLTWH(SizeConfig.screenWidth * 5.2, SizeConfig.screenHeight * 3.1, SizeConfig.screenWidth * 14.6, SizeConfig.screenHeight *18.8),
-                    size: Size(SizeConfig.screenWidth * 25.0, SizeConfig.screenHeight * 25.0),
-                    pinLeft: true,
-                    pinRight: true,
-                    pinTop: true,
-                    pinBottom: true,
-                    child: SvgPicture.string(
-                      _svg_9fxlix,
-                      allowDrawingOutsideViewBox: true,
-                      fit: BoxFit.fill,
+                    semanticContainer: true,
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
+                    elevation: 5,
+                    margin: EdgeInsets.all(10),
+                    color: const Color(0xff1a2677),
                   ),
-                ],
-              ),
+                );
+              },
             ),
-          ),
-          Transform.translate(
-            offset: Offset(SizeConfig.screenWidth * 66.5, SizeConfig.screenHeight * 395.5),
-            child: Text(
-              'TED Sydney 2019',
-              style: TextStyle(
-                fontFamily: 'Roboto',
-                fontSize: 17,
-                color: const Color(0xffffffff),
-                letterSpacing: 0.1875,
-                fontWeight: FontWeight.w700,
-                height: SizeConfig.screenHeight * 1.15,
-              ),
-              textAlign: TextAlign.left,
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(SizeConfig.screenWidth * 67.5, SizeConfig.screenHeight * 423.5),
-            child: Text(
-              'You are an Attendee',
-              style: TextStyle(
-                fontFamily: 'Roboto',
-                fontSize: 12,
-                color: const Color(0xff6ad3d2),
-                letterSpacing: 0.140625,
-                height: SizeConfig.screenHeight * 1.5333333333333334,
-              ),
-              textAlign: TextAlign.left,
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(SizeConfig.screenWidth * 285.0, SizeConfig.screenHeight * 395.0),
-            child:
-                // Adobe XD layer: 'delete-24px' (group)
-                SizedBox(
-              width: SizeConfig.screenWidth * 25.0,
-              height: SizeConfig.screenHeight * 25.0,
-              child: Stack(
-                children: <Widget>[
-                  Pinned.fromSize(
-                    bounds: Rect.fromLTWH(0.0, 0.0, SizeConfig.screenWidth * 25.0, SizeConfig.screenHeight * 25.0),
-                    size: Size(SizeConfig.screenWidth * 25.0, SizeConfig.screenHeight * 25.0),
-                    pinLeft: true,
-                    pinRight: true,
-                    pinTop: true,
-                    pinBottom: true,
-                    child: SvgPicture.string(
-                      _svg_g7k8u0,
-                      allowDrawingOutsideViewBox: true,
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                  Pinned.fromSize(
-                    bounds: Rect.fromLTWH(SizeConfig.screenWidth * 5.2, SizeConfig.screenHeight * 3.1, SizeConfig.screenWidth * 14.6, SizeConfig.screenHeight * 18.8),
-                    size: Size(SizeConfig.screenWidth * 25.0, SizeConfig.screenHeight * 25.0),
-                    pinLeft: true,
-                    pinRight: true,
-                    pinTop: true,
-                    pinBottom: true,
-                    child: SvgPicture.string(
-                      _svg_9fxlix,
-                      allowDrawingOutsideViewBox: true,
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(SizeConfig.screenWidth * 66.5, SizeConfig.screenHeight * 471.5),
-            child: Text(
-              'Web Summit 2019',
-              style: TextStyle(
-                fontFamily: 'Roboto',
-                fontSize: 17,
-                color: const Color(0xffffffff),
-                letterSpacing: 0.1875,
-                fontWeight: FontWeight.w700,
-                height: SizeConfig.screenHeight * 1.15,
-              ),
-              textAlign: TextAlign.left,
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(SizeConfig.screenWidth * 66.5, SizeConfig.screenHeight * 499.5),
-            child: Text(
-              'You are an Attendee',
-              style: TextStyle(
-                fontFamily: 'Roboto',
-                fontSize: 12,
-                color: const Color(0xff6ad3d2),
-                letterSpacing: 0.140625,
-                height:SizeConfig.screenHeight * 1.5333333333333334,
-              ),
-              textAlign: TextAlign.left,
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(SizeConfig.screenWidth * 285.0, SizeConfig.screenHeight * 472.0),
-            child:
-                // Adobe XD layer: 'delete-24px' (group)
-                SizedBox(
-              width: SizeConfig.screenWidth * 25.0,
-              height: SizeConfig.screenHeight * 25.0,
-              child: Stack(
-                children: <Widget>[
-                  Pinned.fromSize(
-                    bounds: Rect.fromLTWH(SizeConfig.screenWidth * 0.0, SizeConfig.screenHeight * 0.0, SizeConfig.screenWidth * 25.0, SizeConfig.screenHeight * 25.0),
-                    size: Size(SizeConfig.screenWidth * 25.0, SizeConfig.screenHeight * 25.0),
-                    pinLeft: true,
-                    pinRight: true,
-                    pinTop: true,
-                    pinBottom: true,
-                    child: SvgPicture.string(
-                      _svg_bin63t,
-                      allowDrawingOutsideViewBox: true,
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                  Pinned.fromSize(
-                    bounds: Rect.fromLTWH(SizeConfig.screenWidth * 5.2,SizeConfig.screenHeight * 3.1, SizeConfig.screenWidth * 14.6, SizeConfig.screenHeight * 18.8),
-                    size: Size(SizeConfig.screenWidth * 25.0, SizeConfig.screenHeight * 25.0),
-                    pinLeft: true,
-                    pinRight: true,
-                    pinTop: true,
-                    pinBottom: true,
-                    child: SvgPicture.string(
-                      _svg_9fxlix,
-                      allowDrawingOutsideViewBox: true,
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+
           ),
           Transform.translate(
             offset: Offset(SizeConfig.screenWidth * 133.0, SizeConfig.screenHeight *587.0),
@@ -317,7 +131,7 @@ class JoinAnEvent extends StatelessWidget {
                               borderRadius: BorderRadius.circular(35.0),
                               color: const Color(0xffffffff),
                               border: Border.all(
-                                  width: SizeConfig.screenWidth * 1.0, color: const Color(0xff680aee)),
+                                  width: SizeConfig.screenWidth * 1.0, color: const Color(0xff1a2677)),
                             ),
                           ),
                         ),
@@ -388,8 +202,9 @@ class JoinAnEvent extends StatelessWidget {
           Container(),
         ],
       ),
-    );
-  }
+    ));
+    }
+
 }
 
 const String _svg_pybriv =

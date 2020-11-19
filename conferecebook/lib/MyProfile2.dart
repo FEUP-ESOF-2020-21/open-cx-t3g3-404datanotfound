@@ -112,7 +112,8 @@ class Profile2 extends State<MyProfile2> {
     twitter = widget.twitter;
     github = widget.github;
     myInterests = interests.split(',').toList();
-    return Scaffold(
+    return WillPopScope(
+    onWillPop: () async => false, child: Scaffold(
       backgroundColor: const Color(0xffffffff),
       body: Stack(
         children: <Widget>[
@@ -486,7 +487,7 @@ class Profile2 extends State<MyProfile2> {
           ),
         ],
       ),
-    );
+    ));
   }
 }
 

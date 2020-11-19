@@ -1,4 +1,5 @@
 import 'package:ConfereceBook/JoinAnEvent.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import './CreateProfile1.dart';
@@ -84,7 +85,8 @@ class Login extends State<MyLogin> {
   Widget build(BuildContext context) {
     auth = widget.auth;
     SizeConfig().init(context);
-    return Scaffold(
+    return WillPopScope(
+    onWillPop: () async => false, child: Scaffold(
       backgroundColor: const Color(0xffffffff),
       body: Stack(
         children: <Widget>[
@@ -124,7 +126,7 @@ class Login extends State<MyLogin> {
               child:
               TextField(
                 onChanged: (String value) async {
-                  this.email = value;
+                  this.email = value.trim();
                 },
                 obscureText: false,
                 decoration: InputDecoration(
@@ -178,9 +180,13 @@ class Login extends State<MyLogin> {
                 onTap: () {
                   check().then((value) {
                     if (value) {
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) => JoinAnEvent(auth: widget.auth)
-                      ));
+                      FirebaseDatabase.instance.reference().once().then((DataSnapshot snapshot) {
+                        Map<dynamic, dynamic> map = snapshot.value;
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                            builder: (context) => JoinAnEvent(auth: widget.auth, map: map,)
+                        ));
+                      });
+
                     } else {
                       showAlertDialog(context);
                     }
@@ -275,7 +281,7 @@ class Login extends State<MyLogin> {
           ),
         ],
       ),
-    );
+    ));
   }
 }
 

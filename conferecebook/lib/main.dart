@@ -1,5 +1,6 @@
 import 'package:ConfereceBook/JoinAnEvent.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,23 +9,33 @@ import 'package:ConfereceBook/Login.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  Map<dynamic, dynamic> map;
+  await FirebaseDatabase.instance.reference().once().then((DataSnapshot snapshot) {
+     map = snapshot.value;
+  });
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
-      .then((value) => runApp(MyApp()));
+      .then((value) => runApp(MyApp(map: map)));
+
 }
 
 class MyApp extends StatelessWidget {
 
+  MyApp({Key key, this.map}) : super(key: key);
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final Map<dynamic, dynamic> map;
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return  MaterialApp(
+            debugShowCheckedModeBanner: false,
             title: 'ConferenceBook',
             theme: ThemeData(
               primarySwatch: Colors.blue,
             ),
             home:
-            (_auth.currentUser == null) ? MyLogin(auth: _auth) : JoinAnEvent(auth: _auth),
+            (_auth.currentUser == null) ? MyLogin(auth: _auth) : JoinAnEvent(auth: _auth, map: map)
           );
   }
 }

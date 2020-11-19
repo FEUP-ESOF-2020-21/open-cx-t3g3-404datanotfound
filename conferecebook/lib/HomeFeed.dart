@@ -1,3 +1,4 @@
+import 'package:ConfereceBook/EnterEventCode.dart';
 import 'package:ConfereceBook/JoinAnEvent.dart';
 import 'package:ConfereceBook/Login.dart';
 import 'package:ConfereceBook/MyProfile.dart';
@@ -34,10 +35,12 @@ class HomeFeed extends StatefulWidget {
     Key key,
     this.auth,
     this.image,
+    this.code
   }) : super(key: key);
 
   final FirebaseAuth auth;
   final String image;
+  final String code;
 
   @override
   State<StatefulWidget> createState() => MyHomeFeed();
@@ -57,6 +60,7 @@ class MyHomeFeed extends State<HomeFeed> {
   String linkedin;
   String twitter;
   String github;
+  String code;
   final GlobalKey<ScaffoldState> _scaffoldState = GlobalKey();
 
   @override
@@ -64,11 +68,12 @@ class MyHomeFeed extends State<HomeFeed> {
     auth = widget.auth;
     image = widget.image;
     SizeConfig().init(context);
-    return Scaffold(
+    return WillPopScope(
+    onWillPop: () async => false, child: Scaffold(
       key: _scaffoldState,
       appBar: AppBar(
         actions: <Widget>[
-          IconButton(icon: new Icon(FontAwesomeIcons.search, color: const Color(0xffffffff),), onPressed: (){
+          IconButton(icon: new Icon(FontAwesomeIcons.users, color: const Color(0xffffffff),), onPressed: (){
             Navigator.of(context).pushReplacement(MaterialPageRoute(
                 builder: (context) => SeeallParticipants()));
           }),
@@ -90,18 +95,18 @@ class MyHomeFeed extends State<HomeFeed> {
                   Map<dynamic, dynamic> map6 = snapshot.value;
                   Map<dynamic, dynamic> map7 = snapshot.value;
                   String user = auth.currentUser.uid;
-                  this.image = map.values.toList()[0][user]["photo"];
-                  this.name = map.values.toList()[0][user]["name"];
-                  this.job = map.values.toList()[0][user]["job"];
-                  this.interests = map.values.toList()[0][user]["interests"];
-                  this.city = map.values.toList()[0][user]["city"];
-                  this.bio = map.values.toList()[0][user]["bio"];
-                  this.area = map.values.toList()[0][user]["area"];
-                  this.linkedin = map.values.toList()[0][user]["linkedin"];
-                  this.facebook = map.values.toList()[0][user]["facebook"];
-                  this.instagram = map.values.toList()[0][user]["instagram"];
-                  this.twitter = map.values.toList()[0][user]["twitter"];
-                  this.github = map.values.toList()[0][user]["github"];
+                  this.image = map.values.toList()[1][user]["photo"];
+                  this.name = map.values.toList()[1][user]["name"];
+                  this.job = map.values.toList()[1][user]["job"];
+                  this.interests = map.values.toList()[1][user]["interests"];
+                  this.city = map.values.toList()[1][user]["city"];
+                  this.bio = map.values.toList()[1][user]["bio"];
+                  this.area = map.values.toList()[1][user]["area"];
+                  this.linkedin = map.values.toList()[1][user]["linkedin"];
+                  this.facebook = map.values.toList()[1][user]["facebook"];
+                  this.instagram = map.values.toList()[1][user]["instagram"];
+                  this.twitter = map.values.toList()[1][user]["twitter"];
+                  this.github = map.values.toList()[1][user]["github"];
                   print(name);
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
                       builder: (context) => MyProfile(
@@ -137,6 +142,7 @@ class MyHomeFeed extends State<HomeFeed> {
           children: [
             ListTile(),
             ListTile(
+              leading: new Icon(FontAwesomeIcons.userAlt, color: const Color(0xff1A2677),),
               title: Text("MyProfile"),
               onTap: () async {
                 FirebaseDatabase.instance
@@ -144,25 +150,19 @@ class MyHomeFeed extends State<HomeFeed> {
                     .once()
                     .then((DataSnapshot snapshot) {
                   Map<dynamic, dynamic> map = snapshot.value;
-                  Map<dynamic, dynamic> map2 = snapshot.value;
-                  Map<dynamic, dynamic> map3 = snapshot.value;
-                  Map<dynamic, dynamic> map4 = snapshot.value;
-                  Map<dynamic, dynamic> map5 = snapshot.value;
-                  Map<dynamic, dynamic> map6 = snapshot.value;
-                  Map<dynamic, dynamic> map7 = snapshot.value;
                   String user = auth.currentUser.uid;
-                  this.image = map.values.toList()[0][user]["photo"];
-                  this.name = map.values.toList()[0][user]["name"];
-                  this.job = map.values.toList()[0][user]["job"];
-                  this.interests = map.values.toList()[0][user]["interests"];
-                  this.city = map.values.toList()[0][user]["city"];
-                  this.bio = map.values.toList()[0][user]["bio"];
-                  this.area = map.values.toList()[0][user]["area"];
-                  this.linkedin = map.values.toList()[0][user]["linkedin"];
-                  this.facebook = map.values.toList()[0][user]["facebook"];
-                  this.instagram = map.values.toList()[0][user]["instagram"];
-                  this.twitter = map.values.toList()[0][user]["twitter"];
-                  this.github = map.values.toList()[0][user]["github"];
+                  this.image = map.values.toList()[1][user]["photo"];
+                  this.name = map.values.toList()[1][user]["name"];
+                  this.job = map.values.toList()[1][user]["job"];
+                  this.interests = map.values.toList()[1][user]["interests"];
+                  this.city = map.values.toList()[1][user]["city"];
+                  this.bio = map.values.toList()[1][user]["bio"];
+                  this.area = map.values.toList()[1][user]["area"];
+                  this.linkedin = map.values.toList()[1][user]["linkedin"];
+                  this.facebook = map.values.toList()[1][user]["facebook"];
+                  this.instagram = map.values.toList()[1][user]["instagram"];
+                  this.twitter = map.values.toList()[1][user]["twitter"];
+                  this.github = map.values.toList()[1][user]["github"];
                   print(name);
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
                       builder: (context) => MyProfile(
@@ -183,15 +183,50 @@ class MyHomeFeed extends State<HomeFeed> {
               },
             ),
             ListTile(
+              leading: new Icon(FontAwesomeIcons.plusCircle, color: const Color(0xff1A2677),),
+              title: Text("Enter Event Code"),
+              onTap: () {
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => EnterEventCode(
+                      auth: widget.auth,
+                    )));
+              },
+            ),
+            ListTile(
+              leading: new Icon(FontAwesomeIcons.exchangeAlt, color: const Color(0xff1A2677),),
+              title: Text("Change to Other Event"),
+              onTap: () {
+                FirebaseDatabase.instance.reference().once().then((DataSnapshot snapshot) {
+                  Map<dynamic, dynamic> map = snapshot.value;
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => JoinAnEvent(auth: widget.auth, map: map,)
+                  ));
+                });
+              },
+            ),
+            ListTile(
+              leading: new Icon(FontAwesomeIcons.bell, color: const Color(0xff1A2677),),
+              title: Text("Notifications Panel"),
+              onTap: () {
+              },
+            ),
+            ListTile(
+              leading: new Icon(FontAwesomeIcons.users, color: const Color(0xff1A2677),),
+              title: Text("Participants List"),
+              onTap: () {
+              },
+            ),
+            ListTile(
+              leading: new Icon(FontAwesomeIcons.signOutAlt, color: const Color(0xff1A2677),),
               title: Text("LogOut"),
               onTap: () {
                 auth.signOut();
                 Navigator.of(context).pushReplacement(MaterialPageRoute(
                     builder: (context) => MyLogin(
-                        auth: auth,
-                        )));
+                      auth: auth,
+                    )));
               },
-            )
+            ),
           ],
         ),
       ),
@@ -224,7 +259,7 @@ class MyHomeFeed extends State<HomeFeed> {
 
         ],
       ),
-    );
+    ));
   }
 }
 

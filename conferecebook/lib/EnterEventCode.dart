@@ -1,13 +1,14 @@
+import 'package:ConfereceBook/HomeFeed.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
-import './WelcomeonBoard.dart';
-import 'package:adobe_xd/page_link.dart';
-import './HomeFeed.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/widgets.dart';
 
+import 'dart:async';
+
+import 'package:ConfereceBook/CreateProfile2.dart';
 
 class SizeConfig {
   static MediaQueryData _mediaQueryData;
@@ -23,216 +24,258 @@ class SizeConfig {
   }
 }
 
-class EnterEventCode extends StatefulWidget {
-  EnterEventCode(
-      {Key key,
-        this.auth,
-      })
-      : super(key: key);
+class EnterEventCode extends StatefulWidget{
+  EnterEventCode({Key key, this.auth}) : super(key: key);
 
   final FirebaseAuth auth;
 
   @override
-  State<StatefulWidget> createState() => MyEventCode();
+  State<StatefulWidget> createState() =>
+      EventCode();
 }
 
-class MyEventCode extends State<EnterEventCode> {
-  FirebaseAuth auth;
-  String image;
-  String userUID;
+class EventCode extends State<EnterEventCode>{
 
-  Future checkCode() async {
+  @override
+  void dispose() {
+    _codeController.dispose();
+    super.dispose();
+  }
+
+  showAlertDialog(BuildContext context, String text) {
+    Widget okButton = FlatButton(
+      child: Text("OK"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    AlertDialog alerta;
+    if (text == "Error") {
+      alerta = AlertDialog(
+        title: Text("Invalid Event Code"),
+        content: Text("The event code is invalid. Please try again."),
+        actions: [
+          okButton,
+        ],
+      );
+    } else if (text == "Empty") {
+      alerta = AlertDialog(
+        title: Text("Empty Field"),
+        content: Text("The event code field is empty."),
+        actions: [
+          okButton,
+        ],
+      );
+    }
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alerta;
+      },
+    );
+  }
+
+  String code = "";
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _codeController = TextEditingController();
+
+  String userId;
+  bool _success = false;
+  FirebaseAuth auth;
+
+  // ignore: missing_return
+  Future<String> _register() async {
+    await FirebaseDatabase.instance
+        .reference()
+        .once()
+        .then((DataSnapshot snapshot) {
+      Map<dynamic, dynamic> map = snapshot.value;
+      int length = map.values.toList()[0].length;
+      for (int i = 1; i <= length; i++) {
+        String aux = "id" + i.toString();
+        String codes = map.values.toList()[0][aux]["code"];
+        if (codes == this.code) {
+          _success = true;
+        }
+      }
+  });
+    return _success == true ? "" : "Error";
   }
 
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
     auth = widget.auth;
-    userUID = this.auth.currentUser.uid;
-    return Scaffold(
-      backgroundColor: const Color(0xffffffff),
-      body: Stack(
-        children: <Widget>[
-          Container(
-            width: SizeConfig.screenWidth * 412.0,
-            height: SizeConfig.screenHeight * 870.0,
-            decoration: BoxDecoration(
-              color: const Color(0xff1a2677),
-              border: Border.all(width: SizeConfig.screenWidth * 1.0, color: const Color(0xff707070)),
-            ),
-          ),
-          Container(),
-          Transform.translate(
-            offset: Offset(SizeConfig.screenWidth * 326.0, SizeConfig.screenHeight * 402.0),
-            child:
-                // Adobe XD layer: 'arrow_forward-24px' (group)
-                PageLink(
-              links: [
-                PageLinkInfo(
-                  transition: LinkTransition.Fade,
-                  ease: Curves.easeOut,
-                  duration: 0.3,
-                  pageBuilder: () => WelcomeonBoard(),
-                ),
-              ],
-              child: SizedBox(
-                width: SizeConfig.screenWidth * 35.0,
-                height: SizeConfig.screenHeight * 35.0,
-                child: Stack(
-                  children: <Widget>[
-                    Pinned.fromSize(
-                      bounds: Rect.fromLTWH(0.0, 0.0, SizeConfig.screenWidth * 35.0, SizeConfig.screenHeight * 35.0),
-                      size: Size(SizeConfig.screenWidth * 35.0, SizeConfig.screenHeight * 35.0),
-                      pinLeft: true,
-                      pinRight: true,
-                      pinTop: true,
-                      pinBottom: true,
-                      child: SvgPicture.string(
-                        _svg_755e5l,
-                        allowDrawingOutsideViewBox: true,
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                    Pinned.fromSize(
-                      bounds: Rect.fromLTWH(SizeConfig.screenWidth * 5.8, SizeConfig.screenHeight * 5.8, SizeConfig.screenWidth * 23.3, SizeConfig.screenHeight *23.3),
-                      size: Size(SizeConfig.screenWidth * 35.0, SizeConfig.screenHeight * 35.0),
-                      pinLeft: true,
-                      pinRight: true,
-                      pinTop: true,
-                      pinBottom: true,
-                      child: SvgPicture.string(
-                        _svg_sub2yt,
-                        allowDrawingOutsideViewBox: true,
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                  ],
-                ),
+    SizeConfig().init(context);
+    return WillPopScope(
+    onWillPop: () async => false, child: Scaffold(
+        resizeToAvoidBottomPadding: false,
+        backgroundColor: const Color(0xff1A2677),
+        body: Stack(
+          children: <Widget>[
+            Transform.translate(
+              offset: Offset(SizeConfig.screenWidth * 164.0,
+                  SizeConfig.screenHeight * 150.0),
+              child: Image.asset('images/icon.png',
+                width: SizeConfig.screenWidth * 90.0,
               ),
             ),
-          ),
-          Container(),
-          Transform.translate(
-            offset: Offset(SizeConfig.screenWidth * 60.0, SizeConfig.screenHeight * 149.5),
-            child: Text(
-              'Here for a new event?',
-              style: TextStyle(
-                fontFamily: 'Roboto',
-                fontSize: 50,
-                color: const Color(0xffffffff),
-                letterSpacing: 0.54375,
-                height: SizeConfig.screenHeight * 1.0344827586206897,
-              ),
-              textAlign: TextAlign.left,
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(SizeConfig.screenWidth * 53.5, SizeConfig.screenHeight * 400.0),
-            child: Container(
-              width: SizeConfig.screenWidth * 290.0,
-              child:
-              TextField(
-                obscureText: false,
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  filled: true,
-                  border: OutlineInputBorder(
-                      borderSide: new BorderSide(color: const Color(0xffffffff))
-                  ),
-                  labelText: 'Event Code',
-                ),
-                style: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontSize: 16,
-                  color: const Color(0xffffffff),
-                  letterSpacing: 0.15,
-                  height: SizeConfig.screenHeight * 1,
-                ),
-                textAlign: TextAlign.left,
-              ),
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(SizeConfig.screenWidth * 135.0, SizeConfig.screenHeight * 829.0),
-            child: SizedBox(
-              width: 144.0,
-              child: Text(
-                'ConferenceBook',
-                style: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontSize: 16,
-                  color: const Color(0xffffffff),
-                  letterSpacing: 0.15,
-                  height: SizeConfig.screenHeight * 1.5,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(SizeConfig.screenWidth * 120,
-                SizeConfig.screenHeight * 550.0),
-            child: Container(
-              child: InkWell(
-                onTap: () async {
-                  checkCode().then((value) {
-                    FirebaseDatabase.instance.reference().once().then((DataSnapshot snapshot) {
-                      Map<dynamic, dynamic> map = snapshot.value;
-                      this.image = map.values.toList()[0][userUID]["photo"];
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) => HomeFeed(auth: this.auth, image: this.image)));
-                    });
-
-                  });
-                },
-                child: SizedBox(
-                  width: SizeConfig.screenWidth * 149.0,
-                  height: SizeConfig.screenHeight * 57.0,
-                  child: Stack(
-                    children: <Widget>[
-                      Pinned.fromSize(
-                        bounds: Rect.fromLTWH(
-                            0.0,
-                            0.0,
-                            SizeConfig.screenWidth * 149.0,
-                            SizeConfig.screenHeight * 57.0),
-                        size: Size(SizeConfig.screenWidth * 149.0,
-                            SizeConfig.screenHeight * 57.0),
-                        pinLeft: true,
-                        pinRight: true,
-                        pinTop: true,
-                        pinBottom: true,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(35.0),
-                            color: const Color(0xffffffff),
-                            border: Border.all(
-                                width: 1.0, color: const Color(0xffffffff)),
-                          ),
-                          child: SizedBox(
-                            width: SizeConfig.screenWidth * 88.0,
-                            child: Text(
-                              'NEXT',
-                              style: TextStyle(
-                                fontFamily: 'Roboto',
-                                fontSize: 15,
-                                color: const Color(0xff1A2677),
-                                letterSpacing: 1.6909999999999998,
-                                height: 2,
-                              ),
-                              textAlign: TextAlign.center,
+            Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Transform.translate(
+                      offset: Offset(SizeConfig.screenWidth * 53.5, SizeConfig.screenHeight * 350.0),
+                      child: Container(
+                        width: 270.0,
+                        child: TextFormField(
+                          controller: _codeController,
+                          onChanged: (String value) async {
+                            this.code = value;
+                          },
+                          obscureText: false,
+                          decoration: InputDecoration(
+                            icon: Icon(FontAwesomeIcons.code, color: const Color(0xffffffff)),
+                            hintText: 'Event Code',
+                            filled: true,
+                            fillColor: Colors.white,
+                            border: InputBorder.none,
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white),
+                              borderRadius: BorderRadius.circular(25.7),
                             ),
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white),
+                              borderRadius: BorderRadius.circular(25.7),
+                            ),
+                          ),
+                          style: TextStyle(
+                            fontFamily: 'Roboto',
+                            fontSize: 16,
+                            color: const Color(0xff1A2677),
+                            letterSpacing: 0.15,
+                            height: 1,
+                          ),
+                          textAlign: TextAlign.left,
+                        ),)),
+                  Transform.translate(
+                    offset: Offset(SizeConfig.screenWidth / 2, SizeConfig.screenHeight * 450.0),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      alignment: Alignment.center,
+                      child: InkWell(
+                        onTap: () async {
+                          if (_formKey.currentState.validate()) {
+                            _register().then((value) {
+                              if (this.code == "" ) {
+                                showAlertDialog(context, "Empty");
+                              } else if (value == "Error") {
+                                showAlertDialog(context, "Error");
+                              } else {
+                                FirebaseDatabase.instance
+                                    .reference()
+                                    .once()
+                                    .then((DataSnapshot snapshot) {
+                                  Map<dynamic, dynamic> map = snapshot.value;
+                                  String image = map.values.toList()[1][auth.currentUser.uid]["photo"];
+                                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                      builder: (context) =>
+                                          HomeFeed(auth: this.auth, image: image, code: code)));
+                                });
+                              }
+                            });
+                          }
+                        },
+                        child: SizedBox(
+                          width: 149.0,
+                          height: 57.0,
+                          child: Stack(
+                            children: <Widget>[
+                              Pinned.fromSize(
+                                bounds: Rect.fromLTWH(0.0, 0.0, 149.0, 57.0),
+                                size: Size(149.0, 57.0),
+                                pinLeft: true,
+                                pinRight: true,
+                                pinTop: true,
+                                pinBottom: true,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(35.0),
+                                    color: const Color(0xffffffff),
+                                    border: Border.all(
+                                        width: 1.0, color: const Color(0xffffffff)),
+                                  ),
+                                  child: SizedBox(
+                                    width: 88.0,
+                                    child: Text(
+                                      'NEXT',
+                                      style: TextStyle(
+                                        fontFamily: 'Roboto',
+                                        fontSize: 20,
+                                        color: const Color(0xff1A2677),
+                                        letterSpacing: 1.6909999999999998,
+                                        height: 2,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                    ],
+                    ),),
+                  Transform.translate(
+                    offset: Offset(SizeConfig.screenWidth * 135.0,
+                        SizeConfig.screenHeight * 650.0),
+                    child: SizedBox(
+                      width: SizeConfig.screenWidth * 144.0,
+                      child: Text(
+                        'ConferenceBook',
+                        style: TextStyle(
+                          fontFamily: 'Roboto',
+                          fontSize: 16,
+                          color: const Color(0xffffffff),
+                          letterSpacing: 0.15,
+                          height: SizeConfig.screenHeight * 1.5,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
-          ),
-        ],
+          ],
+        )
+    ));
+  }
+}
+
+class _Chip extends StatelessWidget {
+  const _Chip({
+    @required this.label,
+    @required this.onDeleted,
+    @required this.index,
+  });
+
+  final String label;
+  final ValueChanged<int> onDeleted;
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    return Chip(
+      labelPadding: const EdgeInsets.only(left: 8.0),
+      label: Text(label),
+      deleteIcon: Icon(
+        Icons.close,
+        size: 18,
       ),
+      onDeleted: () {
+        onDeleted(index);
+      },
     );
   }
 }

@@ -91,7 +91,8 @@ class Profile extends State<MyProfile> {
     linkedin = widget.linkedin;
     twitter = widget.twitter;
     github = widget.github;
-    return Scaffold(
+    return WillPopScope(
+    onWillPop: () async => false, child: Scaffold(
       backgroundColor: const Color(0xffffffff),
       body: Stack(
         children: <Widget>[
@@ -312,7 +313,7 @@ class Profile extends State<MyProfile> {
           ),
         ],
       ),
-    );
+    ));
   }
 }
 

@@ -27,7 +27,8 @@ class MyMessages extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return Scaffold(
+    return WillPopScope(
+    onWillPop: () async => false, child: Scaffold(
       backgroundColor: const Color(0xffffffff),
       body: Stack(
         children: <Widget>[
@@ -1799,7 +1800,7 @@ class MyMessages extends StatelessWidget {
           ),
         ],
       ),
-    );
+    ));
   }
 }
 
