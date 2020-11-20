@@ -44,64 +44,52 @@ class JoinAnEvent extends StatefulWidget {
 class JoinEvent extends State<JoinAnEvent> {
 
   FirebaseAuth auth;
-  int numCodes;
   String code;
+  String nameEvent;
   Map<dynamic, dynamic> map;
+  List<String> conferenceNames = new List();
+  List<String> conferenceCodes = new List();
+
+  @override
+  void initState() {
+    super.initState();
+    map = widget.map;
+    auth = widget.auth;
+    int length = map.values.toList()[0].length;
+    for (int i = 1; i <= length; i++) {
+      String aux = "id" + i.toString();
+      Map<dynamic, dynamic> conf = map.values.toList()[0];
+      String name = conf[aux]["name"];
+      String code3 = conf[aux]["code"];
+      try {
+        String userUID = map.values.toList()[0][aux]["users"][auth.currentUser.uid];
+        conferenceNames.add(name);
+        conferenceCodes.add(code3);
+      } catch(e) {
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    auth = widget.auth;
-    map = widget.map;
-    auth = widget.auth;
-    numCodes = map.values.toList()[0].length;
+    if (conferenceNames.isEmpty) {
     return WillPopScope(
     onWillPop: () async => false, child: Scaffold(
       backgroundColor: const Color(0xff1a2677),
       body: Stack(
         children: <Widget>[
           Transform.translate(
-            offset: Offset(SizeConfig.screenWidth *  0.0, SizeConfig.screenHeight *  250.0),
-            child: ListView.builder(
-              itemCount: numCodes,
-              itemBuilder: (context, position) {
-                String aux = "id" + (position+1).toString();
-                code = map.values.toList()[0][aux]["name"];
-                String seconded = map.values.toList()[0][aux]["code"];
-                return Container(
-                  child: Card(
-                    child: new ListTile(
-                      trailing: IconButton(icon: new Icon(FontAwesomeIcons.trash, color: const Color(0xffffffff),), onPressed: (){
-                        // Delete Event
-                      }),
-                      title: Text(code, style: TextStyle(fontSize: 17.0, color: const Color(0xffffffff), fontWeight: FontWeight.bold),),
-                      subtitle: Text('You are a participant', style: TextStyle(fontSize: 10.0, color: const Color(0xffffffff), fontWeight: FontWeight.bold),),
-                      onTap: (){
-                        FirebaseDatabase.instance
-                            .reference()
-                            .once()
-                            .then((DataSnapshot snapshot) {
-                          Map<dynamic, dynamic> map = snapshot.value;
-                          String image = map.values.toList()[2][auth.currentUser.uid]["photo"];
-                          Navigator.of(context).pushReplacement(MaterialPageRoute(
-                              builder: (context) =>
-                                  HomeFeed(auth: this.auth, image: image, code: seconded, map: map,)));
-                        });
-                      },
-                    ),
-                    semanticContainer: true,
-                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    elevation: 5,
-                    margin: EdgeInsets.all(10),
-                    color: const Color(0xff1a2677),
-                  ),
-                );
-              },
+            offset: Offset(SizeConfig.screenWidth *  0.0, SizeConfig.screenHeight *  0),
+            child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(FontAwesomeIcons.times, color: Colors.white,),
+                    Text("\n Ups! You don't have any active \n conference. Why don't you join one?", textAlign: TextAlign.center, style: TextStyle(color: Colors.white),),
+                  ],
+                )
             ),
-
           ),
           Transform.translate(
             offset: Offset(SizeConfig.screenWidth * 133.0, SizeConfig.screenHeight *587.0),
@@ -203,8 +191,157 @@ class JoinEvent extends State<JoinAnEvent> {
         ],
       ),
     ));
-    }
+    } else {
+      return WillPopScope(
+          onWillPop: () async => false, child: Scaffold(
+        backgroundColor: const Color(0xff1a2677),
+        body: Stack(
+          children: <Widget>[
+            Transform.translate(
+              offset: Offset(SizeConfig.screenWidth *  0.0, SizeConfig.screenHeight *  250.0),
+              child: ListView.builder(
+                itemCount: conferenceNames.length,
+                itemBuilder: (context, position) {
+                  code = conferenceNames[position];
+                  nameEvent = conferenceCodes[position];
+                  //print(nameEvent);
+                  return Container(
+                    child: Card(
+                      child: new ListTile(
+                        trailing: IconButton(icon: new Icon(FontAwesomeIcons.trash, color: const Color(0xffffffff),), onPressed: (){
+                          // Delete Event
+                        }),
+                        title: Text(code, style: TextStyle(fontSize: 17.0, color: const Color(0xffffffff), fontWeight: FontWeight.bold),),
+                        subtitle: Text('You are a participant', style: TextStyle(fontSize: 10.0, color: const Color(0xffffffff), fontWeight: FontWeight.bold),),
+                        onTap: (){
+                          FirebaseDatabase.instance
+                              .reference()
+                              .once()
+                              .then((DataSnapshot snapshot) {
+                            Map<dynamic, dynamic> map = snapshot.value;
+                            String image = map.values.toList()[2][auth.currentUser.uid]["photo"];
+                            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                builder: (context) =>
+                                    HomeFeed(auth: this.auth, image: image, code: nameEvent, map: map,)));
+                          });
+                        },
+                      ),
+                      semanticContainer: true,
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      elevation: 5,
+                      margin: EdgeInsets.all(10),
+                      color: const Color(0xff1a2677),
+                    ),
+                  );
+                },
+              ),
 
+            ),
+            Transform.translate(
+              offset: Offset(SizeConfig.screenWidth * 133.0, SizeConfig.screenHeight *587.0),
+              child: SizedBox(
+                width: SizeConfig.screenWidth * 149.0,
+                height: SizeConfig.screenHeight * 57.0,
+                child: Stack(
+                  children: <Widget>[
+                    Pinned.fromSize(
+                      bounds: Rect.fromLTWH(0.0, 0.0, SizeConfig.screenWidth * 149.0, SizeConfig.screenHeight * 57.0),
+                      size: Size(SizeConfig.screenWidth * 149.0, SizeConfig.screenHeight *57.0),
+                      pinLeft: true,
+                      pinRight: true,
+                      pinTop: true,
+                      pinBottom: true,
+                      child: Stack(
+                        children: <Widget>[
+                          Pinned.fromSize(
+                            bounds: Rect.fromLTWH(0.0, 0.0, SizeConfig.screenWidth * 149.0, SizeConfig.screenHeight * 57.0),
+                            size: Size(SizeConfig.screenWidth * 149.0,SizeConfig.screenHeight * 57.0),
+                            pinLeft: true,
+                            pinRight: true,
+                            pinTop: true,
+                            pinBottom: true,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(35.0),
+                                color: const Color(0xffffffff),
+                                border: Border.all(
+                                    width: SizeConfig.screenWidth * 1.0, color: const Color(0xff1a2677)),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Pinned.fromSize(
+                        bounds: Rect.fromLTWH(SizeConfig.screenWidth * 26.5, SizeConfig.screenHeight * 15.5, SizeConfig.screenWidth * 96.0, SizeConfig.screenHeight * 26.0),
+                        size: Size(SizeConfig.screenWidth * 149.0, SizeConfig.screenHeight *57.0),
+                        fixedWidth: true,
+                        fixedHeight: true,
+                        child: PageLink(
+                          links: [
+                            PageLinkInfo(
+                              transition: LinkTransition.Fade,
+                              ease: Curves.easeOut,
+                              duration: 0.3,
+                              pageBuilder: () => EnterEventCode(auth: auth,),
+                            ),
+                          ], child: Text(
+                          'New Event',
+                          style: TextStyle(
+                            fontFamily: 'Roboto',
+                            fontSize: 17.2,
+                            color: const Color(0xff1a2677),
+                            letterSpacing: 0.1875,
+                            fontWeight: FontWeight.w700,
+                            height: 1,
+                          ),
+                          textAlign: TextAlign.left,
+                        ),)
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Transform.translate(
+              offset: Offset(SizeConfig.screenWidth * 64.5,SizeConfig.screenHeight * 145.5),
+              child: Text(
+                'Join one event now!',
+                style: TextStyle(
+                  fontFamily: 'Roboto',
+                  fontSize: 50,
+                  color: const Color(0xffffffff),
+                  letterSpacing: 0.54375,
+                  height: SizeConfig.screenHeight * 1.0344827586206897,
+                ),
+                textAlign: TextAlign.left,
+              ),
+            ),
+            Transform.translate(
+              offset: Offset(SizeConfig.screenWidth * 135.0,SizeConfig.screenHeight * 829.0),
+              child: SizedBox(
+                width: SizeConfig.screenWidth * 144.0,
+                child: Text(
+                  'ConferenceBook',
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontSize: 16,
+                    color: const Color(0xffffffff),
+                    letterSpacing: 0.15,
+                    height:SizeConfig.screenHeight * 1.5,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+            Container(),
+          ],
+        ),
+      ));
+    }
+  }
 }
 
 const String _svg_pybriv =

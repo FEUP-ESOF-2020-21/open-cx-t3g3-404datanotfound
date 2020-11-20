@@ -377,12 +377,10 @@ class MyHomeFeed extends State<HomeFeed> {
         appBar: AppBar(
           actions: <Widget>[
             IconButton(icon: new Icon(FontAwesomeIcons.users, color: const Color(0xffffffff),), onPressed: (){
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (context) => SeeallParticipants()));
+
             }),
             IconButton(icon: new Icon(FontAwesomeIcons.bell, color: const Color(0xffffffff),), onPressed: (){
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (context) => NotificationsPanel()));
+
             }),
             InkWell(
                 onTap: () async {

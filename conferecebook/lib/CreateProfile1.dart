@@ -187,8 +187,7 @@ class MyProfileState extends State<CreateProfile1>{
   @override
   Widget build(BuildContext context) {
     auth = widget.auth;
-    return WillPopScope(
-    onWillPop: () async => false, child: Scaffold(
+    return Scaffold(
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         title: Text("New Account"),
@@ -346,7 +345,7 @@ class MyProfileState extends State<CreateProfile1>{
             ),
           ),
         ],
-      ))
+      )
     );
   }
 }

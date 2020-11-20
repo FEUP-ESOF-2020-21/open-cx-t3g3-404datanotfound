@@ -1,4 +1,5 @@
 import 'package:ConfereceBook/HomeFeed.dart';
+import 'package:ConfereceBook/JoinAnEvent.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -42,6 +43,44 @@ class EventCode extends State<EnterEventCode>{
     super.dispose();
   }
 
+  Future addDataBase() async{
+    await FirebaseDatabase.instance
+        .reference()
+        .once()
+        .then((DataSnapshot snapshot) {
+      Map<dynamic, dynamic> map = snapshot.value;
+      int length = map.values.toList()[0].length;
+      for (int i = 1; i <= length; i++) {
+        String aux = "id" + i.toString();
+        String codes = map.values.toList()[0][aux]["code"];
+        if (codes == this.code) {
+          String user;
+          try {
+            user = map.values.toList()[0][aux]["users"][widget.auth.currentUser.uid];
+            showAlertDialog(context, "Already");
+          } catch(e) {
+            DatabaseReference firebaseDatabaseRef =
+            FirebaseDatabase.instance.reference().child('Conferences').child(aux);
+            firebaseDatabaseRef.child("users").set({
+              widget.auth.currentUser.uid : widget.auth.currentUser.uid,
+            });
+            FirebaseDatabase.instance
+                .reference()
+                .once()
+                .then((DataSnapshot snapshot) {
+              Map<dynamic, dynamic> map = snapshot.value;
+              String image = map.values.toList()[2][widget.auth.currentUser.uid]["photo"];
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (context) =>
+                      HomeFeed(auth: this.auth, image: image, code: code, map: map,)));
+            });
+          }
+        }
+      }
+
+  });
+  }
+
   showAlertDialog(BuildContext context, String text) {
     Widget okButton = FlatButton(
       child: Text("OK"),
@@ -62,6 +101,14 @@ class EventCode extends State<EnterEventCode>{
       alerta = AlertDialog(
         title: Text("Empty Field"),
         content: Text("The event code field is empty."),
+        actions: [
+          okButton,
+        ],
+      );
+    } else if (text == "Already") {
+      alerta = AlertDialog(
+        title: Text("Already Registered"),
+        content: Text("You're already in this conference!"),
         actions: [
           okButton,
         ],
@@ -112,6 +159,36 @@ class EventCode extends State<EnterEventCode>{
         backgroundColor: const Color(0xff1A2677),
         body: Stack(
           children: <Widget>[
+            Container(
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      child: Expanded(
+                        child: Align(
+                          alignment: FractionalOffset.topLeft,
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 25.0, left: 10.0),
+                            child: FloatingActionButton(
+                              onPressed: () async {
+                                FirebaseDatabase.instance.reference().once().then((DataSnapshot snapshot) {
+                                  Map<dynamic, dynamic> map = snapshot.value;
+                                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                      builder: (context) => JoinAnEvent(auth: widget.auth, map: map,)
+                                  ));
+                                });
+                              },
+                              backgroundColor: const Color(0xff1A2677),
+                              child: Icon(
+                                FontAwesomeIcons.arrowLeft,
+                                color: const Color(0xffffffff),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                )),
             Transform.translate(
               offset: Offset(SizeConfig.screenWidth * 164.0,
                   SizeConfig.screenHeight * 150.0),
@@ -172,16 +249,7 @@ class EventCode extends State<EnterEventCode>{
                               } else if (value == "Error") {
                                 showAlertDialog(context, "Error");
                               } else {
-                                FirebaseDatabase.instance
-                                    .reference()
-                                    .once()
-                                    .then((DataSnapshot snapshot) {
-                                  Map<dynamic, dynamic> map = snapshot.value;
-                                  String image = map.values.toList()[2][widget.auth.currentUser.uid]["photo"];
-                                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                                      builder: (context) =>
-                                          HomeFeed(auth: this.auth, image: image, code: code, map: map,)));
-                                });
+                                addDataBase();
                               }
                             });
                           }

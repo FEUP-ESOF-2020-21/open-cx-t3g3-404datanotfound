@@ -30,23 +30,23 @@ class SizeConfig {
 }
 
 class MyProfile2 extends StatefulWidget {
-  MyProfile2({
-    Key key,
-    this.auth,
-    this.image,
-    this.name,
-    this.job,
-    this.interests,
-    this.city,
-    this.bio,
-    this.area,
-    this.facebook,
-    this.instagram,
-    this.linkedin,
-    this.twitter,
-    this.github,
-    this.code
-  }) : super(key: key);
+  MyProfile2(
+      {Key key,
+      this.auth,
+      this.image,
+      this.name,
+      this.job,
+      this.interests,
+      this.city,
+      this.bio,
+      this.area,
+      this.facebook,
+      this.instagram,
+      this.linkedin,
+      this.twitter,
+      this.github,
+      this.code})
+      : super(key: key);
 
   final FirebaseAuth auth;
   final String image;
@@ -107,13 +107,13 @@ class Profile2 extends State<MyProfile2> {
     );
     AlertDialog alerta;
 
-      alerta = AlertDialog(
-        title: Text("Oops..."),
-        content: Text(name.trimRight() + " doesn't have a " + text + " account."),
-        actions: [
-          okButton,
-        ],
-      );
+    alerta = AlertDialog(
+      title: Text("Oops..."),
+      content: Text(name.trimRight() + " doesn't have a " + text + " account."),
+      actions: [
+        okButton,
+      ],
+    );
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -139,403 +139,396 @@ class Profile2 extends State<MyProfile2> {
     github = widget.github;
     myInterests = interests.split(',').toList();
     return WillPopScope(
-    onWillPop: () async => false, child: Scaffold(
-      backgroundColor: const Color(0xffffffff),
-      body: Stack(
-        children: <Widget>[
-          Transform.translate(
-            offset: Offset(
-                SizeConfig.screenWidth * 34.0, SizeConfig.screenHeight * 150.0),
-            child: Container(
-              width: SizeConfig.screenWidth * 345.0,
-              height: SizeConfig.screenHeight * 636.0,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30.0),
-                color: const Color(0x80ececec),
-              ),
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(
-                SizeConfig.screenWidth * 110.0, SizeConfig.screenHeight * 64.0),
-            child: Container(
-              width: SizeConfig.screenWidth * 194.0,
-              height: SizeConfig.screenHeight * 194.0,
-              decoration: BoxDecoration(
-                borderRadius:
-                    BorderRadius.all(Radius.elliptical(9999.0, 9999.0)),
-                color: const Color(0xfff5f5f5),
-              ),
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(SizeConfig.screenWidth * 158.5,
-                SizeConfig.screenHeight * 290.0),
-            child: SizedBox(
-              width: SizeConfig.screenWidth * 100.0,
-              child: Text(
-                this.city,
-                style: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontSize: 12,
-                  color: const Color(0xff1A2677),
-                  letterSpacing: 0.1875,
-                  fontWeight: FontWeight.w500,
-                  height: 1.2,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-          Container(),
-          Container(),
-          Container(),
-          Container(),
-          Container(),
-          Container(),
-          Container(),
-          Container(),
-          Container(),
-          Container(),
-          Container(),
-          Container(),
-          Transform.translate(
-            offset: Offset(
-                SizeConfig.screenWidth * 130, SizeConfig.screenHeight * 350),
-            child: Text(
-              'Social Media',
-              style: TextStyle(
-                fontFamily: 'Roboto',
-                fontSize: 20,
-                color: const Color(0xff1A2677),
-                letterSpacing: 0.36,
-                fontWeight: FontWeight.w500,
-                height: 1,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(
-                SizeConfig.screenWidth * 150, SizeConfig.screenHeight * 550),
-            child: Text(
-              'Interests',
-              style: TextStyle(
-                fontFamily: 'Roboto',
-                fontSize: 20,
-                color: const Color(0xff1A2677),
-                letterSpacing: 0.36,
-                fontWeight: FontWeight.w500,
-                height: 1,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          Transform.translate(
-              offset: Offset(
-                  SizeConfig.screenWidth * 80, SizeConfig.screenHeight * 600),
-              child: Container(
-                width: SizeConfig.screenWidth * 250,
-                child: Tags(
-                  key: _tagStateKey,
-                  textField: TagsTextField(
-                    textStyle: TextStyle(fontSize: 10),
-                    constraintSuggestion: true, suggestions: [],
-                    onSubmitted: (String str) {
-                      // Add item to the data source.
-                      setState(() {
-                        // required
-                        myInterests.add(str);
-                      });
-                    },
-                    //width: double.infinity, padding: EdgeInsets.symmetric(horizontal: 10),
-                  ),
-                  itemCount: myInterests.length, // required
-                  itemBuilder: (int index) {
-                    final item = myInterests[index];
-
-                    return ItemTags(
-                      // Each ItemTags must contain a Key. Keys allow Flutter to
-                      // uniquely identify widgets.
-                      key: Key(index.toString()),
-                      index: index,
-                      // required
-                      title: item,
-                      textStyle: TextStyle(
-                        fontSize: 10,
-                      ),
-                      combine: ItemTagsCombine.withTextBefore,
-                      image: null,
-                      // OR null,
-                      icon: ItemTagsIcon(
-                        icon: Icons.add,
-                      ),
-                      // OR null,
-                      removeButton: ItemTagsRemoveButton(
-                        onRemoved: () {
-                          // Remove the item from the data source.
-                          setState(() {
-                            // required
-                            myInterests.removeAt(index);
-                          });
-                          //required
-                          return true;
-                        },
-                      ),
-                      // OR null,
-                      onPressed: (item) => print(item),
-                      onLongPressed: (item) => print(item),
-                    );
-                  },
-                ),
-              )),
-          Transform.translate(
-            offset: Offset(
-                SizeConfig.screenWidth * 200, SizeConfig.screenHeight * 440.0),
-            child: Container(
-                child: IconButton(
-                    icon: Icon(FontAwesomeIcons.linkedin,
-                        color: const Color(0xff1A2677)),
-                    onPressed: () async {
-    if (this.linkedin == null) showAlertDialog(context, "LinkedIn");
-    else {
-
-    String url = 'https://linkedin.com/in/' + this.linkedin;
-                      if (await canLaunch(url)) {
-                        await launch(url);
-                      } else {
-                        throw 'Could not launch $url';
-                      }}
-                    })),
-          ),
-          Transform.translate(
-            offset: Offset(
-                SizeConfig.screenWidth * 220, SizeConfig.screenHeight * 380.0),
-            child: Container(
-                child: IconButton(
-                    icon: Icon(FontAwesomeIcons.twitter,
-                        color: const Color(0xff1A2677)),
-                    onPressed: () async {
-    if (this.twitter == null) showAlertDialog(context, "Twitter");
-    else {
-
-    String url = 'https://twitter.com/' + this.twitter;
-                      if (await canLaunch(url)) {
-                        await launch(url);
-                      } else {
-                        throw 'Could not launch $url';
-                      }}
-                    })),
-          ),
-          Transform.translate(
-            offset: Offset(
-                SizeConfig.screenWidth * 150, SizeConfig.screenHeight * 440.0),
-            child: Container(
-                child: IconButton(
-                    icon: Icon(FontAwesomeIcons.github,
-                        color: const Color(0xff1A2677)),
-                    onPressed: () async {
-    if (this.github == null) showAlertDialog(context, "Github");
-    else {
-
-    String url = 'https://github.com/' + this.github;
-                      if (await canLaunch(url)) {
-                        await launch(url);
-                      } else {
-                        throw 'Could not launch $url';
-                      }}
-                    })),
-          ),
-          Transform.translate(
-            offset: Offset(
-                SizeConfig.screenWidth * 170, SizeConfig.screenHeight * 380.0),
-            child: Container(
-                child: IconButton(
-                    icon: Icon(FontAwesomeIcons.instagram,
-                        color: const Color(0xff1A2677)),
-                    onPressed: () async {
-    if (this.instagram == null) showAlertDialog(context, "Instagram");
-    else {
-
-    String url = 'https://instagram.com/' + this.instagram;
-                      if (await canLaunch(url)) {
-                        await launch(url);
-                      } else {
-                        throw 'Could not launch $url';
-                      }}
-                    })),
-          ),
-          Transform.translate(
-            offset: Offset(
-                SizeConfig.screenWidth * 120, SizeConfig.screenHeight * 380.0),
-            child: Container(
-                child: IconButton(
-                    icon: Icon(FontAwesomeIcons.facebook,
-                        color: const Color(0xff1A2677)),
-                    onPressed: () async {
-                      if (this.facebook == null) showAlertDialog(context, "Facebook");
-                      else {
-                        String url = 'https://facebook.com/' + this.facebook;
-
-                      if (await canLaunch(url)) {
-                        await launch(url);
-                      } else {
-                        throw 'Could not launch $url';
-                      }
-                      }
-                    })),
-          ),
-          Transform.translate(
-            offset: Offset(
-                SizeConfig.screenWidth * 80, SizeConfig.screenHeight * 250.0),
-            child: SizedBox(
-              width: 226.0,
-              child: Text(
-                this.name,
-                style: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontSize: 30,
-                  color: const Color(0xff1A2677),
-                  letterSpacing: 0.28125,
-                  fontWeight: FontWeight.w500,
-                  height: 0.8,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(
-                SizeConfig.screenWidth * 350.0, SizeConfig.screenHeight * 35),
-            child: Icon(
-              FontAwesomeIcons.pencilAlt,
-              color: const Color(0xff1A2677),
-            ),
-          ),
-          Container(),
-          Transform.translate(
-            offset: Offset(
-                SizeConfig.screenWidth * 150, SizeConfig.screenHeight * 100.0),
-            child:
-                // Adobe XD layer: 'NoPath' (shape)
-                Container(
-              child: CircleAvatar(
-                backgroundImage: NetworkImage(this.image),
-                radius: 50,
-              ),
-            ),
-          ),
-          Container(
-              child: Column(
+        onWillPop: () async => false,
+        child: Scaffold(
+          backgroundColor: const Color(0xffffffff),
+          body: Stack(
             children: <Widget>[
-              Container(
-                child: Expanded(
-                  child: Align(
-                    alignment: FractionalOffset.bottomLeft,
-                    child: Padding(
-                      padding: EdgeInsets.only(bottom: 10.0, left: 10.0),
-                      child: FloatingActionButton(
+              Transform.translate(
+                offset: Offset(SizeConfig.screenWidth * 34.0,
+                    SizeConfig.screenHeight * 150.0),
+                child: Container(
+                  width: SizeConfig.screenWidth * 345.0,
+                  height: SizeConfig.screenHeight * 636.0,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30.0),
+                    color: const Color(0x80ececec),
+                  ),
+                ),
+              ),
+              Transform.translate(
+                offset: Offset(SizeConfig.screenWidth * 110.0,
+                    SizeConfig.screenHeight * 64.0),
+                child: Container(
+                  width: SizeConfig.screenWidth * 194.0,
+                  height: SizeConfig.screenHeight * 194.0,
+                  decoration: BoxDecoration(
+                    borderRadius:
+                        BorderRadius.all(Radius.elliptical(9999.0, 9999.0)),
+                    color: const Color(0xfff5f5f5),
+                  ),
+                ),
+              ),
+              Transform.translate(
+                offset: Offset(SizeConfig.screenWidth * 158.5,
+                    SizeConfig.screenHeight * 290.0),
+                child: SizedBox(
+                  width: SizeConfig.screenWidth * 100.0,
+                  child: Text(
+                    this.city,
+                    style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontSize: 12,
+                      color: const Color(0xff1A2677),
+                      letterSpacing: 0.1875,
+                      fontWeight: FontWeight.w500,
+                      height: 1.2,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+              Container(),
+              Container(),
+              Container(),
+              Container(),
+              Container(),
+              Container(),
+              Container(),
+              Container(),
+              Container(),
+              Container(),
+              Container(),
+              Container(),
+              Transform.translate(
+                offset: Offset(SizeConfig.screenWidth * 130,
+                    SizeConfig.screenHeight * 350),
+                child: Text(
+                  'Social Media',
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontSize: 20,
+                    color: const Color(0xff1A2677),
+                    letterSpacing: 0.36,
+                    fontWeight: FontWeight.w500,
+                    height: 1,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Transform.translate(
+                offset: Offset(SizeConfig.screenWidth * 150,
+                    SizeConfig.screenHeight * 550),
+                child: Text(
+                  'Interests',
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontSize: 20,
+                    color: const Color(0xff1A2677),
+                    letterSpacing: 0.36,
+                    fontWeight: FontWeight.w500,
+                    height: 1,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Transform.translate(
+                  offset: Offset(SizeConfig.screenWidth * 80,
+                      SizeConfig.screenHeight * 600),
+                  child: Container(
+                    width: SizeConfig.screenWidth * 250,
+                    child: Tags(
+                      key: _tagStateKey,
+                      itemCount: myInterests.length, // required
+                      itemBuilder: (int index) {
+                        final item = myInterests[index];
+                        return ItemTags(
+                          // Each ItemTags must contain a Key. Keys allow Flutter to
+                          // uniquely identify widgets.
+                          key: Key(index.toString()),
+                          index: index,
+                          // required
+                          title: item,
+                          textStyle: TextStyle(
+                            fontSize: 10,
+                          ),
+                          combine: ItemTagsCombine.withTextBefore,
+                          image: null,
+                          // OR null,
+                          icon: null,
+                          // OR null,
+                          removeButton: null,
+                          // OR null,
+                          onPressed: (item) => print(item),
+                          onLongPressed: (item) => print(item),
+                        );
+                      },
+                    ),
+                  )),
+              Transform.translate(
+                offset: Offset(SizeConfig.screenWidth * 200,
+                    SizeConfig.screenHeight * 440.0),
+                child: Container(
+                    child: IconButton(
+                        icon: Icon(FontAwesomeIcons.linkedin,
+                            color: const Color(0xff1A2677)),
                         onPressed: () async {
-                          interestsToString();
-                          FirebaseDatabase.instance
-                              .reference()
-                              .child('Users')
-                              .child(widget.auth.currentUser.uid)
-                              .update({interests: interests}).then((value) {
-                            Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                    builder: (context) => MyProfile(
-                                        auth: widget.auth,
-                                        image: image,
-                                        name: name,
-                                        job: job,
-                                        interests: interests,
-                                        city: city,
-                                        bio: bio,
-                                        area: area,
-                                        linkedin: linkedin,
-                                        facebook: facebook,
-                                        instagram: instagram,
-                                        twitter: twitter,
-                                        github: github,
-                                    code: widget.code)));
-                          });
-                        },
-                        backgroundColor: const Color(0xff1A2677),
-                        child: Icon(
-                          FontAwesomeIcons.arrowLeft,
-                          color: const Color(0xffffffff),
+                          if (this.linkedin == null)
+                            showAlertDialog(context, "LinkedIn");
+                          else {
+                            String url =
+                                'https://linkedin.com/in/' + this.linkedin;
+                            if (await canLaunch(url)) {
+                              await launch(url);
+                            } else {
+                              throw 'Could not launch $url';
+                            }
+                          }
+                        })),
+              ),
+              Transform.translate(
+                offset: Offset(SizeConfig.screenWidth * 220,
+                    SizeConfig.screenHeight * 380.0),
+                child: Container(
+                    child: IconButton(
+                        icon: Icon(FontAwesomeIcons.twitter,
+                            color: const Color(0xff1A2677)),
+                        onPressed: () async {
+                          if (this.twitter == null)
+                            showAlertDialog(context, "Twitter");
+                          else {
+                            String url = 'https://twitter.com/' + this.twitter;
+                            if (await canLaunch(url)) {
+                              await launch(url);
+                            } else {
+                              throw 'Could not launch $url';
+                            }
+                          }
+                        })),
+              ),
+              Transform.translate(
+                offset: Offset(SizeConfig.screenWidth * 150,
+                    SizeConfig.screenHeight * 440.0),
+                child: Container(
+                    child: IconButton(
+                        icon: Icon(FontAwesomeIcons.github,
+                            color: const Color(0xff1A2677)),
+                        onPressed: () async {
+                          if (this.github == null)
+                            showAlertDialog(context, "Github");
+                          else {
+                            String url = 'https://github.com/' + this.github;
+                            if (await canLaunch(url)) {
+                              await launch(url);
+                            } else {
+                              throw 'Could not launch $url';
+                            }
+                          }
+                        })),
+              ),
+              Transform.translate(
+                offset: Offset(SizeConfig.screenWidth * 170,
+                    SizeConfig.screenHeight * 380.0),
+                child: Container(
+                    child: IconButton(
+                        icon: Icon(FontAwesomeIcons.instagram,
+                            color: const Color(0xff1A2677)),
+                        onPressed: () async {
+                          if (this.instagram == null)
+                            showAlertDialog(context, "Instagram");
+                          else {
+                            String url =
+                                'https://instagram.com/' + this.instagram;
+                            if (await canLaunch(url)) {
+                              await launch(url);
+                            } else {
+                              throw 'Could not launch $url';
+                            }
+                          }
+                        })),
+              ),
+              Transform.translate(
+                offset: Offset(SizeConfig.screenWidth * 120,
+                    SizeConfig.screenHeight * 380.0),
+                child: Container(
+                    child: IconButton(
+                        icon: Icon(FontAwesomeIcons.facebook,
+                            color: const Color(0xff1A2677)),
+                        onPressed: () async {
+                          if (this.facebook == null)
+                            showAlertDialog(context, "Facebook");
+                          else {
+                            String url =
+                                'https://facebook.com/' + this.facebook;
+
+                            if (await canLaunch(url)) {
+                              await launch(url);
+                            } else {
+                              throw 'Could not launch $url';
+                            }
+                          }
+                        })),
+              ),
+              Transform.translate(
+                offset: Offset(SizeConfig.screenWidth * 80,
+                    SizeConfig.screenHeight * 250.0),
+                child: SizedBox(
+                  width: 226.0,
+                  child: Text(
+                    this.name,
+                    style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontSize: 30,
+                      color: const Color(0xff1A2677),
+                      letterSpacing: 0.28125,
+                      fontWeight: FontWeight.w500,
+                      height: 0.8,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+              Transform.translate(
+                offset: Offset(SizeConfig.screenWidth * 350.0,
+                    SizeConfig.screenHeight * 35),
+                child: Icon(
+                  FontAwesomeIcons.pencilAlt,
+                  color: const Color(0xff1A2677),
+                ),
+              ),
+              Container(),
+              Transform.translate(
+                offset: Offset(SizeConfig.screenWidth * 150,
+                    SizeConfig.screenHeight * 100.0),
+                child:
+                    // Adobe XD layer: 'NoPath' (shape)
+                    Container(
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage(this.image),
+                    radius: 50,
+                  ),
+                ),
+              ),
+              Container(
+                  child: Column(
+                children: <Widget>[
+                  Container(
+                    child: Expanded(
+                      child: Align(
+                        alignment: FractionalOffset.bottomLeft,
+                        child: Padding(
+                          padding: EdgeInsets.only(bottom: 10.0, left: 10.0),
+                          child: FloatingActionButton(
+                            onPressed: () async {
+                              interestsToString();
+                              FirebaseDatabase.instance
+                                  .reference()
+                                  .child('Users')
+                                  .child(widget.auth.currentUser.uid)
+                                  .update({interests: interests}).then((value) {
+                                Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                        builder: (context) => MyProfile(
+                                            auth: widget.auth,
+                                            image: image,
+                                            name: name,
+                                            job: job,
+                                            interests: interests,
+                                            city: city,
+                                            bio: bio,
+                                            area: area,
+                                            linkedin: linkedin,
+                                            facebook: facebook,
+                                            instagram: instagram,
+                                            twitter: twitter,
+                                            github: github,
+                                            code: widget.code)));
+                              });
+                            },
+                            backgroundColor: const Color(0xff1A2677),
+                            child: Icon(
+                              FontAwesomeIcons.arrowLeft,
+                              color: const Color(0xffffffff),
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ),
-              )
-            ],
-          )),
-          Transform.translate(
-              offset: Offset(
-                  SizeConfig.screenWidth * 10, SizeConfig.screenHeight * 20),
-              child: SizedBox.fromSize(
-                size: Size(56, 56), // button width and height
-                child: ClipOval(
-                  child: Material(
-                    color: const Color(0xff1A2677), // button color
-                    child: InkWell(
-                      splashColor: const Color(0xff1A2677), // splash color
-                      onTap: () async {
-                        FirebaseDatabase.instance
-                            .reference()
-                            .once()
-                            .then((DataSnapshot snapshot) {
-                          Map<dynamic, dynamic> map = snapshot.value;
-                          Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                  builder: (context) => HomeFeed(
-                                      auth: widget.auth,
-                                      image: image,
-                                      code: widget.code,
-                                      map: map)));
-                        });
-                      }, // button pressed
-                      child: Icon(FontAwesomeIcons.home, color: Colors.white,), // icon
-
-                    ),
-                  ),
-                ),
+                  )
+                ],
               )),
-          Transform.translate(
-              offset: Offset(
-                  SizeConfig.screenWidth * 340, SizeConfig.screenHeight * 790),
-              child: SizedBox.fromSize(
-                size: Size(56, 56), // button width and height
-                child: ClipOval(
-                  child: Material(
-                    color: const Color(0xff1A2677), // button color
-                    child: InkWell(
-                      splashColor: const Color(0xff1A2677), // splash color
-                      onTap: () async {
-                        widget.auth.signOut();
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (context) => MyLogin(
-                              auth: widget.auth,
-                            )));
-                      }, // button pressed
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Icon(FontAwesomeIcons.signOutAlt, color: Colors.white,), // icon
-                          Text("LogOut", style: TextStyle(color: Colors.white, fontSize: 10),), // text
-                        ],
+              Transform.translate(
+                  offset: Offset(SizeConfig.screenWidth * 10,
+                      SizeConfig.screenHeight * 20),
+                  child: SizedBox.fromSize(
+                    size: Size(56, 56), // button width and height
+                    child: ClipOval(
+                      child: Material(
+                        color: const Color(0xff1A2677), // button color
+                        child: InkWell(
+                          splashColor: const Color(0xff1A2677), // splash color
+                          onTap: () async {
+                            FirebaseDatabase.instance
+                                .reference()
+                                .once()
+                                .then((DataSnapshot snapshot) {
+                              Map<dynamic, dynamic> map = snapshot.value;
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: (context) => HomeFeed(
+                                          auth: widget.auth,
+                                          image: image,
+                                          code: widget.code,
+                                          map: map)));
+                            });
+                          }, // button pressed
+                          child: Icon(
+                            FontAwesomeIcons.home,
+                            color: Colors.white,
+                          ), // icon
+                        ),
                       ),
                     ),
-                  ),
-                ),
-              )),
-
-        ],
-      ),
-    ));
+                  )),
+              Transform.translate(
+                  offset: Offset(SizeConfig.screenWidth * 340,
+                      SizeConfig.screenHeight * 790),
+                  child: SizedBox.fromSize(
+                    size: Size(56, 56), // button width and height
+                    child: ClipOval(
+                      child: Material(
+                        color: const Color(0xff1A2677), // button color
+                        child: InkWell(
+                          splashColor: const Color(0xff1A2677), // splash color
+                          onTap: () async {
+                            widget.auth.signOut();
+                            Navigator.of(context)
+                                .pushReplacement(MaterialPageRoute(
+                                    builder: (context) => MyLogin(
+                                          auth: widget.auth,
+                                        )));
+                          }, // button pressed
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Icon(
+                                FontAwesomeIcons.signOutAlt,
+                                color: Colors.white,
+                              ), // icon
+                              Text(
+                                "LogOut",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 10),
+                              ), // text
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  )),
+            ],
+          ),
+        ));
   }
 }
 
