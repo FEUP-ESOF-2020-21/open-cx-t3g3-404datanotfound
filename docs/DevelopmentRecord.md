@@ -71,7 +71,7 @@ Start by contextualizing your module, describing the main concepts, terms, roles
 
 ### Use case diagram 
 
-<img src="use_case_diagram.png" width=25% height=25%>
+![Use Case Diagram](use_case_diagram.png)
 
 #### Login:
 
