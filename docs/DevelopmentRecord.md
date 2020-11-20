@@ -195,7 +195,7 @@ Start by contextualizing your module, describing the main concepts, terms, roles
   iii) Participant doesn't hits 'post'/'comment'
   iv) System doesn't posts/comments a publication
 
-##### Initiate a private conversation
+#### Initiate a private conversation
 * __Actor__: Participant
 * __Description__: This use case exists so that a participant can initiate a private conversation with another user on the ConferenceBook's chat.
 * __Preconditions and Postconditions__: In order to initiate a private conversation, the participant must be logged in and have access to the event in question. In the end, the participant will have started a conversation with another user
