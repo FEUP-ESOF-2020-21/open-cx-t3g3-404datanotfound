@@ -71,7 +71,159 @@ Start by contextualizing your module, describing the main concepts, terms, roles
 
 ### Use case diagram 
 
-![](https://i.imgur.com/6NKFsY4.png)
+![Use Case Diagram](use_case_diagram.png)
+
+#### Login:
+
+* __Actor__: User
+* __Description__: This use case exists so that a user can login into ConferenceBook.
+* __Preconditions and Postconditions__: In order to sucessfully login, the user must have created an account and use a valid email/password pair. In the end, the user will be able to acess the event's feed.
+* __Normal Flow__:
+  i) User types email/password
+  ii) System validates email/password pair
+  iii) System will show the event's feed
+* __Alternative Flows and Exceptions__:
+  i) User types email/password
+  ii) System validates email/password pair and emmits error message
+  * __OR__
+  i) User types email/password
+  ii) System validates email/password pair
+  iii) If it is the first time the user accesses ConferenceBook, the system will redirect user to a page where the user should insert the event's code
+
+#### Show conference participants:
+
+* __Actor__: User
+* __Description__: This use case exists so that a user can see every other user on the event and, if he wishes, display another user's profile.
+* __Preconditions and Postconditions__: In order to access the user's list, the user must be logged in and have access to the event in question. In the end, a user's list will be displayed.
+* __Normal Flow__:
+  i) User's list is displayed 
+* __Alternative Flows and Exceptions__:
+  i) User's list is displayed 
+  ii) User clicks another user's profile
+  iii) The clicked profile is displayed
+
+#### Edit "My Profile"
+* __Actor__: User
+* __Description__: This use case exists so that a user can add or update information in his profile.
+* __Preconditions and Postconditions__: In order to edit his profile, the user must be logged in and add new information in his profile. In the end, the user's profile will be updated.
+* __Normal Flow__:
+  i) User's current profile is displayed
+  ii) User adds/updates information on his profile
+  iii) User validates the changes
+  iv) System saves the new information
+* __Alternative Flows and Exceptions__:
+  i) User's current profile is displayed
+  ii) User adds/updates information on his profile
+  iii) User doesn't validate the changes
+  iv) System keeps the old information
+
+#### See ConferenceBook feed
+* __Actor__: User
+* __Description__: This use case exists so that a user can see, by inverse order of posting, all the posts in the ConferenceBook feed, using the infinite scroll technique.
+* __Preconditions and Postconditions__: In order to see the feed, the user must be logged in, have access to the event in question and scroll through out the posts. In the end, the user will have catched up on as many posts as he wishes.
+* __Normal Flow__:
+  i) System shows event's feed
+  ii) User scrolls down to see past publications
+  iii) The system will keep showing older publications as long as the user keeps scrolling and there are more publications to be shown
+* __Alternative Flows and Exceptions__:
+  i) System shows event's feed
+  ii) User scrolls up to refresh to newer publications
+  iii) The system will show the new posts which have been made between the moment the user got to the feed page and the moment he refreshed the feed
+
+#### Chat with other users
+* __Actor__: User
+* __Description__: This use case exists so that a user can respond a conversation initiated by a Participant. This means that a Sponsor cannot be the one initiating a conversation, but he can keep it going.
+* __Preconditions and Postconditions__: In order to chat with other users, the user must be logged in, have access to the event in question and respond to the other user's message. In the end, a dialogue between two users will have been made and the conversation record will stay on the chat.
+* __Normal Flow__:
+  i) System pops a message through chat
+  ii) User reads and responds the message
+  iii) User hits 'Send'
+  iv) System sends the message
+* __Alternative Flows and Exceptions__:
+  i) System pops a message through chat
+  ii) User reads and responds the message
+  iii) User doesn't hit 'Send'
+  iv) System doesn't send the message
+  * __OR__
+  i) System pops a message through chat
+  ii) User reads the message
+
+#### Like posts
+* __Actor__: User
+* __Description__: This use case exists so that a user can like a post made by another user.
+* __Preconditions and Postconditions__: In order to like posts, the user must be logged in and have access to the event in question. In the end, a like from the user will appear on the post
+* __Normal Flow__:
+  i) User clicks like button
+  ii) System adds like to the publication
+* __Alternative Flows and Exceptions__:
+  i) User unclicks like button
+  ii) System removes like from the publication
+
+
+#### Post/comment (limited)
+* __Actor__: Sponsor
+* __Description__: This use case exists so that a sponsor can post/comment on the ConferenceBook feed while, at the same time, preventing him from overloading the feed with publicity. As is, the sponsor will have a limited amount of posts/comments he can make (unless the sponsor is responding to comments on his own post)
+* __Preconditions and Postconditions__: In order to post/comment posts on an event, the sponsor must be logged in and have his sponsorship validated. In the end, posts and comments made by the sponsor will appear on the feed.
+* __Normal Flow__:
+  i) System shows a place to post/comment
+  ii) Sponsor posts/comments something
+  iii) Sponsor hits 'post'/'comment'
+  iv) System posts/comments a publication
+* __Alternative Flows and Exceptions__:
+  i) System shows a place to post/comment
+  ii) Sponsor posts/comments something
+  iii) Sponsor doesn't hits 'post'/'comment'
+  iv) System doesn't posts/comments a publication
+  * __OR__
+  i) System shows a place to post/comment
+  ii) Sponsor posts/comments/ something
+  iii) Sponsor hits 'post'/'comment', but the maximum of posts/comments has been achieved
+  iv) System displays error message
+
+#### Post/comment
+* __Actor__: Participant
+* __Description__: This use case exists so that a participant can post/comment photographs, videos and/or text on the ConferenceBook feed
+* __Preconditions and Postconditions__: In order to post and comment posts on an event, the participant must be logged in and have access to the event in question. In the end, posts and comments made by the participant will appear on the feed.
+* __Normal Flow__:
+  i) System shows a place to post/comment
+  ii) Participant posts/comments something
+  iii) Participant hits 'post'/'comment'
+  iv) System posts/comments a publication
+* __Alternative Flows and Exceptions__:
+  i) System shows a place to post/comment
+  ii) Participant posts/comments something
+  iii) Participant doesn't hits 'post'/'comment'
+  iv) System doesn't posts/comments a publication
+
+#### Initiate a private conversation
+* __Actor__: Participant
+* __Description__: This use case exists so that a participant can initiate a private conversation with another user on the ConferenceBook's chat.
+* __Preconditions and Postconditions__: In order to initiate a private conversation, the participant must be logged in and have access to the event in question. In the end, the participant will have started a conversation with another user
+* __Normal Flow__:
+  i) Participant opens chat with another user
+  ii) Participant types a message
+  iii) Participant hits 'send'
+  iv) System sends the message
+* __Alternative Flows and Exceptions__:
+  i) Participant opens chat with another user
+  ii) Participant types a message
+  iii) Participant doesn't hit 'send'
+  iv) System doesn't send the message
+
+
+#### Moderate posts
+* __Actor__: Organizer
+* __Description__: This use case exists so that an organizer can moderate the posts (delete or manage spam posts) on the ConferenceBook feed.
+* __Preconditions and Postconditions__: In order to moderate the post, the organizer must be logged in. In the end, there won't be hatred nor spam posts on the ConferenceBook feed.
+* __Normal Flow__:
+  i) Moderator finds a hatred post
+  ii) Moderador clicks delete button
+  iii) System deletes the post
+  iv) System notifies user of the deletion of his post
+* __Alternative Flows and Exceptions__:
+  i) Moderator finds a spam post
+  ii) Moderador warns sponsor
+
 
 <!---Create a use-case diagram in UML with all high-level use cases possibly addressed by your module.
 
@@ -96,32 +248,32 @@ Briefly describe each use case mentioning the following:
 For each user story you should write also the acceptance tests (textually in Gherkin), i.e., a description of scenarios (situations) that will help to confirm that the system satisfies the requirements addressed by the user story.
 -->
 
-#### Participants
+#### Users
 
-General role, includes every participant in the conference, be it attendee, speaker, organizer or sponsor.
-
-| Effort     | Importance    | Description     |
-| :------------- | :----------: | -----------: |
-|  5 | Must Have   | As a conference participant, I want to login in the app using my email and password, so that I can access my personal profile.     |
-|  6 | Must Have   | As a conference participant, I want to create a profile with my email and password, so that I store personal information on the app.    |
-|  6 | Must Have   | As a conference participant, I want to choose which information is displayed on my profile, namely small bio, soft and technical skills, social network nicknames, previous experience and education so that I manage what information is shown to other participants.    |
-|  2 | Must Have   | As a conference participant, I want to change my display name according to the conference I am attending so that I make it suitable for each conference I attend.    |
-|  5 | Must Have   | As a conference participant, I want to see the list of all the conference participants, so that I can know who is also attending the conference.    |
-|  8 | Must Have   | As a conference participant, I want to access every participants personal profile so that I can see if I want to contact them.    |
-|  3 | Must Have   | As a conference participant, I want to search in the list of all the conference participants for a specific name, so that I can easily find someone that I am looking for.    |
-|  3 | Must Have   | As a conference participant, I want to insert a conference code, so that I can access the conference details and feed.    |
-|  9 | Must Have   | As a conference participant, I want to post photos, videos and opinions in a way that everyone in the event can see it, so that I share my experience with all the participants.     |
-|  4 | Must Have   | As a conference participant, I want to comment on other participant's posts so that we can discuss meaningful topics.   |
-|  4 | Could Have   | As a conference participant, I want to choose whether or not I want to display my conference history so that other participants can/can't see which conferences I previously attended.    |
-|  6 | Could Have   | As a conference participant, I want to update my personal profile whenever I please, changing the information that was entered when I first signed in, so that I can keep my basic information updated over time.    |
-
-#### Attendees (including speakers)
-
-This role includes both attendees and speakers of the conference, since they will have the same funcionalities while using the app.
+General role, includes every user of the conference, be it attendee, speaker, organizer or sponsor.
 
 | Effort     | Importance    | Description     |
 | :------------- | :----------: | -----------: |
-|  9 | Should Have   | As a conference attendee, I want to chat in private with other participants, so that I can continue conversations that may have started elsewhere.    |
+|  5 | Must Have   | As an app user, I want to login in the app using my email and password, so that I can access my personal profile.     |
+|  6 | Must Have   | As an app user, I want to create a profile with my email and password, so that I store personal information on the app.    |
+|  6 | Must Have   | As an app user, I want to choose which information is displayed on my profile, namely small bio, soft and technical skills, social network nicknames, previous experience and education so that I manage what information is shown to other participants.    |
+|  2 | Must Have   | As an app user, I want to change my display name according to the conference I am attending so that I make it suitable for each conference I attend.    |
+|  5 | Must Have   | As an app user, I want to see the list of all the conference participants, so that I can know who is also attending the conference.    |
+|  8 | Must Have   | As an app user, I want to access every participants personal profile so that I can see if I want to contact them.    |
+|  3 | Must Have   | As an app user, I want to search in the list of all the conference participants for a specific name, so that I can easily find someone that I am looking for.    |
+|  3 | Must Have   | As an app user, I want to insert a conference code, so that I can access the conference details and feed.    |
+|  9 | Must Have   | As an app user, I want to post photos, videos and opinions in a way that everyone in the event can see it, so that I share my experience with all the participants.     |
+|  4 | Must Have   | As an app user, I want to comment on other participant's posts so that we can discuss meaningful topics.   |
+|  4 | Could Have   | As an app user, I want to choose whether or not I want to display my conference history so that other participants can/can't see which conferences I previously attended.    |
+|  6 | Could Have   | As an app user, I want to update my personal profile whenever I please, changing the information that was entered when I first signed in, so that I can keep my basic information updated over time.    |
+
+#### Participants (including attendees, speakers and organizers)
+
+This role includes both attendees, speakers and organizers of the conference, since they will have the same funcionalities while using the app.
+
+| Effort     | Importance    | Description     |
+| :------------- | :----------: | -----------: |
+|  9 | Should Have   | As a conference participant, I want to chat in private with other participants, so that I can continue conversations that may have started elsewhere.    |
 
 
 #### Organizers
