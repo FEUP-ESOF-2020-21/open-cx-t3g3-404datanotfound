@@ -1,7 +1,9 @@
+
 import 'package:ConfereceBook/EnterEventCode.dart';
 import 'package:ConfereceBook/JoinAnEvent.dart';
 import 'package:ConfereceBook/Login.dart';
 import 'package:ConfereceBook/MyProfile.dart';
+import 'package:ConfereceBook/Post.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +17,9 @@ import './NotificationsPanel.dart';
 import './SeeallParticipants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/widgets.dart';
+import 'package:video_player/video_player.dart';
+import 'package:video_player/video_player.dart';
+import 'package:flutter/material.dart';
 
 class SizeConfig {
   static MediaQueryData _mediaQueryData;
@@ -35,18 +40,20 @@ class HomeFeed extends StatefulWidget {
     Key key,
     this.auth,
     this.image,
-    this.code
+    this.code,
+    this.map,
   }) : super(key: key);
 
   final FirebaseAuth auth;
   final String image;
   final String code;
-
+  final Map<dynamic, dynamic> map;
   @override
   State<StatefulWidget> createState() => MyHomeFeed();
 }
 
 class MyHomeFeed extends State<HomeFeed> {
+  VideoPlayerController _controller;
   FirebaseAuth auth;
   String image;
   String name;
@@ -61,13 +68,24 @@ class MyHomeFeed extends State<HomeFeed> {
   String twitter;
   String github;
   String code;
+  Map<dynamic, dynamic> myMap;
+  int numPosts;
   final GlobalKey<ScaffoldState> _scaffoldState = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
     auth = widget.auth;
     image = widget.image;
+    myMap = widget.map;
+    code = widget.code;
+    print("Beginning" + code);
+    try {
+      numPosts = myMap.values.toList()[1][widget.code].length;
+    } catch(e) {
+      numPosts = 0;
+    }
     SizeConfig().init(context);
+    if (numPosts != 0) {
     return WillPopScope(
     onWillPop: () async => false, child: Scaffold(
       key: _scaffoldState,
@@ -88,25 +106,19 @@ class MyHomeFeed extends State<HomeFeed> {
                     .once()
                     .then((DataSnapshot snapshot) {
                   Map<dynamic, dynamic> map = snapshot.value;
-                  Map<dynamic, dynamic> map2 = snapshot.value;
-                  Map<dynamic, dynamic> map3 = snapshot.value;
-                  Map<dynamic, dynamic> map4 = snapshot.value;
-                  Map<dynamic, dynamic> map5 = snapshot.value;
-                  Map<dynamic, dynamic> map6 = snapshot.value;
-                  Map<dynamic, dynamic> map7 = snapshot.value;
                   String user = auth.currentUser.uid;
-                  this.image = map.values.toList()[1][user]["photo"];
-                  this.name = map.values.toList()[1][user]["name"];
-                  this.job = map.values.toList()[1][user]["job"];
-                  this.interests = map.values.toList()[1][user]["interests"];
-                  this.city = map.values.toList()[1][user]["city"];
-                  this.bio = map.values.toList()[1][user]["bio"];
-                  this.area = map.values.toList()[1][user]["area"];
-                  this.linkedin = map.values.toList()[1][user]["linkedin"];
-                  this.facebook = map.values.toList()[1][user]["facebook"];
-                  this.instagram = map.values.toList()[1][user]["instagram"];
-                  this.twitter = map.values.toList()[1][user]["twitter"];
-                  this.github = map.values.toList()[1][user]["github"];
+                  this.image = map.values.toList()[2][user]["photo"];
+                  this.name = map.values.toList()[2][user]["name"];
+                  this.job = map.values.toList()[2][user]["job"];
+                  this.interests = map.values.toList()[2][user]["interests"];
+                  this.city = map.values.toList()[2][user]["city"];
+                  this.bio = map.values.toList()[2][user]["bio"];
+                  this.area = map.values.toList()[2][user]["area"];
+                  this.linkedin = map.values.toList()[2][user]["linkedin"];
+                  this.facebook = map.values.toList()[2][user]["facebook"];
+                  this.instagram = map.values.toList()[2][user]["instagram"];
+                  this.twitter = map.values.toList()[2][user]["twitter"];
+                  this.github = map.values.toList()[2][user]["github"];
                   print(name);
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
                       builder: (context) => MyProfile(
@@ -122,7 +134,8 @@ class MyHomeFeed extends State<HomeFeed> {
                           facebook: facebook,
                           instagram: instagram,
                           twitter: twitter,
-                          github: github)));
+                          github: github,
+                      code: code)));
                 });
               },
               child: CircleAvatar(
@@ -151,18 +164,18 @@ class MyHomeFeed extends State<HomeFeed> {
                     .then((DataSnapshot snapshot) {
                   Map<dynamic, dynamic> map = snapshot.value;
                   String user = auth.currentUser.uid;
-                  this.image = map.values.toList()[1][user]["photo"];
-                  this.name = map.values.toList()[1][user]["name"];
-                  this.job = map.values.toList()[1][user]["job"];
-                  this.interests = map.values.toList()[1][user]["interests"];
-                  this.city = map.values.toList()[1][user]["city"];
-                  this.bio = map.values.toList()[1][user]["bio"];
-                  this.area = map.values.toList()[1][user]["area"];
-                  this.linkedin = map.values.toList()[1][user]["linkedin"];
-                  this.facebook = map.values.toList()[1][user]["facebook"];
-                  this.instagram = map.values.toList()[1][user]["instagram"];
-                  this.twitter = map.values.toList()[1][user]["twitter"];
-                  this.github = map.values.toList()[1][user]["github"];
+                  this.image = map.values.toList()[2][user]["photo"];
+                  this.name = map.values.toList()[2][user]["name"];
+                  this.job = map.values.toList()[2][user]["job"];
+                  this.interests = map.values.toList()[2][user]["interests"];
+                  this.city = map.values.toList()[2][user]["city"];
+                  this.bio = map.values.toList()[2][user]["bio"];
+                  this.area = map.values.toList()[2][user]["area"];
+                  this.linkedin = map.values.toList()[2][user]["linkedin"];
+                  this.facebook = map.values.toList()[2][user]["facebook"];
+                  this.instagram = map.values.toList()[2][user]["instagram"];
+                  this.twitter = map.values.toList()[2][user]["twitter"];
+                  this.github = map.values.toList()[2][user]["github"];
                   print(name);
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
                       builder: (context) => MyProfile(
@@ -233,17 +246,118 @@ class MyHomeFeed extends State<HomeFeed> {
       backgroundColor: const Color(0xffffffff),
       body: Stack(
         children: <Widget>[
+          Transform.translate(
+            offset: Offset(SizeConfig.screenWidth *  0.0, SizeConfig.screenHeight *  0.0),
+            child: ListView.builder(
+              shrinkWrap:true,
+              itemCount: numPosts,
+              itemBuilder: (context, position) {
+                Map<dynamic, dynamic> postInfo = myMap.values.toList()[1][widget.code];
+                String userUID = postInfo.values.toList()[position]["user"];
+                String text = postInfo.values.toList()[position]["text"];
+                String multimedia = postInfo.values.toList()[position]["multimedia"];
+                int likes = postInfo.values.toList()[position]["likes"];
+                int numComments = postInfo.values.toList()[position]["numComments"];
+                String name = myMap.values.toList()[2][userUID]["name"];
+                String userPhoto = myMap.values.toList()[2][userUID]["photo"];
+                Uri uri = Uri.parse(multimedia);
+                String typeString = uri.path.substring(uri.path.length - 3).toLowerCase();
+                String type = "";
+                if (typeString == "jpg") {
+                  type = "image";
+                }
+                if (typeString == "mp4") {
+                  type = "video";
+                }
+                return Container(
+                    margin: const EdgeInsets.all(15.0),
+                    padding: const EdgeInsets.all(3.0),
+                    decoration: BoxDecoration(
+                      color: const Color(0xffD3D3D3),
+                        border: Border.all(
+                          width: 2,
+                          color: const Color(0xffD3D3D3),
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                    ),
+                    child:  SizedBox(
+                        width: multimedia != " " ? SizeConfig.screenWidth * 500 : SizeConfig.screenWidth * 200,
+                        height: multimedia != " " ? SizeConfig.screenHeight * 500 : SizeConfig.screenWidth * 200,
+                    child: Stack(
+                      children: <Widget>[
+                    Transform.translate(
+                    offset: Offset(SizeConfig.screenWidth *  0.0, SizeConfig.screenHeight *  0.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
 
-          Container(
-              child: Column(
+                      Text(name + "  ", style: TextStyle(color: const Color(0xff000000), fontWeight: FontWeight.bold),),
+                      CircleAvatar(
+                          radius: 20.0,
+                          backgroundImage: NetworkImage(userPhoto) //default image
+                      ),
+                    ],
+                  )
+                    ),
+                        Transform.translate(
+                            offset: Offset(SizeConfig.screenWidth *  0.0, multimedia != " " ? SizeConfig.screenHeight *  470.0 : SizeConfig.screenHeight * 190.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                Text(likes.toString() + " "),
+                                Icon(FontAwesomeIcons.commentAlt),
+                                Text("    "+numComments.toString()+" "),
+                                Icon(FontAwesomeIcons.heart),
+                              ],
+                            )
+                        ),
+                        Transform.translate(
+                            offset: Offset(SizeConfig.screenWidth * 60.0, SizeConfig.screenHeight * 50.0),
+                            child:  SizedBox(
+                              width: SizeConfig.screenWidth * 250 ,
+                              height: SizeConfig.screenHeight * 500 ,
+                              child: text != null ? Text(text, style: TextStyle(color: const Color(0xff000000)),) : Container()
+                        ),),
+                  Transform.translate(
+                      offset: Offset(SizeConfig.screenWidth *  0.0, SizeConfig.screenHeight * 95.0),
+                      child: SizedBox(
+                          width: multimedia != " " ? SizeConfig.screenWidth * 360 : 0,
+                          height: multimedia != " " ? SizeConfig.screenHeight * 360 : 0,
+                          child: Container(
+                            child: multimedia != " " ? (type == "image") ? Image(image: NetworkImage(multimedia)) :
+                            Container(
+                              child:Scaffold(
+                                body: Center(
+                                  child: Container(
+                                    child: Text('Unable to show media'),
+                                  )
+
+                                ),
+                              ),
+                            ) : Container(),
+                          ),
+                        ),),
+
+                      ],)));
+              },
+            )
+          ),
+        ],
+      ),
+      floatingActionButton: Container(
+          child: Column(
             children: <Widget>[
               Container(
                 child: Expanded(
                   child: Align(
-                    alignment: FractionalOffset.bottomRight,
+                    alignment: FractionalOffset.bottomLeft,
                     child: Padding(
-                      padding: EdgeInsets.only(bottom: 10.0, right: 10.0),
+                      padding: EdgeInsets.only(bottom: 10.0, left: 20.0),
                       child: FloatingActionButton(
+                        onPressed: () {
+                          Navigator.of(context).pushReplacement(MaterialPageRoute(
+                              builder: (context) => Post(auth: widget.auth,code: widget.code,)));
+                        },
                         backgroundColor: const Color(0xff1A2677),
                         child: Icon(
                           FontAwesomeIcons.plus,
@@ -256,10 +370,205 @@ class MyHomeFeed extends State<HomeFeed> {
               )
             ],
           )),
-
-        ],
-      ),
-    ));
+    ));} else {
+      return WillPopScope(
+          onWillPop: () async => false, child: Scaffold(
+        key: _scaffoldState,
+        appBar: AppBar(
+          actions: <Widget>[
+            IconButton(icon: new Icon(FontAwesomeIcons.users, color: const Color(0xffffffff),), onPressed: (){
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (context) => SeeallParticipants()));
+            }),
+            IconButton(icon: new Icon(FontAwesomeIcons.bell, color: const Color(0xffffffff),), onPressed: (){
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (context) => NotificationsPanel()));
+            }),
+            InkWell(
+                onTap: () async {
+                  FirebaseDatabase.instance
+                      .reference()
+                      .once()
+                      .then((DataSnapshot snapshot) {
+                    Map<dynamic, dynamic> map = snapshot.value;
+                    String user = auth.currentUser.uid;
+                    this.image = map.values.toList()[2][user]["photo"];
+                    this.name = map.values.toList()[2][user]["name"];
+                    this.job = map.values.toList()[2][user]["job"];
+                    this.interests = map.values.toList()[2][user]["interests"];
+                    this.city = map.values.toList()[2][user]["city"];
+                    this.bio = map.values.toList()[2][user]["bio"];
+                    this.area = map.values.toList()[2][user]["area"];
+                    this.linkedin = map.values.toList()[2][user]["linkedin"];
+                    this.facebook = map.values.toList()[2][user]["facebook"];
+                    this.instagram = map.values.toList()[2][user]["instagram"];
+                    this.twitter = map.values.toList()[2][user]["twitter"];
+                    this.github = map.values.toList()[2][user]["github"];
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) => MyProfile(
+                            auth: auth,
+                            image: image,
+                            name: name,
+                            job: job,
+                            interests: interests,
+                            city: city,
+                            bio: bio,
+                            area: area,
+                            linkedin: linkedin,
+                            facebook: facebook,
+                            instagram: instagram,
+                            twitter: twitter,
+                            github: github,
+                        code: widget.code)));
+                  });
+                },
+                child: CircleAvatar(
+                  backgroundImage: NetworkImage(this.image),
+                  radius: 22,
+                )),
+          ],
+          title: Text(""),
+          backgroundColor: const Color(0xff1A2677),
+          leading: IconButton(icon: new Icon(FontAwesomeIcons.bars, color: const Color(0xffffffff),), onPressed: (){
+            _scaffoldState.currentState.openDrawer();
+          }),
+        ),
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              ListTile(),
+              ListTile(
+                leading: new Icon(FontAwesomeIcons.userAlt, color: const Color(0xff1A2677),),
+                title: Text("MyProfile"),
+                onTap: () async {
+                  FirebaseDatabase.instance
+                      .reference()
+                      .once()
+                      .then((DataSnapshot snapshot) {
+                    Map<dynamic, dynamic> map = snapshot.value;
+                    String user = auth.currentUser.uid;
+                    this.image = map.values.toList()[2][user]["photo"];
+                    this.name = map.values.toList()[2][user]["name"];
+                    this.job = map.values.toList()[2][user]["job"];
+                    this.interests = map.values.toList()[2][user]["interests"];
+                    this.city = map.values.toList()[2][user]["city"];
+                    this.bio = map.values.toList()[2][user]["bio"];
+                    this.area = map.values.toList()[2][user]["area"];
+                    this.linkedin = map.values.toList()[2][user]["linkedin"];
+                    this.facebook = map.values.toList()[2][user]["facebook"];
+                    this.instagram = map.values.toList()[2][user]["instagram"];
+                    this.twitter = map.values.toList()[2][user]["twitter"];
+                    this.github = map.values.toList()[2][user]["github"];
+                    print(name);
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) => MyProfile(
+                            auth: auth,
+                            image: image,
+                            name: name,
+                            job: job,
+                            interests: interests,
+                            city: city,
+                            bio: bio,
+                            area: area,
+                            linkedin: linkedin,
+                            facebook: facebook,
+                            instagram: instagram,
+                            twitter: twitter,
+                            github: github)));
+                  });
+                },
+              ),
+              ListTile(
+                leading: new Icon(FontAwesomeIcons.plusCircle, color: const Color(0xff1A2677),),
+                title: Text("Enter Event Code"),
+                onTap: () {
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => EnterEventCode(
+                        auth: widget.auth,
+                      )));
+                },
+              ),
+              ListTile(
+                leading: new Icon(FontAwesomeIcons.exchangeAlt, color: const Color(0xff1A2677),),
+                title: Text("Change to Other Event"),
+                onTap: () {
+                  FirebaseDatabase.instance.reference().once().then((DataSnapshot snapshot) {
+                    Map<dynamic, dynamic> map = snapshot.value;
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) => JoinAnEvent(auth: widget.auth, map: map,)
+                    ));
+                  });
+                },
+              ),
+              ListTile(
+                leading: new Icon(FontAwesomeIcons.bell, color: const Color(0xff1A2677),),
+                title: Text("Notifications Panel"),
+                onTap: () {
+                },
+              ),
+              ListTile(
+                leading: new Icon(FontAwesomeIcons.users, color: const Color(0xff1A2677),),
+                title: Text("Participants List"),
+                onTap: () {
+                },
+              ),
+              ListTile(
+                leading: new Icon(FontAwesomeIcons.signOutAlt, color: const Color(0xff1A2677),),
+                title: Text("LogOut"),
+                onTap: () {
+                  auth.signOut();
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => MyLogin(
+                        auth: auth,
+                      )));
+                },
+              ),
+            ],
+          ),
+        ),
+        backgroundColor: const Color(0xffffffff),
+        body: Stack(
+          children: <Widget>[
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(FontAwesomeIcons.frownOpen),
+                  Text("\n Ups! There isn't any \n post for this conference!", textAlign: TextAlign.center,),
+                ],
+              )
+            ),
+            Container(
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      child: Expanded(
+                        child: Align(
+                          alignment: FractionalOffset.bottomRight,
+                          child: Padding(
+                            padding: EdgeInsets.only(bottom: 10.0, right: 10.0),
+                            child: FloatingActionButton(
+                              onPressed: () {
+                                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                    builder: (context) => Post(auth: widget.auth,code: widget.code,)));
+                              },
+                              backgroundColor: const Color(0xff1A2677),
+                              child: Icon(
+                                FontAwesomeIcons.plus,
+                                color: const Color(0xffffffff),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                )),
+          ],
+        ),
+      ));
+    }
   }
 }
 
