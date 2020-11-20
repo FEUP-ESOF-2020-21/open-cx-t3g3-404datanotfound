@@ -1,4 +1,4 @@
-﻿# openCX-*ConferenceBook* Development Report
+# openCX-*ConferenceBook* Development Report
 
 Welcome to the documentation pages of the *ConferenceBook* of **openCX**!
 
@@ -41,7 +41,8 @@ A product vision describes the essential of the product and sets the direction t
 
 **We favor a catchy and concise statement, ideally one sentence.**)--->
 
-There is always a time in physical or virtual conferences when you wish you could share a thought, experience, or chat with another participant. ConferenceBook is a social network to enhance this communication. Connecting people, towards mind broadening and empowerment of relationships.
+There is always a time in a conference when you wish you could share a thought, experience, or chat with another participant. ConferenceBook is a social network to enhance this communication. Connecting people, towards mind broadening and empowerment of relationships.
+
 <!---
 To learn more about how to write a good product vision, please see also:
 * [How To Create A Convincing Product Vision To Guide Your Team, by uxstudioteam.com](https://uxstudioteam.com/ux-blog/product-vision/)
@@ -60,10 +61,6 @@ Take a look at the following links to learn some techniques:
 * [The Best Elevator Pitch Examples, Templates, and Tactics - A Guide to Writing an Unforgettable Elevator Speech, by strategypeak.com](https://strategypeak.com/elevator-pitch-examples/)
 * [Top 7 Killer Elevator Pitch Examples, by toggl.com](https://blog.toggl.com/elevator-pitch-examples/)
 --->
-(target: conference organizer who can invest in us)
-
-Most conferences fail when it comes to communication amongst participants. That's the reason why we created ConferenceBook: an app to make this communication easier than ever, providing participants with a full networking experience. ConferenceBook allows attendees, organizers and sponsors to interact with each others, by making posts, sharing contacts and interests, and chatting. With ConferenceBook, your event will become more appealing to your participants!
-
 ---
 ## Requirements
 
@@ -198,7 +195,7 @@ Start by contextualizing your module, describing the main concepts, terms, roles
   iii) Participant doesn't hits 'post'/'comment'
   iv) System doesn't posts/comments a publication
 
-##### Initiate a private conversation
+#### Initiate a private conversation
 * __Actor__: Participant
 * __Description__: This use case exists so that a participant can initiate a private conversation with another user on the ConferenceBook's chat.
 * __Preconditions and Postconditions__: In order to initiate a private conversation, the participant must be logged in and have access to the event in question. In the end, the participant will have started a conversation with another user
@@ -214,7 +211,7 @@ Start by contextualizing your module, describing the main concepts, terms, roles
   iv) System doesn't send the message
 
 
-##### Moderate posts
+#### Moderate posts
 * __Actor__: Organizer
 * __Description__: This use case exists so that an organizer can moderate the posts (delete or manage spam posts) on the ConferenceBook feed.
 * __Preconditions and Postconditions__: In order to moderate the post, the organizer must be logged in. In the end, there won't be hatred nor spam posts on the ConferenceBook feed.
