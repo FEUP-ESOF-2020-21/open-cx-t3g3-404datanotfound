@@ -251,32 +251,32 @@ Briefly describe each use case mentioning the following:
 For each user story you should write also the acceptance tests (textually in Gherkin), i.e., a description of scenarios (situations) that will help to confirm that the system satisfies the requirements addressed by the user story.
 -->
 
-#### Participants
+#### Users
 
-General role, includes every participant in the conference, be it attendee, speaker, organizer or sponsor.
-
-| Effort     | Importance    | Description     |
-| :------------- | :----------: | -----------: |
-|  5 | Must Have   | As a conference participant, I want to login in the app using my email and password, so that I can access my personal profile.     |
-|  6 | Must Have   | As a conference participant, I want to create a profile with my email and password, so that I store personal information on the app.    |
-|  6 | Must Have   | As a conference participant, I want to choose which information is displayed on my profile, namely small bio, soft and technical skills, social network nicknames, previous experience and education so that I manage what information is shown to other participants.    |
-|  2 | Must Have   | As a conference participant, I want to change my display name according to the conference I am attending so that I make it suitable for each conference I attend.    |
-|  5 | Must Have   | As a conference participant, I want to see the list of all the conference participants, so that I can know who is also attending the conference.    |
-|  8 | Must Have   | As a conference participant, I want to access every participants personal profile so that I can see if I want to contact them.    |
-|  3 | Must Have   | As a conference participant, I want to search in the list of all the conference participants for a specific name, so that I can easily find someone that I am looking for.    |
-|  3 | Must Have   | As a conference participant, I want to insert a conference code, so that I can access the conference details and feed.    |
-|  9 | Must Have   | As a conference participant, I want to post photos, videos and opinions in a way that everyone in the event can see it, so that I share my experience with all the participants.     |
-|  4 | Must Have   | As a conference participant, I want to comment on other participant's posts so that we can discuss meaningful topics.   |
-|  4 | Could Have   | As a conference participant, I want to choose whether or not I want to display my conference history so that other participants can/can't see which conferences I previously attended.    |
-|  6 | Could Have   | As a conference participant, I want to update my personal profile whenever I please, changing the information that was entered when I first signed in, so that I can keep my basic information updated over time.    |
-
-#### Attendees (including speakers)
-
-This role includes both attendees and speakers of the conference, since they will have the same funcionalities while using the app.
+General role, includes every user of the conference, be it attendee, speaker, organizer or sponsor.
 
 | Effort     | Importance    | Description     |
 | :------------- | :----------: | -----------: |
-|  9 | Should Have   | As a conference attendee, I want to chat in private with other participants, so that I can continue conversations that may have started elsewhere.    |
+|  5 | Must Have   | As an app user, I want to login in the app using my email and password, so that I can access my personal profile.     |
+|  6 | Must Have   | As an app user, I want to create a profile with my email and password, so that I store personal information on the app.    |
+|  6 | Must Have   | As an app user, I want to choose which information is displayed on my profile, namely small bio, soft and technical skills, social network nicknames, previous experience and education so that I manage what information is shown to other participants.    |
+|  2 | Must Have   | As an app user, I want to change my display name according to the conference I am attending so that I make it suitable for each conference I attend.    |
+|  5 | Must Have   | As an app user, I want to see the list of all the conference participants, so that I can know who is also attending the conference.    |
+|  8 | Must Have   | As an app user, I want to access every participants personal profile so that I can see if I want to contact them.    |
+|  3 | Must Have   | As an app user, I want to search in the list of all the conference participants for a specific name, so that I can easily find someone that I am looking for.    |
+|  3 | Must Have   | As an app user, I want to insert a conference code, so that I can access the conference details and feed.    |
+|  9 | Must Have   | As an app user, I want to post photos, videos and opinions in a way that everyone in the event can see it, so that I share my experience with all the participants.     |
+|  4 | Must Have   | As an app user, I want to comment on other participant's posts so that we can discuss meaningful topics.   |
+|  4 | Could Have   | As an app user, I want to choose whether or not I want to display my conference history so that other participants can/can't see which conferences I previously attended.    |
+|  6 | Could Have   | As an app user, I want to update my personal profile whenever I please, changing the information that was entered when I first signed in, so that I can keep my basic information updated over time.    |
+
+#### Participants (including attendees, speakers and organizers)
+
+This role includes both attendees, speakers and organizers of the conference, since they will have the same funcionalities while using the app.
+
+| Effort     | Importance    | Description     |
+| :------------- | :----------: | -----------: |
+|  9 | Should Have   | As a conference participant, I want to chat in private with other participants, so that I can continue conversations that may have started elsewhere.    |
 
 
 #### Organizers
