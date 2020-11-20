@@ -61,7 +61,7 @@ Take a look at the following links to learn some techniques:
 --->
 ---
 
-Most conferences fail when it comes to communication amongst participants. That's reason why we created ConferenceBook: an app to make this communication easier than ever, providing participants with a full networking experience. ConferenceBook allows attendees, organizers and sponsors to interact with each others, by making posts, sharing contacts and interests, and chatting. With ConferenceBook, your event will become more appealing to your participants!
+Most conferences fail when it comes to communication amongst participants. That's the reason why we created ConferenceBook: an app to make this communication easier than ever, providing participants with a full networking experience. ConferenceBook allows attendees, organizers and sponsors to interact with each others, by making posts, sharing contacts and interests, and chatting. With ConferenceBook, your event will become more appealing to your participants!
 
 ## Requirements
 
