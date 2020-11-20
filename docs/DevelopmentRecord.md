@@ -1,4 +1,4 @@
-# openCX-*ConferenceBook* Development Report
+﻿# openCX-*ConferenceBook* Development Report
 
 Welcome to the documentation pages of the *ConferenceBook* of **openCX**!
 
@@ -41,8 +41,7 @@ A product vision describes the essential of the product and sets the direction t
 
 **We favor a catchy and concise statement, ideally one sentence.**)--->
 
-There is always a time in a conference when you wish you could share a thought, experience, or chat with another participant. ConferenceBook is a social network to enhance this communication. Connecting people, towards mind broadening and empowerment of relationships.
-
+There is always a time in physical or virtual conferences when you wish you could share a thought, experience, or chat with another participant. ConferenceBook is a social network to enhance this communication. Connecting people, towards mind broadening and empowerment of relationships.
 <!---
 To learn more about how to write a good product vision, please see also:
 * [How To Create A Convincing Product Vision To Guide Your Team, by uxstudioteam.com](https://uxstudioteam.com/ux-blog/product-vision/)
@@ -61,6 +60,10 @@ Take a look at the following links to learn some techniques:
 * [The Best Elevator Pitch Examples, Templates, and Tactics - A Guide to Writing an Unforgettable Elevator Speech, by strategypeak.com](https://strategypeak.com/elevator-pitch-examples/)
 * [Top 7 Killer Elevator Pitch Examples, by toggl.com](https://blog.toggl.com/elevator-pitch-examples/)
 --->
+(target: conference organizer who can invest in us)
+
+Most conferences fail when it comes to communication amongst participants. That's the reason why we created ConferenceBook: an app to make this communication easier than ever, providing participants with a full networking experience. ConferenceBook allows attendees, organizers and sponsors to interact with each others, by making posts, sharing contacts and interests, and chatting. With ConferenceBook, your event will become more appealing to your participants!
+
 ---
 ## Requirements
 
