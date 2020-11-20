@@ -54,7 +54,7 @@ class MyProfileState4 extends State<CreateProfile4> {
   Future insertDataBase() async {
     String image = basename(widget.imageFile.path);
     Reference firebaseStorageRef =
-        FirebaseStorage.instance.ref().child('uploads/$image');
+        FirebaseStorage.instance.ref().child('profilePics/$image');
     UploadTask uploadTask = firebaseStorageRef.putFile(widget.imageFile);
     TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => null);
     taskSnapshot.ref.getDownloadURL().then((value) {

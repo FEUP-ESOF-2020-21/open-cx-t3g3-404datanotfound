@@ -1,5 +1,6 @@
 import 'package:ConfereceBook/MyProfile2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:adobe_xd/pinned.dart';
@@ -22,8 +23,6 @@ class SizeConfig {
   }
 }
 
-
-
 class MyProfile extends StatefulWidget {
   MyProfile({
     Key key,
@@ -40,6 +39,7 @@ class MyProfile extends StatefulWidget {
     this.linkedin,
     this.twitter,
     this.github,
+    this.code
   }) : super(key: key);
 
   final FirebaseAuth auth;
@@ -55,6 +55,7 @@ class MyProfile extends StatefulWidget {
   final String linkedin;
   final String twitter;
   final String github;
+  final String code;
 
   @override
   State<StatefulWidget> createState() => Profile();
@@ -73,6 +74,7 @@ class Profile extends State<MyProfile> {
   String linkedin;
   String twitter;
   String github;
+  String code;
   FirebaseAuth auth;
 
   @override
@@ -91,178 +93,192 @@ class Profile extends State<MyProfile> {
     linkedin = widget.linkedin;
     twitter = widget.twitter;
     github = widget.github;
+    code = widget.code;
     return WillPopScope(
-    onWillPop: () async => false, child: Scaffold(
-      backgroundColor: const Color(0xffffffff),
-      body: Stack(
-        children: <Widget>[
-          Transform.translate(
-            offset: Offset(SizeConfig.screenWidth *34.0, SizeConfig.screenHeight *150.0),
-            child: Container(
-              width: SizeConfig.screenWidth * 345.0,
-              height: SizeConfig.screenHeight * 636.0,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30.0),
-                color: const Color(0x80ececec),
-              ),
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(SizeConfig.screenWidth *110.0, SizeConfig.screenHeight *64.0),
-            child: Container(
-              width: SizeConfig.screenWidth * 194.0,
-              height: SizeConfig.screenHeight * 194.0,
-              decoration: BoxDecoration(
-                borderRadius:
-                    BorderRadius.all(Radius.elliptical(9999.0, 9999.0)),
-                color: const Color(0xfff5f5f5),
-              ),
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(SizeConfig.screenWidth *158.5, SizeConfig.screenHeight *290.0),
-            child: SizedBox(
-              width: SizeConfig.screenWidth * 100.0,
-              child: Text(
-                this.city,
-                style: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontSize: 12,
-                  color: const Color(0xff1A2677),
-                  letterSpacing: 0.1875,
-                  fontWeight: FontWeight.w500,
-                  height: 1.2,
+        onWillPop: () async => false,
+        child: Scaffold(
+          backgroundColor: const Color(0xffffffff),
+          body: Stack(
+            children: <Widget>[
+              Transform.translate(
+                offset: Offset(SizeConfig.screenWidth * 34.0,
+                    SizeConfig.screenHeight * 150.0),
+                child: Container(
+                  width: SizeConfig.screenWidth * 345.0,
+                  height: SizeConfig.screenHeight * 636.0,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30.0),
+                    color: const Color(0x80ececec),
+                  ),
                 ),
-                textAlign: TextAlign.center,
               ),
-            ),
-          ),
-          Container(),
-          Container(),
-          Container(),
-          Container(),
-          Container(),
-          Container(),
-          Container(),
-          Container(),
-          Container(),
-          Container(),
-          Container(),
-          Container(),
-          Transform.translate(
-            offset: Offset(SizeConfig.screenWidth *70, SizeConfig.screenHeight *430),
-            child: Container(
-                child: Text(
+              Transform.translate(
+                offset: Offset(SizeConfig.screenWidth * 110.0,
+                    SizeConfig.screenHeight * 64.0),
+                child: Container(
+                  width: SizeConfig.screenWidth * 194.0,
+                  height: SizeConfig.screenHeight * 194.0,
+                  decoration: BoxDecoration(
+                    borderRadius:
+                        BorderRadius.all(Radius.elliptical(9999.0, 9999.0)),
+                    color: const Color(0xfff5f5f5),
+                  ),
+                ),
+              ),
+              Transform.translate(
+                offset: Offset(SizeConfig.screenWidth * 158.5,
+                    SizeConfig.screenHeight * 290.0),
+                child: SizedBox(
+                  width: SizeConfig.screenWidth * 100.0,
+                  child: Text(
+                    this.city,
+                    style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontSize: 12,
+                      color: const Color(0xff1A2677),
+                      letterSpacing: 0.1875,
+                      fontWeight: FontWeight.w500,
+                      height: 1.2,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+              Container(),
+              Container(),
+              Container(),
+              Container(),
+              Container(),
+              Container(),
+              Container(),
+              Container(),
+              Container(),
+              Container(),
+              Container(),
+              Container(),
+              Transform.translate(
+                offset: Offset(
+                    SizeConfig.screenWidth * 70, SizeConfig.screenHeight * 430),
+                child: Container(
+                    child: Text(
                   bio,
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(fontWeight: FontWeight.bold),
-                )
-            ),),
-          Transform.translate(
-            offset: Offset(SizeConfig.screenWidth *59.5, SizeConfig.screenHeight *376.5),
-            child: Text(
-              'Bio',
-              style: TextStyle(
-                fontFamily: 'Roboto',
-                fontSize: 20,
-                color: const Color(0xff1A2677),
-                letterSpacing: 0.36,
-                fontWeight: FontWeight.w500,
-                height: 1,
+                )),
               ),
-              textAlign: TextAlign.left,
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(SizeConfig.screenWidth *70, SizeConfig.screenHeight *530),
-            child: Container(
+              Transform.translate(
+                offset: Offset(SizeConfig.screenWidth * 59.5,
+                    SizeConfig.screenHeight * 376.5),
                 child: Text(
+                  'Bio',
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontSize: 20,
+                    color: const Color(0xff1A2677),
+                    letterSpacing: 0.36,
+                    fontWeight: FontWeight.w500,
+                    height: 1,
+                  ),
+                  textAlign: TextAlign.left,
+                ),
+              ),
+              Transform.translate(
+                offset: Offset(
+                    SizeConfig.screenWidth * 70, SizeConfig.screenHeight * 530),
+                child: Container(
+                    child: Text(
                   job,
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(fontWeight: FontWeight.bold),
-                )
-            ),),
-          Transform.translate(
-            offset: Offset(SizeConfig.screenWidth *59.5, SizeConfig.screenHeight *476.5),
-            child: Text(
-              'Job',
-              style: TextStyle(
-                fontFamily: 'Roboto',
-                fontSize: 20,
-                color: const Color(0xff1A2677),
-                letterSpacing: 0.36,
-                fontWeight: FontWeight.w500,
-                height: 1,
+                )),
               ),
-              textAlign: TextAlign.left,
-            ),
-          ),
-    Transform.translate(
-    offset: Offset(SizeConfig.screenWidth *70, SizeConfig.screenHeight *630),
-    child: Container(
-            child: Text(
-              area,
-              textAlign: TextAlign.center,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontWeight: FontWeight.bold),
-            )
-          ),),
-          Transform.translate(
-            offset: Offset(SizeConfig.screenWidth *59.5, SizeConfig.screenHeight *576.5),
-            child: Text(
-              'Area',
-              style: TextStyle(
-                fontFamily: 'Roboto',
-                fontSize: 20,
-                color: const Color(0xff1A2677),
-                letterSpacing: 0.36,
-                fontWeight: FontWeight.w500,
-                height: 1,
-              ),
-              textAlign: TextAlign.left,
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(SizeConfig.screenWidth *80, SizeConfig.screenHeight *250.0),
-            child: SizedBox(
-              width: 226.0,
-              child: Text(
-                this.name,
-                style: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontSize: 30,
-                  color: const Color(0xff1A2677),
-                  letterSpacing: 0.28125,
-                  fontWeight: FontWeight.w500,
-                  height: 0.8,
+              Transform.translate(
+                offset: Offset(SizeConfig.screenWidth * 59.5,
+                    SizeConfig.screenHeight * 476.5),
+                child: Text(
+                  'Job',
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontSize: 20,
+                    color: const Color(0xff1A2677),
+                    letterSpacing: 0.36,
+                    fontWeight: FontWeight.w500,
+                    height: 1,
+                  ),
+                  textAlign: TextAlign.left,
                 ),
-                textAlign: TextAlign.center,
               ),
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(SizeConfig.screenWidth *350.0, SizeConfig.screenHeight *35),
-            child: Icon(
-              FontAwesomeIcons.pencilAlt,
-              color: const Color(0xff1A2677),
-            ),
-          ),
-          Container(),
-          Transform.translate(
-            offset: Offset(SizeConfig.screenWidth *150, SizeConfig.screenHeight *100.0),
-            child:
-                // Adobe XD layer: 'NoPath' (shape)
-                Container(
-              child: CircleAvatar(
-                backgroundImage: NetworkImage(this.image),
-                radius: 50,
+              Transform.translate(
+                offset: Offset(
+                    SizeConfig.screenWidth * 70, SizeConfig.screenHeight * 630),
+                child: Container(
+                    child: Text(
+                  area,
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                )),
               ),
-            ),
-          ),
-          Container(
-              child: Column(
+              Transform.translate(
+                offset: Offset(SizeConfig.screenWidth * 59.5,
+                    SizeConfig.screenHeight * 576.5),
+                child: Text(
+                  'Area',
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontSize: 20,
+                    color: const Color(0xff1A2677),
+                    letterSpacing: 0.36,
+                    fontWeight: FontWeight.w500,
+                    height: 1,
+                  ),
+                  textAlign: TextAlign.left,
+                ),
+              ),
+              Transform.translate(
+                offset: Offset(SizeConfig.screenWidth * 80,
+                    SizeConfig.screenHeight * 250.0),
+                child: SizedBox(
+                  width: 226.0,
+                  child: Text(
+                    this.name,
+                    style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontSize: 30,
+                      color: const Color(0xff1A2677),
+                      letterSpacing: 0.28125,
+                      fontWeight: FontWeight.w500,
+                      height: 0.8,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+              Transform.translate(
+                offset: Offset(SizeConfig.screenWidth * 350.0,
+                    SizeConfig.screenHeight * 35),
+                child: Icon(
+                  FontAwesomeIcons.pencilAlt,
+                  color: const Color(0xff1A2677),
+                ),
+              ),
+              Container(),
+              Transform.translate(
+                offset: Offset(SizeConfig.screenWidth * 150,
+                    SizeConfig.screenHeight * 100.0),
+                child:
+                    // Adobe XD layer: 'NoPath' (shape)
+                    Container(
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage(this.image),
+                    radius: 50,
+                  ),
+                ),
+              ),
+              Container(
+                  child: Column(
                 children: <Widget>[
                   Container(
                     child: Expanded(
@@ -273,8 +289,22 @@ class Profile extends State<MyProfile> {
                           child: FloatingActionButton(
                             onPressed: () async {
                               Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(builder: (context) => MyProfile2(auth: auth, image: image, name: name, job: job, interests: interests, city: city, bio: bio, area: area,linkedin: linkedin,
-                                      facebook: facebook, instagram: instagram, twitter: twitter, github: github)));
+                                  MaterialPageRoute(
+                                      builder: (context) => MyProfile2(
+                                          auth: auth,
+                                          image: image,
+                                          name: name,
+                                          job: job,
+                                          interests: interests,
+                                          city: city,
+                                          bio: bio,
+                                          area: area,
+                                          linkedin: linkedin,
+                                          facebook: facebook,
+                                          instagram: instagram,
+                                          twitter: twitter,
+                                          github: github,
+                                      code: widget.code)));
                             },
                             backgroundColor: const Color(0xff1A2677),
                             child: Icon(
@@ -288,32 +318,42 @@ class Profile extends State<MyProfile> {
                   )
                 ],
               )),
-          Transform.translate(
-            offset: Offset(SizeConfig.screenWidth * 30, SizeConfig.screenHeight *30),
-            child:
-                // Adobe XD layer: 'home-24px' (group)
-                PageLink(
-              links: [
-                PageLinkInfo(
-                  transition: LinkTransition.Fade,
-                  ease: Curves.easeOut,
-                  duration: 0.3,
-                  pageBuilder: () => HomeFeed(auth: auth, image: image),
-                ),
-              ],
-              child: SizedBox(
-                width: 40.0,
-                height: 40.0,
-                child: Icon(
-                  FontAwesomeIcons.home,
-                  color: const Color(0xff1A2677),
-                ),
-              ),
-            ),
+              Transform.translate(
+                  offset: Offset(
+                      SizeConfig.screenWidth * 10, SizeConfig.screenHeight * 20),
+                  child: SizedBox.fromSize(
+                    size: Size(56, 56), // button width and height
+                    child: ClipOval(
+                      child: Material(
+                        color: const Color(0xff1A2677), // button color
+                        child: InkWell(
+                          splashColor: const Color(0xff1A2677), // splash color
+                          onTap: () async {
+                            FirebaseDatabase.instance
+                                .reference()
+                                .once()
+                                .then((DataSnapshot snapshot) {
+                              Map<dynamic, dynamic> map = snapshot.value;
+                              print(code);
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: (context) => HomeFeed(
+                                          auth: auth,
+                                          image: image,
+                                          code: widget.code,
+                                          map: map)));
+                            });
+                          }, // button pressed
+                          child: Icon(FontAwesomeIcons.home, color: Colors.white,), // icon
+
+                        ),
+                      ),
+                    ),
+                  )),
+
+            ],
           ),
-        ],
-      ),
-    ));
+        ));
   }
 }
 

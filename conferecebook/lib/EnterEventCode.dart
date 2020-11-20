@@ -177,10 +177,10 @@ class EventCode extends State<EnterEventCode>{
                                     .once()
                                     .then((DataSnapshot snapshot) {
                                   Map<dynamic, dynamic> map = snapshot.value;
-                                  String image = map.values.toList()[1][auth.currentUser.uid]["photo"];
+                                  String image = map.values.toList()[2][widget.auth.currentUser.uid]["photo"];
                                   Navigator.of(context).pushReplacement(MaterialPageRoute(
                                       builder: (context) =>
-                                          HomeFeed(auth: this.auth, image: image, code: code)));
+                                          HomeFeed(auth: this.auth, image: image, code: code, map: map,)));
                                 });
                               }
                             });

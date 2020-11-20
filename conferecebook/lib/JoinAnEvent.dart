@@ -67,7 +67,7 @@ class JoinEvent extends State<JoinAnEvent> {
               itemBuilder: (context, position) {
                 String aux = "id" + (position+1).toString();
                 code = map.values.toList()[0][aux]["name"];
-                String secondcode = map.values.toList()[0][aux]["code"];
+                String seconded = map.values.toList()[0][aux]["code"];
                 return Container(
                   child: Card(
                     child: new ListTile(
@@ -82,10 +82,10 @@ class JoinEvent extends State<JoinAnEvent> {
                             .once()
                             .then((DataSnapshot snapshot) {
                           Map<dynamic, dynamic> map = snapshot.value;
-                          String image = map.values.toList()[1][auth.currentUser.uid]["photo"];
+                          String image = map.values.toList()[2][auth.currentUser.uid]["photo"];
                           Navigator.of(context).pushReplacement(MaterialPageRoute(
                               builder: (context) =>
-                                  HomeFeed(auth: this.auth, image: image, code: secondcode)));
+                                  HomeFeed(auth: this.auth, image: image, code: seconded, map: map,)));
                         });
                       },
                     ),

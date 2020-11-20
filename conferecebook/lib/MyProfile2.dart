@@ -45,6 +45,7 @@ class MyProfile2 extends StatefulWidget {
     this.linkedin,
     this.twitter,
     this.github,
+    this.code
   }) : super(key: key);
 
   final FirebaseAuth auth;
@@ -60,6 +61,7 @@ class MyProfile2 extends StatefulWidget {
   final String linkedin;
   final String twitter;
   final String github;
+  final String code;
 
   @override
   State<StatefulWidget> createState() => Profile2();
@@ -94,6 +96,30 @@ class Profile2 extends State<MyProfile2> {
     for (int i = 0; i < myInterests.length; i++) {
       interests += myInterests[i] + ",";
     }
+  }
+
+  showAlertDialog(BuildContext context, String text) {
+    Widget okButton = FlatButton(
+      child: Text("OK"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    AlertDialog alerta;
+
+      alerta = AlertDialog(
+        title: Text("Oops..."),
+        content: Text(name.trimRight() + " doesn't have a " + text + " account."),
+        actions: [
+          okButton,
+        ],
+      );
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alerta;
+      },
+    );
   }
 
   @override
@@ -271,12 +297,15 @@ class Profile2 extends State<MyProfile2> {
                     icon: Icon(FontAwesomeIcons.linkedin,
                         color: const Color(0xff1A2677)),
                     onPressed: () async {
-                      String url = 'https://linkedin.com/in/' + this.linkedin;
+    if (this.linkedin == null) showAlertDialog(context, "LinkedIn");
+    else {
+
+    String url = 'https://linkedin.com/in/' + this.linkedin;
                       if (await canLaunch(url)) {
                         await launch(url);
                       } else {
                         throw 'Could not launch $url';
-                      }
+                      }}
                     })),
           ),
           Transform.translate(
@@ -287,12 +316,15 @@ class Profile2 extends State<MyProfile2> {
                     icon: Icon(FontAwesomeIcons.twitter,
                         color: const Color(0xff1A2677)),
                     onPressed: () async {
-                      String url = 'https://twitter.com/' + this.twitter;
+    if (this.twitter == null) showAlertDialog(context, "Twitter");
+    else {
+
+    String url = 'https://twitter.com/' + this.twitter;
                       if (await canLaunch(url)) {
                         await launch(url);
                       } else {
                         throw 'Could not launch $url';
-                      }
+                      }}
                     })),
           ),
           Transform.translate(
@@ -303,12 +335,15 @@ class Profile2 extends State<MyProfile2> {
                     icon: Icon(FontAwesomeIcons.github,
                         color: const Color(0xff1A2677)),
                     onPressed: () async {
-                      String url = 'https://github.com/' + this.github;
+    if (this.github == null) showAlertDialog(context, "Github");
+    else {
+
+    String url = 'https://github.com/' + this.github;
                       if (await canLaunch(url)) {
                         await launch(url);
                       } else {
                         throw 'Could not launch $url';
-                      }
+                      }}
                     })),
           ),
           Transform.translate(
@@ -319,12 +354,15 @@ class Profile2 extends State<MyProfile2> {
                     icon: Icon(FontAwesomeIcons.instagram,
                         color: const Color(0xff1A2677)),
                     onPressed: () async {
-                      String url = 'https://instagram.com/' + this.instagram;
+    if (this.instagram == null) showAlertDialog(context, "Instagram");
+    else {
+
+    String url = 'https://instagram.com/' + this.instagram;
                       if (await canLaunch(url)) {
                         await launch(url);
                       } else {
                         throw 'Could not launch $url';
-                      }
+                      }}
                     })),
           ),
           Transform.translate(
@@ -335,11 +373,15 @@ class Profile2 extends State<MyProfile2> {
                     icon: Icon(FontAwesomeIcons.facebook,
                         color: const Color(0xff1A2677)),
                     onPressed: () async {
-                      String url = 'https://facebook.com/' + this.facebook;
+                      if (this.facebook == null) showAlertDialog(context, "Facebook");
+                      else {
+                        String url = 'https://facebook.com/' + this.facebook;
+
                       if (await canLaunch(url)) {
                         await launch(url);
                       } else {
                         throw 'Could not launch $url';
+                      }
                       }
                     })),
           ),
@@ -415,7 +457,8 @@ class Profile2 extends State<MyProfile2> {
                                         facebook: facebook,
                                         instagram: instagram,
                                         twitter: twitter,
-                                        github: github)));
+                                        github: github,
+                                    code: widget.code)));
                           });
                         },
                         backgroundColor: const Color(0xff1A2677),
@@ -430,6 +473,37 @@ class Profile2 extends State<MyProfile2> {
               )
             ],
           )),
+          Transform.translate(
+              offset: Offset(
+                  SizeConfig.screenWidth * 10, SizeConfig.screenHeight * 20),
+              child: SizedBox.fromSize(
+                size: Size(56, 56), // button width and height
+                child: ClipOval(
+                  child: Material(
+                    color: const Color(0xff1A2677), // button color
+                    child: InkWell(
+                      splashColor: const Color(0xff1A2677), // splash color
+                      onTap: () async {
+                        FirebaseDatabase.instance
+                            .reference()
+                            .once()
+                            .then((DataSnapshot snapshot) {
+                          Map<dynamic, dynamic> map = snapshot.value;
+                          Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                  builder: (context) => HomeFeed(
+                                      auth: widget.auth,
+                                      image: image,
+                                      code: widget.code,
+                                      map: map)));
+                        });
+                      }, // button pressed
+                      child: Icon(FontAwesomeIcons.home, color: Colors.white,), // icon
+
+                    ),
+                  ),
+                ),
+              )),
           Transform.translate(
               offset: Offset(
                   SizeConfig.screenWidth * 340, SizeConfig.screenHeight * 790),
@@ -458,33 +532,7 @@ class Profile2 extends State<MyProfile2> {
                   ),
                 ),
               )),
-          Transform.translate(
-            offset: Offset(
-                SizeConfig.screenWidth * 30, SizeConfig.screenHeight * 30),
-            child:
-                // Adobe XD layer: 'home-24px' (group)
-                PageLink(
-              links: [
-                PageLinkInfo(
-                  transition: LinkTransition.Fade,
-                  ease: Curves.easeOut,
-                  duration: 0.3,
-                  pageBuilder: () => HomeFeed(
-                    auth: widget.auth,
-                    image: image,
-                  ),
-                ),
-              ],
-              child: SizedBox(
-                width: 40.0,
-                height: 40.0,
-                child: Icon(
-                  FontAwesomeIcons.home,
-                  color: const Color(0xff1A2677),
-                ),
-              ),
-            ),
-          ),
+
         ],
       ),
     ));
