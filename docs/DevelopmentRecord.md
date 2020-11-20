@@ -37,11 +37,9 @@ Thank you!
 ## Product Vision
 <!---Start by defining a clear and concise vision for your module, to help members of the team, contributors, and users into focusing their often disparate views into a concise, visual, and short textual form. It provides a "high concept" of the product for marketers, developers, and managers.
 
-A product vision describes the essential of the product and sets the direction to where a product is headed, and what the product will deliver in the future. 
+There is always a time in physical or virtual conferences when you wish you could share a thought, experience, or chat with another participant. ConferenceBook is a social network to enhance this communication. Connecting people, towards mind broadening and empowerment of relationships.
 
 **We favor a catchy and concise statement, ideally one sentence.**)--->
-
-There is always a time in a conference when you wish you could share a thought, experience, or chat with another participant. ConferenceBook is a social network to enhance this communication. Connecting people, towards mind broadening and empowerment of relationships.
 
 <!---
 To learn more about how to write a good product vision, please see also:
@@ -62,6 +60,9 @@ Take a look at the following links to learn some techniques:
 * [Top 7 Killer Elevator Pitch Examples, by toggl.com](https://blog.toggl.com/elevator-pitch-examples/)
 --->
 ---
+
+Most conferences fail when it comes to communication amongst participants. That's reason why we created ConferenceBook: an app to make this communication easier than ever, providing participants with a full networking experience. ConferenceBook allows attendees, organizers and sponsors to interact with each others, by making posts, sharing contacts and interests, and chatting. With ConferenceBook, your event will become more appealing to your participants!
+
 ## Requirements
 
 <!---In this section, you should describe all kinds of requirements for your module: functional and non-functional requirements.
