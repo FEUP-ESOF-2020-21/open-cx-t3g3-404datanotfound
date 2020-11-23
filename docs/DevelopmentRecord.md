@@ -242,7 +242,9 @@ Briefly describe each use case mentioning the following:
 
 ### User stories
 
- In the following sections, all user stories are separated by roles, the effort for each of them is defined and they are ordered by importance, according to the MoSCoW method.
+ In the following sections, roles for every user story are described and an user story map is presented, allowing a more global view of all the user stories of this project.
+
+User story's mockups are present in the comments of each issue in GitHub Projects.
 
 <!--
 **Acceptance tests**.
@@ -268,43 +270,6 @@ This roll will belong to representatives of organizations or institutions that w
 #### User Story Map
 
 ![User Story Map](US_Map.jpg)
-
-### User Stories MockUps
-<div>
-<img src="MockupImages/AppOpening.png" width=25% height=25%>
-<img src="MockupImages/Login.png" width=25% height=25%>
-<img src="MockupImages/JoinAnEvent.png" width=25% height=25%>
-</div>
-
-<div>
-<img src="MockupImages/CreateProfile1.png" width=25% height=25%>
-<img src="MockupImages/CreateProfile2.png" width=25% height=25%>
-<img src="MockupImages/MyProfile1.png" width=25% height=25%>
-</div>
-
-<div>
-<img src="MockupImages/MyProfile2.png" width=25% height=25%>
-<img src="MockupImages/EnterEventCode.png" width=25% height=25%>
-<img src="MockupImages/WelcomeOnBoard.png" width=25% height=25%>
-</div>
-
-<div>
-<img src="MockupImages/HomeFeed.png" width=25% height=25%>
-<img src="MockupImages/NewPost.png" width=25% height=25%>
-<img src="MockupImages/Comments.png" width=25% height=25%>
-</div>
-
-<div>
-<img src="MockupImages/MyMessages.png" width=25% height=25%>
-<img src="MockupImages/Chat.png" width=25% height=25%>
-<img src="MockupImages/OtherEventsOrAddOne.png" width=25% height=25%>
-</div>
-
-<div>
-<img src="MockupImages/NotificationsPanel.png" width=25% height=25%>
-<img src="MockupImages/SeeAllParticipants.png" width=25% height=25%>
-<img src="MockupImages/Search.png" width=25% height=25%>
-</div>
 
 ### Domain model
 
