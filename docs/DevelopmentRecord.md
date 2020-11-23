@@ -253,49 +253,21 @@ For each user story you should write also the acceptance tests (textually in Ghe
 
 General role, includes every user of the conference, be it attendee, speaker, organizer or sponsor.
 
-| Effort     | Importance    | Description     |
-| :------------- | :----------: | -----------: |
-|  5 | Must Have   | As an app user, I want to login in the app using my email and password, so that I can access my personal profile.     |
-|  6 | Must Have   | As an app user, I want to create a profile with my email and password, so that I store personal information on the app.    |
-|  6 | Must Have   | As an app user, I want to choose which information is displayed on my profile, namely small bio, soft and technical skills, social network nicknames, previous experience and education so that I manage what information is shown to other participants.    |
-|  2 | Must Have   | As an app user, I want to change my display name according to the conference I am attending so that I make it suitable for each conference I attend.    |
-|  5 | Must Have   | As an app user, I want to see the list of all the conference participants, so that I can know who is also attending the conference.    |
-|  8 | Must Have   | As an app user, I want to access every participants personal profile so that I can see if I want to contact them.    |
-|  3 | Must Have   | As an app user, I want to search in the list of all the conference participants for a specific name, so that I can easily find someone that I am looking for.    |
-|  3 | Must Have   | As an app user, I want to insert a conference code, so that I can access the conference details and feed.    |
-|  9 | Must Have   | As an app user, I want to post photos, videos and opinions in a way that everyone in the event can see it, so that I share my experience with all the participants.     |
-|  4 | Must Have   | As an app user, I want to comment on other participant's posts so that we can discuss meaningful topics.   |
-|  4 | Could Have   | As an app user, I want to choose whether or not I want to display my conference history so that other participants can/can't see which conferences I previously attended.    |
-|  6 | Could Have   | As an app user, I want to update my personal profile whenever I please, changing the information that was entered when I first signed in, so that I can keep my basic information updated over time.    |
-
 #### Participants (including attendees, speakers and organizers)
 
-This role includes both attendees, speakers and organizers of the conference, since they will have the same funcionalities while using the app.
-
-| Effort     | Importance    | Description     |
-| :------------- | :----------: | -----------: |
-|  9 | Should Have   | As a conference participant, I want to chat in private with other participants, so that I can continue conversations that may have started elsewhere.    |
-
+This role includes attendees, speakers and organizers of the conference, since they will have the same funcionalities while using the app. In addition, organizers will have an extent of this role, since they will have additional funciontalities, explained bellow.
 
 #### Organizers
 
 This roll will be assigned to the organizers of each conference. Naturally, they will play an important role in moderating the feed and helping participants with anything they need.
 
-| Effort     | Importance    | Description     |
-| :------------- | :----------: | -----------: |
-|  1 | Should Have   | As a conference organizer, I want to chat in private with other conference organizers so that we can discuss and solve several issues that can appear during the conference.   |
-|  9 | Could Have   | As a conference organizer, I want to moderate sponsors shares about their organizations so that participants are not spammed with repetitive information.    |
-|  4 | Could Have   | As a conference organizer, I want to delete any post or comment I find relevant so that unsuitable publications do not stay on the conference feed.    |
-
 #### Sponsors
 
 This roll will belong to representatives of organizations or institutions that will be present at the event. In this sense, they will have different objectives from the attendees and, therefore, different actions.
 
-| Effort     | Importance    | Description     |
-| :------------- | :----------: | -----------: |
-|  1 | Should Have   | As a conference sponsor, I want to answer private questions that are asked by the participants so that I can better engage with possible clients/employees.    |
-|  1 | Should Have   | As a conference sponsor, I want to initiate a conversation with organizing members, so that I can clarify doubts related to small problems that may arise.    |
+#### User Story Map
 
+![User Story Map](US_Map.jpg)
 
 ### User Stories MockUps
 <div>
