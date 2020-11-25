@@ -341,7 +341,8 @@ class Profile extends State<MyProfile> {
                                           auth: auth,
                                           image: image,
                                           code: widget.code,
-                                          map: map)));
+                                          map: map
+                                      )));
                             });
                           }, // button pressed
                           child: Icon(FontAwesomeIcons.home, color: Colors.white,), // icon

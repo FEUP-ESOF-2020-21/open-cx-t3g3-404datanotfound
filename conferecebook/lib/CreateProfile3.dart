@@ -176,7 +176,7 @@ class MyProfileState3 extends State<CreateProfile3> {
                           SizeConfig.screenHeight * 150.0),
                       child: TagEditor(
                         length: values.length,
-                        delimeters: [',', ' '],
+                        delimiters: [',', ' '],
                         hasAddButton: false,
                         inputDecoration: const InputDecoration(
                           //helperText: 'Add your Interests',

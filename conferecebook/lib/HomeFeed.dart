@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:flutter/rendering.dart';
+import 'package:ConfereceBook/ParticipantsList.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import './Search.dart';
 import './NewPost.dart';
@@ -91,13 +92,24 @@ class MyHomeFeed extends State<HomeFeed> {
       key: _scaffoldState,
       appBar: AppBar(
         actions: <Widget>[
-          IconButton(icon: new Icon(FontAwesomeIcons.users, color: const Color(0xffffffff),), onPressed: (){
+          IconButton(icon: new Icon(FontAwesomeIcons.users, color: const Color(0xffffffff),), onPressed: () async {
+
+            FirebaseDatabase.instance
+                .reference()
+                .once()
+                .then((DataSnapshot snapshot) {
+                  Map<dynamic, dynamic> map = snapshot.value;
             Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (context) => SeeallParticipants()));
+                builder: (context) => ParticipantsList(
+                  auth: auth,
+                  map: map,
+                  code: code,
+                )));
+              });
           }),
           IconButton(icon: new Icon(FontAwesomeIcons.bell, color: const Color(0xffffffff),), onPressed: (){
-            Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (context) => NotificationsPanel()));
+            //Navigator.of(context).pushReplacement(MaterialPageRoute(
+                //builder: (context) => NotificationsPanel()));
           }),
           InkWell(
               onTap: () async {
@@ -226,7 +238,19 @@ class MyHomeFeed extends State<HomeFeed> {
             ListTile(
               leading: new Icon(FontAwesomeIcons.users, color: const Color(0xff1A2677),),
               title: Text("Participants List"),
-              onTap: () {
+              onTap: () async {
+                FirebaseDatabase.instance
+                    .reference()
+                    .once()
+                    .then((DataSnapshot snapshot) {
+                  Map<dynamic, dynamic> map = snapshot.value;
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => ParticipantsList(
+                          auth: auth,
+                          map: map,
+                          code: code,
+                    )));
+                });
               },
             ),
             ListTile(
