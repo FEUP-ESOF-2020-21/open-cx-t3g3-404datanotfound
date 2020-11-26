@@ -4,6 +4,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
+import 'package:flutter_search_bar/flutter_search_bar.dart';
 import './CreateProfile1.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:flutter/widgets.dart';
@@ -15,13 +16,17 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:async';
 
 import 'MyProfile.dart';
+import 'SearchParticipants.dart';
+
+TextEditingController _textFieldController = TextEditingController();
+
 
 class ParticipantsList extends StatefulWidget {
 
   ParticipantsList({Key key, this.auth, this.map, this.code}): super(key: key);
 
   final FirebaseAuth auth;
-  Map<dynamic, dynamic> map;
+  final Map<dynamic, dynamic> map;
   final String code;
 
   @override
@@ -29,6 +34,8 @@ class ParticipantsList extends StatefulWidget {
 }
 
 class _ParticipantsList extends State<ParticipantsList> {
+
+  String searchToDo;
 
   FirebaseAuth auth;
   Map<dynamic, dynamic> map;
@@ -52,7 +59,42 @@ class _ParticipantsList extends State<ParticipantsList> {
 
   var users; // iterable class to be, which will save the usersUIDs in conference
 
-  //String image = map.values.toList()[2][auth.currentUser.uid]["photo"];
+
+  showTextAlertDialog(BuildContext context) async {
+
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Who are you looking for?"),
+            content: TextField(
+              controller: _textFieldController,
+              textInputAction: TextInputAction.go,
+              keyboardType: TextInputType.text,
+              decoration: InputDecoration(hintText: "Enter a name"),
+            ),
+            actions: <Widget>[
+              new FlatButton(
+                child: new Text('Search'),
+                onPressed: () async {
+                  this.searchToDo = _textFieldController.text;
+                  Navigator.of(context).pop();
+                  print("Searching $this.searchToDo");
+                  Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                              builder: (context) => SearchParticipants(
+                                  auth: auth,
+                                  code: widget.code,
+                                  searchToDo: searchToDo,
+                                  map: map )));
+
+                })
+          ]
+            );
+        }
+    );
+
+  }
 
   @override
   void initState() {
@@ -60,6 +102,7 @@ class _ParticipantsList extends State<ParticipantsList> {
     auth = widget.auth;
     map = widget.map;
     code = widget.code;
+
 
     int numConferences = map.values.toList()[0].length;
 
@@ -88,7 +131,6 @@ class _ParticipantsList extends State<ParticipantsList> {
       usersNames.add(map.values.toList()[2][user]["name"]);
       usersJobs.add(map.values.toList()[2][user]["job"]);
       usersInterests.add(map.values.toList()[2][user]["interests"]);
-      // stupid index is being saved for this "interests" in Firebase -> fix
       usersCities.add(map.values.toList()[2][user]["city"]);
       usersBios.add(map.values.toList()[2][user]["bio"]);
       usersAreas.add(map.values.toList()[2][user]["area"]);
@@ -98,39 +140,42 @@ class _ParticipantsList extends State<ParticipantsList> {
       usersTwitters.add(map.values.toList()[2][user]["twitter"]);
       usersGitHubs.add(map.values.toList()[2][user]["github"]);
       usersRoles.add(map.values.toList()[0][confId]["users"][user]);
-
     }
-    print(usersIDs);
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold (
 
         appBar: AppBar(
-          leading: IconButton(
-              icon: Icon(FontAwesomeIcons.arrowLeft, color: Colors.white),
-              onPressed: () async {
-                FirebaseDatabase.instance
-                    .reference()
-                    .once()
-                    .then((DataSnapshot snapshot) {
-                  Map<dynamic, dynamic> map = snapshot.value;
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                          builder: (context) => HomeFeed(
-                              auth: auth,
-                              code: widget.code,
-                              map: map )));
-                });
-              }
+            leading: IconButton(
+                icon: Icon(FontAwesomeIcons.arrowLeft, color: Colors.white),
+                onPressed: () async {
+                  FirebaseDatabase.instance
+                      .reference()
+                      .once()
+                      .then((DataSnapshot snapshot) {
+                    Map<dynamic, dynamic> map = snapshot.value;
+                    Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                            builder: (context) => HomeFeed(
+                                auth: auth,
+                                code: widget.code,
+                                map: map )));
+                  });
+                }
             ),
-          title: Text("List of Participants"),
-          backgroundColor: Color(0xff1A2677),
+            title: Text("List of Participants"),
+            backgroundColor: Color(0xff1A2677),
+            actions:<Widget> [
+              IconButton(
+                  icon: Icon(FontAwesomeIcons.search, color: Colors.white),
+                  onPressed: () => showTextAlertDialog(context),
+              ),
+            ]
         ),
 
-    body: Stack(
+        body: Stack(
 
         children: <Widget>[
               new ListView.builder(
@@ -202,3 +247,8 @@ class _ParticipantsList extends State<ParticipantsList> {
 
   }
 }
+
+
+/*
+
+*/
