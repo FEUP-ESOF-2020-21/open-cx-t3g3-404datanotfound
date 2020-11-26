@@ -235,7 +235,6 @@ class JoinEvent extends State<JoinAnEvent> {
                                 builder: (context) =>
                                     HomeFeed(
                                       auth: this.auth,
-                                      image: image,
                                       code: conferenceCodes[position],
                                       map: map,
                                     )));

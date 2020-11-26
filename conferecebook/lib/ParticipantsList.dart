@@ -1,4 +1,5 @@
 import 'package:ConfereceBook/JoinAnEvent.dart';
+import 'package:ConfereceBook/ViewProfile1.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,20 +16,6 @@ import 'dart:async';
 
 import 'MyProfile.dart';
 
-class SizeConfig {
-  static MediaQueryData _mediaQueryData;
-  static double screenWidth;
-  static double screenHeight;
-  static double blockSizeHorizontal;
-  static double blockSizeVertical;
-
-  void init(BuildContext context) {
-    _mediaQueryData = MediaQuery.of(context);
-    screenWidth = _mediaQueryData.size.width / 412;
-    screenHeight = _mediaQueryData.size.height / 870;
-  }
-}
-
 class ParticipantsList extends StatefulWidget {
 
   ParticipantsList({Key key, this.auth, this.map, this.code}): super(key: key);
@@ -36,20 +23,6 @@ class ParticipantsList extends StatefulWidget {
   final FirebaseAuth auth;
   Map<dynamic, dynamic> map;
   final String code;
-  /*
-  String image;
-  String name;
-  String city;
-  String bio;
-  String area;
-  String job;
-  String interests;
-  String facebook;
-  String instagram;
-  String linkedin;
-  String twitter;
-  String github;
-  */
 
   @override
   State<StatefulWidget> createState() => _ParticipantsList();
@@ -62,6 +35,7 @@ class _ParticipantsList extends State<ParticipantsList> {
   String code;
 
   // intialize all the list to be present in ListView.Builder
+  List<String> usersIDs = new List();
   List<String> usersImages = new List();
   List<String> usersNames = new List();
   List<String> usersJobs = new List();
@@ -83,6 +57,7 @@ class _ParticipantsList extends State<ParticipantsList> {
   @override
   void initState() {
     super.initState();
+    auth = widget.auth;
     map = widget.map;
     code = widget.code;
 
@@ -108,6 +83,7 @@ class _ParticipantsList extends State<ParticipantsList> {
     for(int i = 0; i < numUsersInConference; i++) {
       String user = users.elementAt(i); // get user no. i
       // knowing the name of each user, save its properties in profile
+      usersIDs.add(user);
       usersImages.add(map.values.toList()[2][user]["photo"]);
       usersNames.add(map.values.toList()[2][user]["name"]);
       usersJobs.add(map.values.toList()[2][user]["job"]);
@@ -124,9 +100,8 @@ class _ParticipantsList extends State<ParticipantsList> {
       usersRoles.add(map.values.toList()[0][confId]["users"][user]);
 
     }
-    print(usersRoles);
+    print(usersIDs);
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -146,7 +121,6 @@ class _ParticipantsList extends State<ParticipantsList> {
                       MaterialPageRoute(
                           builder: (context) => HomeFeed(
                               auth: auth,
-                              image: "https://firebasestorage.googleapis.com/v0/b/conferencebook-42c5f.appspot.com/o/profilePics%2Fimage_picker4706632519985431327.jpg?alt=media&token=73a6dcf7-cc0c-4725-b612-15fabaae591d",
                               code: widget.code,
                               map: map )));
                 });
@@ -161,7 +135,8 @@ class _ParticipantsList extends State<ParticipantsList> {
         children: <Widget>[
               new ListView.builder(
               itemCount: users.length,
-              itemBuilder: (BuildContext ctxt, int index) {
+              itemBuilder: (BuildContext context, int index) {
+                String userToSee = usersIDs[index];
                 String image = usersImages[index];
                 String name = usersNames[index];
                 String job = usersJobs[index];
@@ -197,22 +172,18 @@ class _ParticipantsList extends State<ParticipantsList> {
                                 ),
                       trailing: IconButton(
                           icon: Icon(FontAwesomeIcons.arrowRight, color: Color(0xff1A2677) ),
-                          /*onPressed: () async {
-                            FirebaseDatabase.instance
-                                .reference()
-                                .once()
-                                .then((DataSnapshot snapshot) {
-                              Map<dynamic, dynamic> map = snapshot.value;
+                          onPressed: () async {
                               Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
-                                      builder: (context) => HomeFeed(
+                                      builder: (context) => ViewProfile1(
                                           auth: auth,
-                                          image: "https://firebasestorage.googleapis.com/v0/b/conferencebook-42c5f.appspot.com/o/profilePics%2Fimage_picker4706632519985431327.jpg?alt=media&token=73a6dcf7-cc0c-4725-b612-15fabaae591d",
+                                          userToSee: userToSee, // id of user pressed
+                                          map: map,
                                           code: widget.code,
-                                          map: map )));
-                            });
-                          }*/
-                      ),
+                                          )));
+                            })
+
+
 
 
                       /*onTap: () {
@@ -235,7 +206,7 @@ class _ParticipantsList extends State<ParticipantsList> {
                                     code: code)));
                       }
                   */
-                    ),
+                  ),
                   semanticContainer: true,
                   clipBehavior: Clip.antiAliasWithSaveLayer,
                   shape: RoundedRectangleBorder(

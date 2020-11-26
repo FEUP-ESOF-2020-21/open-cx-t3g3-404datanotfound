@@ -15,7 +15,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import './Search.dart';
 import './NewPost.dart';
 import './NotificationsPanel.dart';
-import './SeeallParticipants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/widgets.dart';
 import 'package:video_player/video_player.dart';
@@ -40,13 +39,11 @@ class HomeFeed extends StatefulWidget {
   HomeFeed({
     Key key,
     this.auth,
-    this.image,
     this.code,
     this.map,
   }) : super(key: key);
 
   final FirebaseAuth auth;
-  final String image;
   final String code;
   final Map<dynamic, dynamic> map;
   @override
@@ -76,9 +73,10 @@ class MyHomeFeed extends State<HomeFeed> {
   @override
   Widget build(BuildContext context) {
     auth = widget.auth;
-    image = widget.image;
     myMap = widget.map;
     code = widget.code;
+    print(auth.currentUser.uid);
+    image = myMap.values.toList()[2][auth.currentUser.uid]["photo"];
     print("Beginning" + code);
     try {
       numPosts = myMap.values.toList()[1][widget.code].length;

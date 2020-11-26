@@ -88,7 +88,6 @@ class EventCode extends State<EnterEventCode>{
               builder: (context) =>
                   HomeFeed(
                     auth: this.auth,
-                    image: image,
                     code: codeForEvent,
                     map: map,
                   )));
