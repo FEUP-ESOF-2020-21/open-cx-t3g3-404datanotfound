@@ -80,6 +80,83 @@ class MyHomeFeed extends State<HomeFeed> {
     print(auth.currentUser.uid);
     image = myMap.values.toList()[2][auth.currentUser.uid]["photo"];
     print("Beginning" + code);
+
+    // get the role of current user
+    int numConferences = myMap.values.toList()[0].length;
+
+    String confName; // to save the value 'WS2020', 'WS2019', ...
+    String confId; // to save the value 'id1', 'id2',...
+
+    // get the conference we're in
+    for(int i = 1; i <= numConferences; i++) {
+      String aux = "id" + i.toString();
+      confName = myMap.values.toList()[0][aux]["code"];
+      if(confName == code) {
+        confId = aux;
+      }
+    } // from here we get the id of conference we're in
+    // with the id, we'll get the role of the user
+
+    String userRole = myMap.values.toList()[0][confId]["users"][auth.currentUser.uid];
+    print("Authenticated user is $userRole");
+
+
+    /*
+    // method that shows up whe organizer wants to delete a post
+
+    showDeleteDialog(BuildContext context){
+      // configura o button
+      Widget cancel = FlatButton(
+        child: Text("Cancel"),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+      );
+      Widget delete = FlatButton(
+        child: Text("Delete"),
+        onPressed: () async {
+          FirebaseDatabase.instance
+              .reference()
+              .child("Posts").
+              .child()
+
+          FirebaseDatabase.instance
+              .reference()
+              .once()
+              .then((DataSnapshot snapshot) {
+            Map<dynamic, dynamic> map = snapshot.value;
+            String image = map.values.toList()[2][widget
+                .auth.currentUser.uid]["photo"];
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                    builder: (context) =>
+                        HomeFeed(
+                          auth: widget.auth,
+                          code: widget.code,
+                          map: map,)));
+          });
+        },
+      );
+      // configura o  AlertDialog
+      AlertDialog alerta = AlertDialog(
+        title: Text("Delete this post?"),
+        content: Text("Are you sure you want to delete this post?"),
+        actions: [
+          cancel,
+          delete
+        ],
+      );
+      // exibe o dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alerta;
+        },
+      );
+    }
+    */
+
+
     try {
       numPosts = myMap.values.toList()[1][widget.code].length;
     } catch(e) {
@@ -347,10 +424,21 @@ class MyHomeFeed extends State<HomeFeed> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: <Widget>[
+                                if (userRole == "Organizer")
+                                  IconButton(
+                                      icon: Icon(FontAwesomeIcons.trash, color: Colors.red),
+                                      onPressed: () {
+                                        // calls showDeleteDialog, user can choose to delete post
+                                        // deleting, post is removed and
+                                        // gets new maps for the feed
+                                      }
+                                  ),
+                                SizedBox(width: 180), // separates trash icon from reactions
                                 Text(likes.toString() + " "),
                                 Icon(FontAwesomeIcons.commentAlt),
                                 Text("    "+numComments.toString()+" "),
                                 Icon(FontAwesomeIcons.heart),
+
                               ],
                             )
                         ),
