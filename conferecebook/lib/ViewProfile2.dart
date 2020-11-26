@@ -445,15 +445,14 @@ class _ViewProfile2 extends State<ViewProfile2> {
                               print(code);
                               Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
-                                      builder: (context) => ViewProfile1(
+                                      builder: (context) => ParticipantsList(
                                           auth: widget.auth,
-                                          userToSee: userToSee,
                                           code: widget.code,
                                           map: map
                                       )));
                             });
                           }, // button pressed
-                          child: Icon(FontAwesomeIcons.arrowLeft, color: Colors.white,), // icon
+                          child: Icon(FontAwesomeIcons.users, color: Colors.white,), // icon
 
                         ),
                       ),

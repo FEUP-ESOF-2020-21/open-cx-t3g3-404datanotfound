@@ -312,7 +312,7 @@ class _ViewProfile1 extends State<ViewProfile1> {
                                       )));
                                 });
                           }, // button pressed
-                          child: Icon(FontAwesomeIcons.arrowLeft, color: Colors.white,), // icon
+                          child: Icon(FontAwesomeIcons.users, color: Colors.white,), // icon
 
                         ),
                       ),

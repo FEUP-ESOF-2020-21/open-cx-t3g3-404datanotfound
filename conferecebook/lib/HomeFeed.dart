@@ -21,6 +21,8 @@ import 'package:video_player/video_player.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
 
+import 'ViewProfile1.dart';
+
 class SizeConfig {
   static MediaQueryData _mediaQueryData;
   static double screenWidth;
@@ -90,7 +92,8 @@ class MyHomeFeed extends State<HomeFeed> {
       key: _scaffoldState,
       appBar: AppBar(
         actions: <Widget>[
-          IconButton(icon: new Icon(FontAwesomeIcons.users, color: const Color(0xffffffff),), onPressed: () async {
+          IconButton(icon: new Icon(FontAwesomeIcons.users, color: const Color(0xffffffff),),
+              onPressed: () async {
 
             FirebaseDatabase.instance
                 .reference()
@@ -104,7 +107,8 @@ class MyHomeFeed extends State<HomeFeed> {
                   code: code,
                 )));
               });
-          }),
+          }
+          ),
           IconButton(icon: new Icon(FontAwesomeIcons.bell, color: const Color(0xffffffff),), onPressed: (){
             //Navigator.of(context).pushReplacement(MaterialPageRoute(
                 //builder: (context) => NotificationsPanel()));
@@ -308,17 +312,34 @@ class MyHomeFeed extends State<HomeFeed> {
                     child: Stack(
                       children: <Widget>[
                     Transform.translate(
-                    offset: Offset(SizeConfig.screenWidth *  0.0, SizeConfig.screenHeight *  0.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
+                      offset: Offset(SizeConfig.screenWidth *  0.0, SizeConfig.screenHeight *  0.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
 
-                      Text(name + "  ", style: TextStyle(color: const Color(0xff000000), fontWeight: FontWeight.bold),),
-                      CircleAvatar(
-                          radius: 20.0,
-                          backgroundImage: NetworkImage(userPhoto) //default image
+                        Text(name + "  ", style: TextStyle(color: const Color(0xff000000), fontWeight: FontWeight.bold),),
+                        InkWell(
+                          onTap: () async {
+                            FirebaseDatabase.instance
+                                .reference()
+                                .once()
+                                .then((DataSnapshot snapshot) {
+                              Map<dynamic, dynamic> map = snapshot.value;
+
+                              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                  builder: (context) => ViewProfile1(
+                                      auth: widget.auth,
+                                      userToSee: userUID,
+                                      map: map,
+                                      code: widget.code)));
+                            });
+                          },
+                          child: CircleAvatar(
+                            radius: 20.0,
+                            backgroundImage: NetworkImage(userPhoto),
+                            //default image
                       ),
-                    ],
+                        )],
                   )
                     ),
                         Transform.translate(
@@ -398,9 +419,23 @@ class MyHomeFeed extends State<HomeFeed> {
         key: _scaffoldState,
         appBar: AppBar(
           actions: <Widget>[
-            IconButton(icon: new Icon(FontAwesomeIcons.users, color: const Color(0xffffffff),), onPressed: (){
+            IconButton(icon: new Icon(FontAwesomeIcons.users, color: const Color(0xffffffff),),
+                onPressed: () async {
 
-            }),
+                  FirebaseDatabase.instance
+                      .reference()
+                      .once()
+                      .then((DataSnapshot snapshot) {
+                    Map<dynamic, dynamic> map = snapshot.value;
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) => ParticipantsList(
+                          auth: auth,
+                          map: map,
+                          code: code,
+                        )));
+                  });
+                }
+            ),
             IconButton(icon: new Icon(FontAwesomeIcons.bell, color: const Color(0xffffffff),), onPressed: (){
 
             }),

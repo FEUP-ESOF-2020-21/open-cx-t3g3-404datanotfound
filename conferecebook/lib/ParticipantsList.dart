@@ -183,29 +183,6 @@ class _ParticipantsList extends State<ParticipantsList> {
                                           )));
                             })
 
-
-
-
-                      /*onTap: () {
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (context) =>
-                                MyProfile(
-                                    auth: auth,
-                                    image: image,
-                                    name: name,
-                                    job: job,
-                                    interests: interests,
-                                    city: city,
-                                    bio: bio,
-                                    area: area,
-                                    linkedin: linkedin,
-                                    facebook: facebook,
-                                    instagram: instagram,
-                                    twitter: twitter,
-                                    github: github,
-                                    code: code)));
-                      }
-                  */
                   ),
                   semanticContainer: true,
                   clipBehavior: Clip.antiAliasWithSaveLayer,
