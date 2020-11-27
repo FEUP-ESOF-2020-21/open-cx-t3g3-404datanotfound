@@ -273,6 +273,8 @@ This roll will belong to representatives of organizations or institutions that w
 
 ### Domain model
 
+![Domain Model](DomainModel.png)
+
 <!--To better understand the context of the software system, it is very useful to have a simple UML class diagram with all the key concepts (names, attributes) and relationships involved of the problem domain addressed by your module.-->
 
 ---
