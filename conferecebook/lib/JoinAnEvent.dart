@@ -31,10 +31,12 @@ class JoinAnEvent extends StatefulWidget {
     Key key,
     this.auth,
     this.map,
+    this.userRole
   }) : super(key: key);
 
   final FirebaseAuth auth;
   final Map<dynamic, dynamic> map;
+  final String userRole;
 
   @override
   State<StatefulWidget> createState() => JoinEvent();
@@ -46,9 +48,12 @@ class JoinEvent extends State<JoinAnEvent> {
   FirebaseAuth auth;
   String code;
   String nameEvent;
+  String userRole;
   Map<dynamic, dynamic> map;
+  // lists of names and codes to be shown in this page
   List<String> conferenceNames = new List();
   List<String> conferenceCodes = new List();
+  List<String> conferenceRoles = new List();
 
   @override
   void initState() {
@@ -56,16 +61,21 @@ class JoinEvent extends State<JoinAnEvent> {
     map = widget.map;
     auth = widget.auth;
     int length = map.values.toList()[0].length;
+
     for (int i = 1; i <= length; i++) {
       String aux = "id" + i.toString();
-      Map<dynamic, dynamic> conf = map.values.toList()[0];
-      String name = conf[aux]["name"];
-      String code3 = conf[aux]["code"];
-      try {
-        String userUID = map.values.toList()[0][aux]["users"][auth.currentUser.uid];
-        conferenceNames.add(name);
-        conferenceCodes.add(code3);
-      } catch(e) {
+      Map<dynamic, dynamic> conf = map.values.toList()[0][aux]; // current conference
+      String nameConf = conf["name"];  // name of conference i
+      String codeConf = conf["code"]; // code of conference i
+
+      if (conf["users"] != null) {
+        String user = conf["users"][widget.auth.currentUser.uid];
+        String userRole = conf["users"][widget.auth.currentUser.uid];
+        if (user != null) {
+          conferenceNames.add(nameConf); // append to list all conference names
+          conferenceCodes.add(codeConf); // append to list all conference codes
+          conferenceRoles.add(userRole); // append to list all roles
+        }
       }
     }
   }
@@ -204,15 +214,16 @@ class JoinEvent extends State<JoinAnEvent> {
                 itemBuilder: (context, position) {
                   code = conferenceNames[position];
                   nameEvent = conferenceCodes[position];
-                  //print(nameEvent);
+                  userRole = conferenceRoles[position];
+                  //print(conferenceCodes);
                   return Container(
                     child: Card(
                       child: new ListTile(
                         trailing: IconButton(icon: new Icon(FontAwesomeIcons.trash, color: const Color(0xffffffff),), onPressed: (){
-                          // Delete Event
+                          // Delete Event -> remove widget and removeFromDataBase
                         }),
                         title: Text(code, style: TextStyle(fontSize: 17.0, color: const Color(0xffffffff), fontWeight: FontWeight.bold),),
-                        subtitle: Text('You are a participant', style: TextStyle(fontSize: 10.0, color: const Color(0xffffffff), fontWeight: FontWeight.bold),),
+                        subtitle: Text('You are $userRole', style: TextStyle(fontSize: 10.0, color: const Color(0xffffffff), fontWeight: FontWeight.bold),),
                         onTap: (){
                           FirebaseDatabase.instance
                               .reference()
@@ -222,7 +233,11 @@ class JoinEvent extends State<JoinAnEvent> {
                             String image = map.values.toList()[2][auth.currentUser.uid]["photo"];
                             Navigator.of(context).pushReplacement(MaterialPageRoute(
                                 builder: (context) =>
-                                    HomeFeed(auth: this.auth, image: image, code: nameEvent, map: map,)));
+                                    HomeFeed(
+                                      auth: this.auth,
+                                      code: conferenceCodes[position],
+                                      map: map,
+                                    )));
                           });
                         },
                       ),

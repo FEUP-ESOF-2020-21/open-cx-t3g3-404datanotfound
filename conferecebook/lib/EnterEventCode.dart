@@ -43,40 +43,61 @@ class EventCode extends State<EnterEventCode>{
     super.dispose();
   }
 
-  Future addDataBase() async{
+  Future addDataBase() async{ // add to DataBase the new user with code
     await FirebaseDatabase.instance
         .reference()
         .once()
         .then((DataSnapshot snapshot) {
       Map<dynamic, dynamic> map = snapshot.value;
       int length = map.values.toList()[0].length;
-      for (int i = 1; i <= length; i++) {
-        String aux = "id" + i.toString();
-        String codes = map.values.toList()[0][aux]["code"];
-        if (codes == this.code) {
-          String user;
-          try {
-            user = map.values.toList()[0][aux]["users"][widget.auth.currentUser.uid];
-            showAlertDialog(context, "Already");
-          } catch(e) {
-            DatabaseReference firebaseDatabaseRef =
-            FirebaseDatabase.instance.reference().child('Conferences').child(aux);
-            firebaseDatabaseRef.child("users").set({
-              widget.auth.currentUser.uid : widget.auth.currentUser.uid,
-            });
-            FirebaseDatabase.instance
-                .reference()
-                .once()
-                .then((DataSnapshot snapshot) {
-              Map<dynamic, dynamic> map = snapshot.value;
-              String image = map.values.toList()[2][widget.auth.currentUser.uid]["photo"];
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (context) =>
-                      HomeFeed(auth: this.auth, image: image, code: code, map: map,)));
-            });
-          }
-        }
+
+      // load internal generic code for event
+      String codeForEvent = map.values.toList()[0][userEvent]["code"];
+
+      // load the 4 possible codes, for the user, for the wanted event
+      String codeForAttendee = map.values.toList()[0][userEvent]["codes"]["forAttendee"];
+      String codeForOrganizer = map.values.toList()[0][userEvent]["codes"]["forOrganizer"];
+      String codeForSpeaker = map.values.toList()[0][userEvent]["codes"]["forSpeaker"];
+      String codeForSponsor = map.values.toList()[0][userEvent]["codes"]["forSponsor"];
+
+      if ( // user == null, so not found => can join OR no users at all
+        map.values.toList()[0][userEvent]["users"] == null ||
+            map.values.toList()[0][userEvent]["users"][widget.auth.currentUser.uid] == null
+      ) {
+        DatabaseReference firebaseDatabaseRef =
+        FirebaseDatabase.instance.reference().child('Conferences').child(userEvent);
+        /*
+        // create a new child in users, where all are
+        firebaseDatabaseRef
+            .child("users")
+            .child(widget.auth.currentUser.uid)
+            .set(widget.auth.currentUser.uid);
+        */
+        // save the user with its role, in proper child
+        firebaseDatabaseRef
+            .child("users")
+            .child(widget.auth.currentUser.uid)
+            .set(userRole);
+        FirebaseDatabase.instance
+            .reference()
+            .once()
+            .then((DataSnapshot snapshot) {
+          Map<dynamic, dynamic> map = snapshot.value;
+          String image = map.values.toList()[2][widget.auth.currentUser.uid]["photo"];
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) =>
+                  HomeFeed(
+                    auth: this.auth,
+                    code: codeForEvent,
+                    map: map,
+                  )));
+        });
       }
+
+      else { // current user is found in current conference
+        showAlertDialog(context, "Already"); // so he's labeled as already
+      };
+
 
   });
   }
@@ -127,10 +148,14 @@ class EventCode extends State<EnterEventCode>{
   final TextEditingController _codeController = TextEditingController();
 
   String userId;
+  // label of the kind of user entering a code, updated if success entering code
+  String userRole;
+  // label to save the event the user is trying to get in
+  String userEvent;
   bool _success = false;
   FirebaseAuth auth;
 
-  // ignore: missing_return
+
   Future<String> _register() async {
     await FirebaseDatabase.instance
         .reference()
@@ -139,10 +164,32 @@ class EventCode extends State<EnterEventCode>{
       Map<dynamic, dynamic> map = snapshot.value;
       int length = map.values.toList()[0].length;
       for (int i = 1; i <= length; i++) {
-        String aux = "id" + i.toString();
-        String codes = map.values.toList()[0][aux]["code"];
-        if (codes == this.code) {
+        String aux = "id" + i.toString(); // build the id1, id2, ...
+        // get from database the 4 codes for the event
+        String codeForAttendee = map.values.toList()[0][aux]["codes"]["forAttendee"];
+        String codeForOrganizer = map.values.toList()[0][aux]["codes"]["forOrganizer"];
+        String codeForSpeaker = map.values.toList()[0][aux]["codes"]["forSpeaker"];
+        String codeForSponsor = map.values.toList()[0][aux]["codes"]["forSponsor"];
+
+        if (this.code == codeForAttendee ) {
           _success = true;
+          this.userRole = "Attendee";
+          this.userEvent = aux;
+        }
+        else if(this.code == codeForOrganizer){
+          _success = true;
+          this.userRole = "Organizer";
+          this.userEvent = aux;
+        }
+        else if(this.code == codeForSpeaker){
+          _success = true;
+          this.userRole = "Speaker";
+          this.userEvent = aux;
+        }
+        else if(this.code == codeForSponsor) {
+          _success = true;
+          this.userRole = "Sponsor";
+          this.userEvent = aux;
         }
       }
   });

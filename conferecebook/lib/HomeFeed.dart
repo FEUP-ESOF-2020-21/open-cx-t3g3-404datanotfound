@@ -10,16 +10,18 @@ import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:flutter/rendering.dart';
+import 'package:ConfereceBook/ParticipantsList.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import './Search.dart';
 import './NewPost.dart';
 import './NotificationsPanel.dart';
-import './SeeallParticipants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/widgets.dart';
 import 'package:video_player/video_player.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
+
+import 'ViewProfile1.dart';
 
 class SizeConfig {
   static MediaQueryData _mediaQueryData;
@@ -39,13 +41,11 @@ class HomeFeed extends StatefulWidget {
   HomeFeed({
     Key key,
     this.auth,
-    this.image,
     this.code,
     this.map,
   }) : super(key: key);
 
   final FirebaseAuth auth;
-  final String image;
   final String code;
   final Map<dynamic, dynamic> map;
   @override
@@ -75,10 +75,88 @@ class MyHomeFeed extends State<HomeFeed> {
   @override
   Widget build(BuildContext context) {
     auth = widget.auth;
-    image = widget.image;
     myMap = widget.map;
     code = widget.code;
+    print(auth.currentUser.uid);
+    image = myMap.values.toList()[2][auth.currentUser.uid]["photo"];
     print("Beginning" + code);
+
+    // get the role of current user
+    int numConferences = myMap.values.toList()[0].length;
+
+    String confName; // to save the value 'WS2020', 'WS2019', ...
+    String confId; // to save the value 'id1', 'id2',...
+
+    // get the conference we're in
+    for(int i = 1; i <= numConferences; i++) {
+      String aux = "id" + i.toString();
+      confName = myMap.values.toList()[0][aux]["code"];
+      if(confName == code) {
+        confId = aux;
+      }
+    } // from here we get the id of conference we're in
+    // with the id, we'll get the role of the user
+
+    String userRole = myMap.values.toList()[0][confId]["users"][auth.currentUser.uid];
+    print("Authenticated user is $userRole");
+
+
+    /*
+    // method that shows up whe organizer wants to delete a post
+
+    showDeleteDialog(BuildContext context){
+      // configura o button
+      Widget cancel = FlatButton(
+        child: Text("Cancel"),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+      );
+      Widget delete = FlatButton(
+        child: Text("Delete"),
+        onPressed: () async {
+          FirebaseDatabase.instance
+              .reference()
+              .child("Posts").
+              .child()
+
+          FirebaseDatabase.instance
+              .reference()
+              .once()
+              .then((DataSnapshot snapshot) {
+            Map<dynamic, dynamic> map = snapshot.value;
+            String image = map.values.toList()[2][widget
+                .auth.currentUser.uid]["photo"];
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                    builder: (context) =>
+                        HomeFeed(
+                          auth: widget.auth,
+                          code: widget.code,
+                          map: map,)));
+          });
+        },
+      );
+      // configura o  AlertDialog
+      AlertDialog alerta = AlertDialog(
+        title: Text("Delete this post?"),
+        content: Text("Are you sure you want to delete this post?"),
+        actions: [
+          cancel,
+          delete
+        ],
+      );
+      // exibe o dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alerta;
+        },
+      );
+    }
+    */
+
+
     try {
       numPosts = myMap.values.toList()[1][widget.code].length;
     } catch(e) {
@@ -91,13 +169,26 @@ class MyHomeFeed extends State<HomeFeed> {
       key: _scaffoldState,
       appBar: AppBar(
         actions: <Widget>[
-          IconButton(icon: new Icon(FontAwesomeIcons.users, color: const Color(0xffffffff),), onPressed: (){
+          IconButton(icon: new Icon(FontAwesomeIcons.users, color: const Color(0xffffffff),),
+              onPressed: () async {
+
+            FirebaseDatabase.instance
+                .reference()
+                .once()
+                .then((DataSnapshot snapshot) {
+                  Map<dynamic, dynamic> map = snapshot.value;
             Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (context) => SeeallParticipants()));
-          }),
+                builder: (context) => ParticipantsList(
+                  auth: auth,
+                  map: map,
+                  code: code,
+                )));
+              });
+          }
+          ),
           IconButton(icon: new Icon(FontAwesomeIcons.bell, color: const Color(0xffffffff),), onPressed: (){
-            Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (context) => NotificationsPanel()));
+            //Navigator.of(context).pushReplacement(MaterialPageRoute(
+                //builder: (context) => NotificationsPanel()));
           }),
           InkWell(
               onTap: () async {
@@ -226,7 +317,19 @@ class MyHomeFeed extends State<HomeFeed> {
             ListTile(
               leading: new Icon(FontAwesomeIcons.users, color: const Color(0xff1A2677),),
               title: Text("Participants List"),
-              onTap: () {
+              onTap: () async {
+                FirebaseDatabase.instance
+                    .reference()
+                    .once()
+                    .then((DataSnapshot snapshot) {
+                  Map<dynamic, dynamic> map = snapshot.value;
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => ParticipantsList(
+                          auth: auth,
+                          map: map,
+                          code: code,
+                    )));
+                });
               },
             ),
             ListTile(
@@ -286,17 +389,34 @@ class MyHomeFeed extends State<HomeFeed> {
                     child: Stack(
                       children: <Widget>[
                     Transform.translate(
-                    offset: Offset(SizeConfig.screenWidth *  0.0, SizeConfig.screenHeight *  0.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
+                      offset: Offset(SizeConfig.screenWidth *  0.0, SizeConfig.screenHeight *  0.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
 
-                      Text(name + "  ", style: TextStyle(color: const Color(0xff000000), fontWeight: FontWeight.bold),),
-                      CircleAvatar(
-                          radius: 20.0,
-                          backgroundImage: NetworkImage(userPhoto) //default image
+                        Text(name + "  ", style: TextStyle(color: const Color(0xff000000), fontWeight: FontWeight.bold),),
+                        InkWell(
+                          onTap: () async {
+                            FirebaseDatabase.instance
+                                .reference()
+                                .once()
+                                .then((DataSnapshot snapshot) {
+                              Map<dynamic, dynamic> map = snapshot.value;
+
+                              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                  builder: (context) => ViewProfile1(
+                                      auth: widget.auth,
+                                      userToSee: userUID,
+                                      map: map,
+                                      code: widget.code)));
+                            });
+                          },
+                          child: CircleAvatar(
+                            radius: 20.0,
+                            backgroundImage: NetworkImage(userPhoto),
+                            //default image
                       ),
-                    ],
+                        )],
                   )
                     ),
                         Transform.translate(
@@ -304,10 +424,21 @@ class MyHomeFeed extends State<HomeFeed> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: <Widget>[
+                                if (userRole == "Organizer")
+                                  IconButton(
+                                      icon: Icon(FontAwesomeIcons.trash, color: Colors.red),
+                                      onPressed: () {
+                                        // calls showDeleteDialog, user can choose to delete post
+                                        // deleting, post is removed and
+                                        // gets new maps for the feed
+                                      }
+                                  ),
+                                SizedBox(width: 180), // separates trash icon from reactions
                                 Text(likes.toString() + " "),
                                 Icon(FontAwesomeIcons.commentAlt),
                                 Text("    "+numComments.toString()+" "),
                                 Icon(FontAwesomeIcons.heart),
+
                               ],
                             )
                         ),
@@ -376,9 +507,23 @@ class MyHomeFeed extends State<HomeFeed> {
         key: _scaffoldState,
         appBar: AppBar(
           actions: <Widget>[
-            IconButton(icon: new Icon(FontAwesomeIcons.users, color: const Color(0xffffffff),), onPressed: (){
+            IconButton(icon: new Icon(FontAwesomeIcons.users, color: const Color(0xffffffff),),
+                onPressed: () async {
 
-            }),
+                  FirebaseDatabase.instance
+                      .reference()
+                      .once()
+                      .then((DataSnapshot snapshot) {
+                    Map<dynamic, dynamic> map = snapshot.value;
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) => ParticipantsList(
+                          auth: auth,
+                          map: map,
+                          code: code,
+                        )));
+                  });
+                }
+            ),
             IconButton(icon: new Icon(FontAwesomeIcons.bell, color: const Color(0xffffffff),), onPressed: (){
 
             }),

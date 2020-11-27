@@ -71,8 +71,8 @@ class MyPost extends State<Post> {
           Navigator.of(context).pushReplacement(
               MaterialPageRoute(
                   builder: (context) =>
-                      HomeFeed(auth: widget.auth,
-                        image: image,
+                      HomeFeed(
+                        auth: widget.auth,
                         code: widget.code,
                         map: map,)));
         });
@@ -278,7 +278,6 @@ class MyPost extends State<Post> {
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               HomeFeed(auth: widget.auth,
-                                                image: image,
                                                 code: widget.code,
                                                 map: map,)));
                                 });
@@ -436,7 +435,6 @@ class MyPost extends State<Post> {
                                     .pushReplacement(MaterialPageRoute(
                                         builder: (context) => HomeFeed(
                                               auth: widget.auth,
-                                              image: image,
                                               code: widget.code,
                                               map: map,
                                             )));
