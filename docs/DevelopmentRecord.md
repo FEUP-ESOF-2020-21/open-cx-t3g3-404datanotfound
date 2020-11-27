@@ -273,7 +273,17 @@ This roll will belong to representatives of organizations or institutions that w
 
 ### Domain model
 
-![Domain Model](DomainModel.png)
+Conferencebook is built on top of the well-known concept of social network. However, unlike most social networks, it is restricted to the ones present in a conference, which must be registered in Conferencebook.
+
+* Each **conference** has an id, name, and code. Each conference participant is given, *a priori*, a specific code for the conference and role to be taken, which can be of Attendee, Speaker, Sponsor, or Organizer. Therefore, each conference has a set of codes, for registration: codeForAttendee, codeForSpeaker, codeForSponsor, and codeForOrganizer.
+ 
+* A **user** can create an account in Conferencebook as usually done in similar platforms, with email and password, and can construct his profile with information of interest to other participants, such as: area of work, short biography, city of living, interests, and job. For an enhanced connectivity with existing platforms for communication and knowledge sharing, users can add to their profile the nicknames for: LinkedIn, Facebook, Instagram, GitHub, and Twitter. A profile picture can also be included. A user is associated to each conference with the role played, thus enabling the possibility of playing different roles in different conferences. Conferences can have as many users as wished, and users can join as many conferences as wished, too.
+
+* An unlimited number of **posts** can be done, associated to each conference. Each post has a date and time, stating when it was created; the user who creates the post is also saved. The post itself can contain text and/or multimedia: a photo or a video. Similarly to what happens in any social network, the app users can leave a like or a comment. Therefore, each post has a number of Likes and Comments saved. Each post is associated to a single conference.
+
+* Associated to each post, and unlimited number of **comments** can exist. Similarly to what happens for posts, each comment can be created by a single user, responding to a single post, and has a date and time, a number of Likes, and a text, containg the message.
+
+![Domain Model](ProblemDomain.png)
 
 <!--To better understand the context of the software system, it is very useful to have a simple UML class diagram with all the key concepts (names, attributes) and relationships involved of the problem domain addressed by your module.-->
 
