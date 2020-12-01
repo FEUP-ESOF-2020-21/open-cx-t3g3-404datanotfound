@@ -63,10 +63,10 @@ class MyProfile2 extends StatefulWidget {
   final String code;
 
   @override
-  State<StatefulWidget> createState() => Profile2();
+  State<StatefulWidget> createState() => _MyProfile2();
 }
 
-class Profile2 extends State<MyProfile2> {
+class _MyProfile2 extends State<MyProfile2> {
   String image;
   String name;
   String job;
@@ -427,7 +427,7 @@ class Profile2 extends State<MyProfile2> {
                                   .update({interests: interests}).then((value) {
                                 Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
-                                        builder: (context) => MyProfile(
+                                        builder: (context) => MyProfile1(
                                             auth: widget.auth,
                                             image: image,
                                             name: name,

@@ -12,9 +12,6 @@ import 'package:adobe_xd/page_link.dart';
 import 'package:flutter/rendering.dart';
 import 'package:ConfereceBook/ParticipantsList.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import './Search.dart';
-import './NewPost.dart';
-import './NotificationsPanel.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/widgets.dart';
 import 'package:video_player/video_player.dart';
@@ -212,7 +209,7 @@ class MyHomeFeed extends State<HomeFeed> {
                   this.github = map.values.toList()[2][user]["github"];
                   print(name);
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => MyProfile(
+                      builder: (context) => MyProfile1(
                           auth: auth,
                           image: image,
                           name: name,
@@ -269,7 +266,7 @@ class MyHomeFeed extends State<HomeFeed> {
                   this.github = map.values.toList()[2][user]["github"];
                   print(name);
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => MyProfile(
+                      builder: (context) => MyProfile1(
                           auth: auth,
                           image: image,
                           name: name,
@@ -548,7 +545,7 @@ class MyHomeFeed extends State<HomeFeed> {
                     this.twitter = map.values.toList()[2][user]["twitter"];
                     this.github = map.values.toList()[2][user]["github"];
                     Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => MyProfile(
+                        builder: (context) => MyProfile1(
                             auth: auth,
                             image: image,
                             name: name,
@@ -605,7 +602,7 @@ class MyHomeFeed extends State<HomeFeed> {
                     this.github = map.values.toList()[2][user]["github"];
                     print(name);
                     Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => MyProfile(
+                        builder: (context) => MyProfile1(
                             auth: auth,
                             image: image,
                             name: name,
