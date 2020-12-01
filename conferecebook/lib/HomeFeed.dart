@@ -18,6 +18,7 @@ import 'package:video_player/video_player.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
 
+import 'ModerationSettings.dart';
 import 'ViewProfile1.dart';
 
 class SizeConfig {
@@ -74,7 +75,6 @@ class _HomeFeed extends State<HomeFeed> {
     auth = widget.auth;
     myMap = widget.map;
     code = widget.code;
-    print(auth.currentUser.uid);
     image = myMap.values.toList()[2][auth.currentUser.uid]["photo"];
     print("Beginning" + code);
 
@@ -165,6 +165,20 @@ class _HomeFeed extends State<HomeFeed> {
       key: _scaffoldState,
       appBar: AppBar(
         actions: <Widget>[
+          IconButton(icon: new Icon(FontAwesomeIcons.redoAlt, color: const Color(0xffffffff),), onPressed: () async {
+            FirebaseDatabase.instance
+                .reference()
+                .once()
+                .then((DataSnapshot snapshot) {
+              Map<dynamic, dynamic> map = snapshot.value;
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (context) => HomeFeed(
+                    auth: auth,
+                    map: map,
+                    code: code,
+                  )));
+            });
+          }),
           IconButton(icon: new Icon(FontAwesomeIcons.users, color: const Color(0xffffffff),),
               onPressed: () async {
 
@@ -182,10 +196,7 @@ class _HomeFeed extends State<HomeFeed> {
               });
           }
           ),
-          IconButton(icon: new Icon(FontAwesomeIcons.bell, color: const Color(0xffffffff),), onPressed: (){
-            //Navigator.of(context).pushReplacement(MaterialPageRoute(
-                //builder: (context) => NotificationsPanel()));
-          }),
+
           InkWell(
               onTap: () async {
                 FirebaseDatabase.instance
@@ -304,12 +315,8 @@ class _HomeFeed extends State<HomeFeed> {
                 });
               },
             ),
-            ListTile(
-              leading: new Icon(FontAwesomeIcons.bell, color: const Color(0xff1A2677),),
-              title: Text("Notifications Panel"),
-              onTap: () {
-              },
-            ),
+            if (userRole == "Organizer")
+
             ListTile(
               leading: new Icon(FontAwesomeIcons.users, color: const Color(0xff1A2677),),
               title: Text("Participants List"),
@@ -325,6 +332,23 @@ class _HomeFeed extends State<HomeFeed> {
                           map: map,
                           code: code,
                     )));
+                });
+              },
+            ),
+            ListTile(
+              leading: new Icon(FontAwesomeIcons.wrench, color: const Color(0xff1A2677),),
+              title: Text("Moderation Settings"),
+              onTap: () {
+                FirebaseDatabase.instance.reference().once().then((DataSnapshot snapshot) {
+                  Map<dynamic, dynamic> map = snapshot.value;
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => ModerationSettings(
+                          auth: auth,
+                          code: code,
+                          map: map
+                      )
+                  ));
+                  print(auth.currentUser.uid);
                 });
               },
             ),
