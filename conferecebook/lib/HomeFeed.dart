@@ -46,10 +46,10 @@ class HomeFeed extends StatefulWidget {
   final String code;
   final Map<dynamic, dynamic> map;
   @override
-  State<StatefulWidget> createState() => MyHomeFeed();
+  State<StatefulWidget> createState() => _HomeFeed();
 }
 
-class MyHomeFeed extends State<HomeFeed> {
+class _HomeFeed extends State<HomeFeed> {
   VideoPlayerController _controller;
   FirebaseAuth auth;
   String image;
@@ -98,40 +98,41 @@ class MyHomeFeed extends State<HomeFeed> {
     print("Authenticated user is $userRole");
 
 
-    /*
-    // method that shows up whe organizer wants to delete a post
 
-    showDeleteDialog(BuildContext context){
-      // configura o button
+    // method that shows up whe organizer wants to delete a post
+    showDeleteDialog(BuildContext context, String postID){
+      // configura o button cancel
       Widget cancel = FlatButton(
         child: Text("Cancel"),
         onPressed: () {
           Navigator.of(context).pop();
         },
       );
+      // configures button delete
       Widget delete = FlatButton(
         child: Text("Delete"),
-        onPressed: () async {
-          FirebaseDatabase.instance
+        onPressed: () {
+          FirebaseDatabase.instance // delete from Firebase
               .reference()
-              .child("Posts").
-              .child()
+              .child("Posts")
+              .child(code)
+              .child(postID)
+              .remove();
 
-          FirebaseDatabase.instance
+          FirebaseDatabase.instance // update the map and rebuild
               .reference()
               .once()
               .then((DataSnapshot snapshot) {
             Map<dynamic, dynamic> map = snapshot.value;
-            String image = map.values.toList()[2][widget
-                .auth.currentUser.uid]["photo"];
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                    builder: (context) =>
-                        HomeFeed(
-                          auth: widget.auth,
-                          code: widget.code,
-                          map: map,)));
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (context) =>
+                    HomeFeed(
+                      auth: this.auth,
+                      code: this.code,
+                      map: map,
+                    )));
           });
+
         },
       );
       // configura o  AlertDialog
@@ -151,8 +152,6 @@ class MyHomeFeed extends State<HomeFeed> {
         },
       );
     }
-    */
-
 
     try {
       numPosts = myMap.values.toList()[1][widget.code].length;
@@ -353,6 +352,7 @@ class MyHomeFeed extends State<HomeFeed> {
               itemCount: numPosts,
               itemBuilder: (context, position) {
                 Map<dynamic, dynamic> postInfo = myMap.values.toList()[1][widget.code];
+                String postID = postInfo.keys.toList()[position];
                 String userUID = postInfo.values.toList()[position]["user"];
                 String text = postInfo.values.toList()[position]["text"];
                 String multimedia = postInfo.values.toList()[position]["multimedia"];
@@ -425,9 +425,7 @@ class MyHomeFeed extends State<HomeFeed> {
                                   IconButton(
                                       icon: Icon(FontAwesomeIcons.trash, color: Colors.red),
                                       onPressed: () {
-                                        // calls showDeleteDialog, user can choose to delete post
-                                        // deleting, post is removed and
-                                        // gets new maps for the feed
+                                        showDeleteDialog(context, postID);
                                       }
                                   ),
                                 SizedBox(width: 180), // separates trash icon from reactions

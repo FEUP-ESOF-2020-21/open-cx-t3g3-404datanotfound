@@ -29,10 +29,10 @@ class MyLogin extends StatefulWidget {
   final FirebaseAuth auth;
 
   @override
-  Login createState() => Login();
+  _MyLogin createState() => _MyLogin();
 }
 
-class Login extends State<MyLogin> {
+class _MyLogin extends State<MyLogin> {
 
   Future<bool> check() async {
     try {

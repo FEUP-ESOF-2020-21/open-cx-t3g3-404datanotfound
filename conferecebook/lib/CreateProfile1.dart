@@ -20,10 +20,10 @@ class CreateProfile1 extends StatefulWidget{
 
   @override
   State<StatefulWidget> createState() =>
-      MyProfileState();
+      _CreateProfile1();
 }
 
-class MyProfileState extends State<CreateProfile1>{
+class _CreateProfile1 extends State<CreateProfile1>{
 
   @override
   void dispose() {
