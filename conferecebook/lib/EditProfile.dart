@@ -1,4 +1,4 @@
-import 'package:ConfereceBook/EditProfile.dart';
+import 'package:ConfereceBook/MyProfile.dart';
 import 'package:ConfereceBook/MyProfile2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -24,8 +24,8 @@ class SizeConfig {
   }
 }
 
-class MyProfile1 extends StatefulWidget {
-  MyProfile1({
+class EditProfile extends StatefulWidget {
+  EditProfile({
     Key key,
     this.auth,
     this.image,
@@ -59,10 +59,10 @@ class MyProfile1 extends StatefulWidget {
   final String code;
 
   @override
-  State<StatefulWidget> createState() => _MyProfile1();
+  State<StatefulWidget> createState() => MyEditProfile();
 }
 
-class _MyProfile1 extends State<MyProfile1> {
+class MyEditProfile extends State<EditProfile> {
   String image;
   String name;
   String job;
@@ -77,6 +77,43 @@ class _MyProfile1 extends State<MyProfile1> {
   String github;
   String code;
   FirebaseAuth auth;
+
+  TextEditingController bioController;
+  TextEditingController jobController;
+  TextEditingController areaController;
+  TextEditingController nameController;
+  TextEditingController cityController;
+
+  updateDataBase() async {
+    DatabaseReference firebaseDatabaseRef = FirebaseDatabase.instance.reference().child('Users');
+    await firebaseDatabaseRef.child(widget.auth.currentUser.uid).update({
+      'name': name,
+      'area': area,
+      'job': job,
+      'bio': bio,
+      'city': city,
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    bioController = TextEditingController(text: widget.bio);
+    jobController = TextEditingController(text: widget.job);
+    areaController = TextEditingController(text: widget.area);
+    nameController = TextEditingController(text: widget.name);
+    cityController = TextEditingController(text: widget.city);
+  }
+
+  @override
+  void dispose() {
+    bioController.dispose();
+    jobController.dispose();
+    areaController.dispose();
+    nameController.dispose();
+    cityController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -128,11 +165,19 @@ class _MyProfile1 extends State<MyProfile1> {
               ),
               Transform.translate(
                 offset: Offset(SizeConfig.screenWidth * 158.5,
-                    SizeConfig.screenHeight * 290.0),
+                    SizeConfig.screenHeight * 270.0),
                 child: SizedBox(
                   width: SizeConfig.screenWidth * 100.0,
-                  child: Text(
-                    this.city,
+                  child: TextField(
+                    controller: cityController,
+                    onChanged: (newValue){
+                      setState(() {
+                        city = newValue;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                    ),
                     style: TextStyle(
                       fontFamily: 'Roboto',
                       fontSize: 12,
@@ -159,15 +204,21 @@ class _MyProfile1 extends State<MyProfile1> {
               Container(),
               Transform.translate(
                 offset: Offset(
-                    SizeConfig.screenWidth * 70, SizeConfig.screenHeight * 430),
-                child: Container(
-                    child: Text(
-                  bio,
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                )),
-              ),
+                    SizeConfig.screenWidth * 70, SizeConfig.screenHeight * 400),
+                    child: TextField(
+                      controller: bioController,
+                      onChanged: (newValue){
+                        setState(() {
+                          bio = newValue;
+                        });
+                      },
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                      ),
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.left,
+                    ),
+                ),
               Transform.translate(
                 offset: Offset(SizeConfig.screenWidth * 59.5,
                     SizeConfig.screenHeight * 376.5),
@@ -186,14 +237,20 @@ class _MyProfile1 extends State<MyProfile1> {
               ),
               Transform.translate(
                 offset: Offset(
-                    SizeConfig.screenWidth * 70, SizeConfig.screenHeight * 530),
-                child: Container(
-                    child: Text(
-                  job,
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
+                    SizeConfig.screenWidth * 70, SizeConfig.screenHeight * 510),
+                child: TextField(
+                  controller: jobController,
+                  onChanged: (newValue){
+                    setState(() {
+                      job = newValue;
+                    });
+                  },
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                  ),
                   style: TextStyle(fontWeight: FontWeight.bold),
-                )),
+                  textAlign: TextAlign.left,
+                ),
               ),
               Transform.translate(
                 offset: Offset(SizeConfig.screenWidth * 59.5,
@@ -213,14 +270,20 @@ class _MyProfile1 extends State<MyProfile1> {
               ),
               Transform.translate(
                 offset: Offset(
-                    SizeConfig.screenWidth * 70, SizeConfig.screenHeight * 630),
-                child: Container(
-                    child: Text(
-                  area,
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
+                    SizeConfig.screenWidth * 70, SizeConfig.screenHeight * 610),
+                child: TextField(
+                  controller: areaController,
+                  onChanged: (newValue){
+                    setState(() {
+                      area = newValue;
+                    });
+                  },
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                  ),
                   style: TextStyle(fontWeight: FontWeight.bold),
-                )),
+                  textAlign: TextAlign.left,
+                ),
               ),
               Transform.translate(
                 offset: Offset(SizeConfig.screenWidth * 59.5,
@@ -240,11 +303,19 @@ class _MyProfile1 extends State<MyProfile1> {
               ),
               Transform.translate(
                 offset: Offset(SizeConfig.screenWidth * 80,
-                    SizeConfig.screenHeight * 250.0),
+                    SizeConfig.screenHeight * 230.0),
                 child: SizedBox(
                   width: 226.0,
-                  child: Text(
-                    this.name,
+                  child: TextField(
+                    controller: nameController,
+                    onChanged: (newValue){
+                      setState(() {
+                        name = newValue;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                    ),
                     style: TextStyle(
                       fontFamily: 'Roboto',
                       fontSize: 30,
@@ -257,49 +328,6 @@ class _MyProfile1 extends State<MyProfile1> {
                   ),
                 ),
               ),
-              Container(
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        child: Expanded(
-                          child: Align(
-                            alignment: FractionalOffset.bottomRight,
-                            child: Padding(
-                              padding: EdgeInsets.only(bottom: 75.0, right: 35.0),
-                              child: FloatingActionButton(
-                                onPressed: () async {
-                                  Navigator.of(context).pushReplacement(
-                                      MaterialPageRoute(
-                                          builder: (context) => MyProfile2(
-                                              auth: auth,
-                                              image: image,
-                                              name: name,
-                                              job: job,
-                                              interests: interests,
-                                              city: city,
-                                              bio: bio,
-                                              area: area,
-                                              linkedin: linkedin,
-                                              facebook: facebook,
-                                              instagram: instagram,
-                                              twitter: twitter,
-                                              github: github,
-                                              code: widget.code)));
-                                },
-                                backgroundColor: const Color(0xffededed),
-                                elevation: 0,
-                                child: Icon(
-                                  FontAwesomeIcons.arrowRight,
-                                  color: const Color(0xff1A2677),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      )
-
-                    ],
-                  )),
               Container(),
               Transform.translate(
                 offset: Offset(SizeConfig.screenWidth * 150,
@@ -324,9 +352,10 @@ class _MyProfile1 extends State<MyProfile1> {
                         child: InkWell(
                           splashColor: const Color(0xff1A2677), // splash color
                           onTap: () async {
+                            updateDataBase();
                             Navigator.of(context).pushReplacement(MaterialPageRoute(
-                                builder: (context) => EditProfile(
-                                    auth: widget.auth,
+                                builder: (context) => MyProfile1(
+                                    auth: auth,
                                     image: image,
                                     name: name,
                                     job: job,
@@ -339,9 +368,9 @@ class _MyProfile1 extends State<MyProfile1> {
                                     instagram: instagram,
                                     twitter: twitter,
                                     github: github,
-                                    code: widget.code)));
+                                    code: code)));
                           }, // button pressed
-                          child: Icon(FontAwesomeIcons.pencilAlt, color: Colors.white,), // icon
+                          child: Icon(FontAwesomeIcons.check, color: Colors.white,), // icon
                         ),
                       ),
                     ),
