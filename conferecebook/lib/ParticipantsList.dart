@@ -59,7 +59,6 @@ class _ParticipantsList extends State<ParticipantsList> {
 
   var users; // iterable class to be, which will save the usersUIDs in conference
 
-
   showTextAlertDialog(BuildContext context) async {
 
     return showDialog(
@@ -102,7 +101,6 @@ class _ParticipantsList extends State<ParticipantsList> {
     auth = widget.auth;
     map = widget.map;
     code = widget.code;
-
 
     int numConferences = map.values.toList()[0].length;
 
@@ -243,7 +241,6 @@ class _ParticipantsList extends State<ParticipantsList> {
             ]
 
     ));
-
 
   }
 }

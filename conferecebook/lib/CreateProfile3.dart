@@ -31,10 +31,10 @@ class CreateProfile3 extends StatefulWidget {
   final String currentJob;
 
   @override
-  State<StatefulWidget> createState() => MyProfileState3();
+  State<StatefulWidget> createState() => _CreateProfile3();
 }
 
-class MyProfileState3 extends State<CreateProfile3> {
+class _CreateProfile3 extends State<CreateProfile3> {
   String userId;
 
   String _interests = "";

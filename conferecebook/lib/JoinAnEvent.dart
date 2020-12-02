@@ -39,21 +39,23 @@ class JoinAnEvent extends StatefulWidget {
   final String userRole;
 
   @override
-  State<StatefulWidget> createState() => JoinEvent();
+  State<StatefulWidget> createState() => _JoinAnEvent();
 
 }
 
-class JoinEvent extends State<JoinAnEvent> {
+class _JoinAnEvent extends State<JoinAnEvent> {
 
   FirebaseAuth auth;
   String code;
   String nameEvent;
   String userRole;
+  String confId;
   Map<dynamic, dynamic> map;
   // lists of names and codes to be shown in this page
   List<String> conferenceNames = new List();
   List<String> conferenceCodes = new List();
   List<String> conferenceRoles = new List();
+  List<String> conferenceIDs = new List();
 
   @override
   void initState() {
@@ -67,6 +69,8 @@ class JoinEvent extends State<JoinAnEvent> {
       Map<dynamic, dynamic> conf = map.values.toList()[0][aux]; // current conference
       String nameConf = conf["name"];  // name of conference i
       String codeConf = conf["code"]; // code of conference i
+      conferenceIDs.add(aux);
+      print(conferenceIDs);
 
       if (conf["users"] != null) {
         String user = conf["users"][widget.auth.currentUser.uid];
@@ -197,7 +201,6 @@ class JoinEvent extends State<JoinAnEvent> {
               ),
             ),
           ),
-          Container(),
         ],
       ),
     ));
@@ -215,13 +218,36 @@ class JoinEvent extends State<JoinAnEvent> {
                   code = conferenceNames[position];
                   nameEvent = conferenceCodes[position];
                   userRole = conferenceRoles[position];
+
                   //print(conferenceCodes);
                   return Container(
                     child: Card(
                       child: new ListTile(
-                        trailing: IconButton(icon: new Icon(FontAwesomeIcons.trash, color: const Color(0xffffffff),), onPressed: (){
-                          // Delete Event -> remove widget and removeFromDataBase
+                        trailing: IconButton(icon: new Icon(FontAwesomeIcons.times, color: const Color(0xffffffff),), onPressed: () {
+                          FirebaseDatabase.instance // delete from Firebase
+                              .reference()
+                              .child("Conferences")
+                              .child(conferenceIDs[position])
+                              .child("users")
+                              .child(auth.currentUser.uid)
+                              .remove();
+
+                          FirebaseDatabase.instance // update the map and rebuild
+                              .reference()
+                              .once()
+                              .then((DataSnapshot snapshot) {
+                            Map<dynamic, dynamic> map = snapshot.value;
+                            String image = map.values.toList()[2][auth.currentUser.uid]["photo"];
+                            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                builder: (context) =>
+                                    JoinAnEvent(
+                                      auth: this.auth,
+                                      map: map,
+                                    )));
+                          });
+
                         }),
+
                         title: Text(code, style: TextStyle(fontSize: 17.0, color: const Color(0xffffffff), fontWeight: FontWeight.bold),),
                         subtitle: Text('You are $userRole', style: TextStyle(fontSize: 10.0, color: const Color(0xffffffff), fontWeight: FontWeight.bold),),
                         onTap: (){

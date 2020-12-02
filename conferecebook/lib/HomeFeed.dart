@@ -12,15 +12,13 @@ import 'package:adobe_xd/page_link.dart';
 import 'package:flutter/rendering.dart';
 import 'package:ConfereceBook/ParticipantsList.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import './Search.dart';
-import './NewPost.dart';
-import './NotificationsPanel.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/widgets.dart';
 import 'package:video_player/video_player.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
 
+import 'ModerationSettings.dart';
 import 'ViewProfile1.dart';
 
 class SizeConfig {
@@ -49,10 +47,10 @@ class HomeFeed extends StatefulWidget {
   final String code;
   final Map<dynamic, dynamic> map;
   @override
-  State<StatefulWidget> createState() => MyHomeFeed();
+  State<StatefulWidget> createState() => _HomeFeed();
 }
 
-class MyHomeFeed extends State<HomeFeed> {
+class _HomeFeed extends State<HomeFeed> {
   VideoPlayerController _controller;
   FirebaseAuth auth;
   String image;
@@ -77,7 +75,6 @@ class MyHomeFeed extends State<HomeFeed> {
     auth = widget.auth;
     myMap = widget.map;
     code = widget.code;
-    print(auth.currentUser.uid);
     image = myMap.values.toList()[2][auth.currentUser.uid]["photo"];
     print("Beginning" + code);
 
@@ -101,40 +98,41 @@ class MyHomeFeed extends State<HomeFeed> {
     print("Authenticated user is $userRole");
 
 
-    /*
-    // method that shows up whe organizer wants to delete a post
 
-    showDeleteDialog(BuildContext context){
-      // configura o button
+    // method that shows up whe organizer wants to delete a post
+    showDeleteDialog(BuildContext context, String postID){
+      // configura o button cancel
       Widget cancel = FlatButton(
         child: Text("Cancel"),
         onPressed: () {
           Navigator.of(context).pop();
         },
       );
+      // configures button delete
       Widget delete = FlatButton(
         child: Text("Delete"),
-        onPressed: () async {
-          FirebaseDatabase.instance
+        onPressed: () {
+          FirebaseDatabase.instance // delete from Firebase
               .reference()
-              .child("Posts").
-              .child()
+              .child("Posts")
+              .child(code)
+              .child(postID)
+              .remove();
 
-          FirebaseDatabase.instance
+          FirebaseDatabase.instance // update the map and rebuild
               .reference()
               .once()
               .then((DataSnapshot snapshot) {
             Map<dynamic, dynamic> map = snapshot.value;
-            String image = map.values.toList()[2][widget
-                .auth.currentUser.uid]["photo"];
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                    builder: (context) =>
-                        HomeFeed(
-                          auth: widget.auth,
-                          code: widget.code,
-                          map: map,)));
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (context) =>
+                    HomeFeed(
+                      auth: this.auth,
+                      code: this.code,
+                      map: map,
+                    )));
           });
+
         },
       );
       // configura o  AlertDialog
@@ -154,8 +152,6 @@ class MyHomeFeed extends State<HomeFeed> {
         },
       );
     }
-    */
-
 
     try {
       numPosts = myMap.values.toList()[1][widget.code].length;
@@ -169,6 +165,20 @@ class MyHomeFeed extends State<HomeFeed> {
       key: _scaffoldState,
       appBar: AppBar(
         actions: <Widget>[
+          IconButton(icon: new Icon(FontAwesomeIcons.redoAlt, color: const Color(0xffffffff),), onPressed: () async {
+            FirebaseDatabase.instance
+                .reference()
+                .once()
+                .then((DataSnapshot snapshot) {
+              Map<dynamic, dynamic> map = snapshot.value;
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (context) => HomeFeed(
+                    auth: auth,
+                    map: map,
+                    code: code,
+                  )));
+            });
+          }),
           IconButton(icon: new Icon(FontAwesomeIcons.users, color: const Color(0xffffffff),),
               onPressed: () async {
 
@@ -186,10 +196,7 @@ class MyHomeFeed extends State<HomeFeed> {
               });
           }
           ),
-          IconButton(icon: new Icon(FontAwesomeIcons.bell, color: const Color(0xffffffff),), onPressed: (){
-            //Navigator.of(context).pushReplacement(MaterialPageRoute(
-                //builder: (context) => NotificationsPanel()));
-          }),
+
           InkWell(
               onTap: () async {
                 FirebaseDatabase.instance
@@ -212,7 +219,7 @@ class MyHomeFeed extends State<HomeFeed> {
                   this.github = map.values.toList()[2][user]["github"];
                   print(name);
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => MyProfile(
+                      builder: (context) => MyProfile1(
                           auth: auth,
                           image: image,
                           name: name,
@@ -269,7 +276,7 @@ class MyHomeFeed extends State<HomeFeed> {
                   this.github = map.values.toList()[2][user]["github"];
                   print(name);
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => MyProfile(
+                      builder: (context) => MyProfile1(
                           auth: auth,
                           image: image,
                           name: name,
@@ -308,12 +315,8 @@ class MyHomeFeed extends State<HomeFeed> {
                 });
               },
             ),
-            ListTile(
-              leading: new Icon(FontAwesomeIcons.bell, color: const Color(0xff1A2677),),
-              title: Text("Notifications Panel"),
-              onTap: () {
-              },
-            ),
+            if (userRole == "Organizer")
+
             ListTile(
               leading: new Icon(FontAwesomeIcons.users, color: const Color(0xff1A2677),),
               title: Text("Participants List"),
@@ -329,6 +332,23 @@ class MyHomeFeed extends State<HomeFeed> {
                           map: map,
                           code: code,
                     )));
+                });
+              },
+            ),
+            ListTile(
+              leading: new Icon(FontAwesomeIcons.wrench, color: const Color(0xff1A2677),),
+              title: Text("Moderation Settings"),
+              onTap: () {
+                FirebaseDatabase.instance.reference().once().then((DataSnapshot snapshot) {
+                  Map<dynamic, dynamic> map = snapshot.value;
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => ModerationSettings(
+                          auth: auth,
+                          code: code,
+                          map: map
+                      )
+                  ));
+                  print(auth.currentUser.uid);
                 });
               },
             ),
@@ -356,6 +376,7 @@ class MyHomeFeed extends State<HomeFeed> {
               itemCount: numPosts,
               itemBuilder: (context, position) {
                 Map<dynamic, dynamic> postInfo = myMap.values.toList()[1][widget.code];
+                String postID = postInfo.keys.toList()[position];
                 String userUID = postInfo.values.toList()[position]["user"];
                 String text = postInfo.values.toList()[position]["text"];
                 String multimedia = postInfo.values.toList()[position]["multimedia"];
@@ -428,9 +449,7 @@ class MyHomeFeed extends State<HomeFeed> {
                                   IconButton(
                                       icon: Icon(FontAwesomeIcons.trash, color: Colors.red),
                                       onPressed: () {
-                                        // calls showDeleteDialog, user can choose to delete post
-                                        // deleting, post is removed and
-                                        // gets new maps for the feed
+                                        showDeleteDialog(context, postID);
                                       }
                                   ),
                                 SizedBox(width: 180), // separates trash icon from reactions
@@ -548,7 +567,7 @@ class MyHomeFeed extends State<HomeFeed> {
                     this.twitter = map.values.toList()[2][user]["twitter"];
                     this.github = map.values.toList()[2][user]["github"];
                     Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => MyProfile(
+                        builder: (context) => MyProfile1(
                             auth: auth,
                             image: image,
                             name: name,
@@ -605,7 +624,7 @@ class MyHomeFeed extends State<HomeFeed> {
                     this.github = map.values.toList()[2][user]["github"];
                     print(name);
                     Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => MyProfile(
+                        builder: (context) => MyProfile1(
                             auth: auth,
                             image: image,
                             name: name,
