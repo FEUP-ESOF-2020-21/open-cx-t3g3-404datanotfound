@@ -64,12 +64,7 @@ class EditProfile extends StatefulWidget {
 
 class MyEditProfile extends State<EditProfile> {
   String image;
-  String name;
-  String job;
   String interests;
-  String city;
-  String bio;
-  String area;
   String facebook;
   String instagram;
   String linkedin;
@@ -77,6 +72,11 @@ class MyEditProfile extends State<EditProfile> {
   String github;
   String code;
   FirebaseAuth auth;
+  String name;
+  String job;
+  String city;
+  String bio;
+  String area;
 
   TextEditingController bioController;
   TextEditingController jobController;
@@ -84,14 +84,59 @@ class MyEditProfile extends State<EditProfile> {
   TextEditingController nameController;
   TextEditingController cityController;
 
+  check(BuildContext context)
+  {
+    // configura o button
+    Widget stay = FlatButton(
+      child: Text("Stay"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    Widget leave = FlatButton(
+      child: Text("Discard"),
+      onPressed: () {
+        FirebaseDatabase.instance
+            .reference()
+            .once()
+            .then((DataSnapshot snapshot) {
+          Map<dynamic, dynamic> map = snapshot.value;
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                  builder: (context) => HomeFeed(
+                      auth: auth,
+                      code: widget.code,
+                      map: map
+                  )));
+        });
+      },
+    );
+    // configura o  AlertDialog
+    AlertDialog alerta = AlertDialog(
+      title: Text("Discard changes?"),
+      content: Text("You've changed some of your profile information."),
+      actions: [
+        stay,
+        leave
+      ],
+    );
+    // exibe o dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alerta;
+      },
+    );
+  }
+
   updateDataBase() async {
     DatabaseReference firebaseDatabaseRef = FirebaseDatabase.instance.reference().child('Users');
     await firebaseDatabaseRef.child(widget.auth.currentUser.uid).update({
-      'name': name,
-      'area': area,
-      'job': job,
-      'bio': bio,
-      'city': city,
+      'name': nameController.value.text,
+      'area': areaController.value.text,
+      'job': jobController.value.text,
+      'bio': bioController.value.text,
+      'city': cityController.value.text,
     });
   }
 
@@ -120,18 +165,18 @@ class MyEditProfile extends State<EditProfile> {
     SizeConfig().init(context);
     auth = widget.auth;
     image = widget.image;
-    name = widget.name;
-    job = widget.job;
     interests = widget.interests;
-    city = widget.city;
-    bio = widget.bio;
-    area = widget.area;
     facebook = widget.facebook;
     instagram = widget.instagram;
     linkedin = widget.linkedin;
     twitter = widget.twitter;
     github = widget.github;
     code = widget.code;
+    name = widget.name;
+    city = widget.city;
+    area = widget.area;
+    job = widget.job;
+    bio = widget.bio;
     return WillPopScope(
         onWillPop: () async => false,
         child: Scaffold(
@@ -170,10 +215,8 @@ class MyEditProfile extends State<EditProfile> {
                   width: SizeConfig.screenWidth * 100.0,
                   child: TextField(
                     controller: cityController,
-                    onChanged: (newValue){
-                      setState(() {
-                        city = newValue;
-                      });
+                    onChanged: (String value) async {
+                        city = value;
                     },
                     decoration: InputDecoration(
                       border: InputBorder.none,
@@ -207,10 +250,8 @@ class MyEditProfile extends State<EditProfile> {
                     SizeConfig.screenWidth * 70, SizeConfig.screenHeight * 400),
                     child: TextField(
                       controller: bioController,
-                      onChanged: (newValue){
-                        setState(() {
-                          bio = newValue;
-                        });
+                      onChanged: (String value) async {
+                          this.bio = value;
                       },
                       decoration: InputDecoration(
                         border: InputBorder.none,
@@ -240,10 +281,8 @@ class MyEditProfile extends State<EditProfile> {
                     SizeConfig.screenWidth * 70, SizeConfig.screenHeight * 510),
                 child: TextField(
                   controller: jobController,
-                  onChanged: (newValue){
-                    setState(() {
-                      job = newValue;
-                    });
+                  onChanged: (String value) async {
+                      job = value;
                   },
                   decoration: InputDecoration(
                     border: InputBorder.none,
@@ -273,10 +312,8 @@ class MyEditProfile extends State<EditProfile> {
                     SizeConfig.screenWidth * 70, SizeConfig.screenHeight * 610),
                 child: TextField(
                   controller: areaController,
-                  onChanged: (newValue){
-                    setState(() {
-                      area = newValue;
-                    });
+                  onChanged: (String value) async {
+                      area = value;
                   },
                   decoration: InputDecoration(
                     border: InputBorder.none,
@@ -308,10 +345,8 @@ class MyEditProfile extends State<EditProfile> {
                   width: 226.0,
                   child: TextField(
                     controller: nameController,
-                    onChanged: (newValue){
-                      setState(() {
-                        name = newValue;
-                      });
+                    onChanged: (String value) async {
+                        name = value;
                     },
                     decoration: InputDecoration(
                       border: InputBorder.none,
@@ -357,12 +392,12 @@ class MyEditProfile extends State<EditProfile> {
                                 builder: (context) => MyProfile1(
                                     auth: auth,
                                     image: image,
-                                    name: name,
-                                    job: job,
+                                    name: nameController.value.text,
+                                    job: jobController.value.text,
                                     interests: interests,
-                                    city: city,
-                                    bio: bio,
-                                    area: area,
+                                    city: cityController.value.text,
+                                    bio: bioController.value.text,
+                                    area: areaController.value.text,
                                     linkedin: linkedin,
                                     facebook: facebook,
                                     instagram: instagram,
@@ -386,12 +421,18 @@ class MyEditProfile extends State<EditProfile> {
                         child: InkWell(
                           splashColor: const Color(0xff1A2677), // splash color
                           onTap: () async {
+                            if ((name != nameController.value.text) ||
+                                (city != cityController.value.text) ||
+                                (area != areaController.value.text) ||
+                                (job != jobController.value.text) ||
+                                (bio != bioController.value.text)) {
+                              check(context);
+                            } else {
                             FirebaseDatabase.instance
                                 .reference()
                                 .once()
                                 .then((DataSnapshot snapshot) {
                               Map<dynamic, dynamic> map = snapshot.value;
-                              print(code);
                               Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
                                       builder: (context) => HomeFeed(
@@ -400,6 +441,7 @@ class MyEditProfile extends State<EditProfile> {
                                           map: map
                                       )));
                             });
+                            }
                           }, // button pressed
                           child: Icon(FontAwesomeIcons.home, color: Colors.white,), // icon
 
