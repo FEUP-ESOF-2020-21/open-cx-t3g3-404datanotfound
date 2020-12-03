@@ -70,6 +70,8 @@ class _HomeFeed extends State<HomeFeed> {
   int numPosts;
   final GlobalKey<ScaffoldState> _scaffoldState = GlobalKey();
 
+
+
   @override
   Widget build(BuildContext context) {
     auth = widget.auth;
@@ -84,6 +86,14 @@ class _HomeFeed extends State<HomeFeed> {
     String confName; // to save the value 'WS2020', 'WS2019', ...
     String confId; // to save the value 'id1', 'id2',...
 
+    bool postsFromSponsors;
+    bool postsFromSpeakers;
+    bool postsFromAttendees;
+
+    int maxPostsFromSponsors;
+    int maxPostsFromSpeakers;
+    int maxPostsFromAttendees;
+
     // get the conference we're in
     for(int i = 1; i <= numConferences; i++) {
       String aux = "id" + i.toString();
@@ -94,10 +104,163 @@ class _HomeFeed extends State<HomeFeed> {
     } // from here we get the id of conference we're in
     // with the id, we'll get the role of the user
 
+    // get the role of auth user
     String userRole = myMap.values.toList()[0][confId]["users"][auth.currentUser.uid];
     print("Authenticated user is $userRole");
 
+    // for post moderation
+    // get the reference to Firebase
+    DatabaseReference firebaseDatabaseRef =
+    FirebaseDatabase.instance.reference().child('Conferences').child(confId);
 
+    // if values are not defined, set default ones
+    if (myMap.values.toList()[0][confId]["postsControl"] == null) {
+
+      // default values for all conferences
+      postsFromSponsors = false;
+      postsFromSpeakers = true;
+      postsFromAttendees = true;
+      maxPostsFromSponsors = 3;
+      maxPostsFromSpeakers = 5;
+      maxPostsFromAttendees = 10;
+
+      // add default values to database
+      firebaseDatabaseRef
+          .child("postsControl")
+          .child("postsFromSponsors")
+          .set(postsFromSponsors);
+
+      firebaseDatabaseRef
+          .child("postsControl")
+          .child("postsFromSpeakers")
+          .set(postsFromSpeakers);
+
+      firebaseDatabaseRef
+          .child("postsControl")
+          .child("postsFromAttendees")
+          .set(postsFromAttendees);
+
+      firebaseDatabaseRef
+          .child("postsControl")
+          .child("maxPostsFromSponsors")
+          .set(maxPostsFromSponsors);
+
+      firebaseDatabaseRef
+          .child("postsControl")
+          .child("maxPostsFromSpeakers")
+          .set(maxPostsFromSpeakers);
+
+      firebaseDatabaseRef
+          .child("postsControl")
+          .child("maxPostsFromAttendees")
+          .set(maxPostsFromAttendees);
+
+    }
+    // if values are defined, get them!
+    else {
+      // get map with postsControl values
+      Map<dynamic, dynamic> postsControl = myMap.values.toList()[0][confId]["postsControl"];
+      // get each individual value
+      postsFromSponsors = postsControl["postsFromSponsors"];
+      postsFromSpeakers = postsControl["postsFromSpeakers"];
+      postsFromAttendees = postsControl["postsFromAttendees"];
+      maxPostsFromSponsors = postsControl["maxPostsFromSponsors"];
+      maxPostsFromSpeakers = postsControl["maxPostsFromSpeakers"];
+      maxPostsFromAttendees = postsControl["maxPostsFromAttendees"];
+
+    }
+
+    bool lockedPosts = false;
+    bool limitReached = false;
+    int limitForThisUser;
+    String typeOfControl;
+
+    int numPostsFromThisUser = 0;
+    int numTotalPosts = myMap.values.toList()[1][code].length;
+    int numPostsLeft;
+
+    // create list with the codes for existing posts
+    var posts = myMap.values.toList()[1][code].keys;
+
+    // compute number of posts from this user
+    for(int i = 0; i < numTotalPosts; i++) {
+      String post = posts.elementAt(i); // for each post
+      // get to know who has done the post
+      String userOfThisPost = myMap.values.toList()[1][code][post]["user"];
+      // check if the user who done post is the authenticated user
+      if (userOfThisPost == auth.currentUser.uid)
+        numPostsFromThisUser++;
+    }
+
+    // decide if it's locked or at limit for each userRole
+    // get number of posts yet to do
+    switch (userRole) {
+      case "Sponsor": {
+        if(postsFromSponsors == false) {
+          lockedPosts = true;
+          typeOfControl = "Lock";
+          print("$userRole has his posts locked");
+        }
+        else if(numPostsFromThisUser >=  maxPostsFromSponsors) {
+          limitReached = true;
+          limitForThisUser = maxPostsFromSponsors;
+          typeOfControl = "Limit";
+          print("Limit of posts reached: user has $numPostsFromThisUser, limit is $limitForThisUser");
+        }
+        else {
+          numPostsLeft = maxPostsFromSponsors - numPostsFromThisUser;
+          typeOfControl = "Allowed";
+          print("As a $userRole, you still have $numPostsLeft posts to do");
+        }
+      }
+      break;
+
+      case "Speaker": {
+        if(postsFromSpeakers == false) {
+          lockedPosts = true;
+          typeOfControl = "Lock";
+          print("$userRole has his posts locked");
+        }
+        else if(numPostsFromThisUser >=  maxPostsFromSpeakers) {
+          limitReached = true;
+          limitForThisUser = maxPostsFromSpeakers;
+
+          typeOfControl = "Limit";
+          print("Limit of posts reached: user has $numPostsFromThisUser, limit is $limitForThisUser");
+        }
+        else {
+          numPostsLeft = maxPostsFromSpeakers - numPostsFromThisUser;
+          typeOfControl = "Allowed";
+          print("As a $userRole, you still have $numPostsLeft posts to do");
+        }
+      }
+      break;
+
+      case "Attendee": {
+        if(postsFromAttendees == false) {
+          lockedPosts = true;
+          typeOfControl = "Lock";
+          print("$userRole has his posts locked");
+        }
+        else if(numPostsFromThisUser >=  maxPostsFromAttendees) {
+          limitReached = true;
+          limitForThisUser = maxPostsFromAttendees;
+          typeOfControl = "Limit";
+          print("Limit of posts reached: user has $numPostsFromThisUser, limit is $limitForThisUser");
+        }
+        else {
+          numPostsLeft = maxPostsFromAttendees - numPostsFromThisUser;
+          typeOfControl = "Allowed";
+          print("As a $userRole, you still have $numPostsLeft posts to do");
+        }
+      }
+      break;
+
+    }
+
+    // if limit is not reached nor posts are locked, user can post
+    bool canPost = !lockedPosts & !limitReached;
+    print("User can post: $canPost");
 
     // method that shows up whe organizer wants to delete a post
     showDeleteDialog(BuildContext context, String postID){
@@ -149,6 +312,52 @@ class _HomeFeed extends State<HomeFeed> {
         context: context,
         builder: (BuildContext context) {
           return alerta;
+        },
+      );
+    }
+
+    showLimitDialog(BuildContext context){
+
+      String textToShow;
+      String subTextToShow;
+
+      switch (typeOfControl) {
+        case "Lock": {
+            textToShow = "Posts for $userRole are locked for now";
+            subTextToShow = "Ask an Organizer to unlock posts for $userRole";
+          }
+        break;
+
+        case "Limit": {
+          textToShow = "You have reached the limit for posts!";
+          subTextToShow = "The limit of posts for $userRole is now $limitForThisUser "
+              "and you have done $numPostsFromThisUser posts.";
+        }
+        break;
+      }
+
+      // set the ok button
+      Widget ok = FlatButton(
+        child: Text("Ok", style: TextStyle(color: Color(0xff1A2677)),),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+      );
+
+       // configure  AlertDialog
+      AlertDialog alert = AlertDialog(
+        title: Text(textToShow),
+        content: Text(subTextToShow),
+        actions: [
+          ok
+        ],
+      );
+
+      // exhibit dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
         },
       );
     }
@@ -315,7 +524,6 @@ class _HomeFeed extends State<HomeFeed> {
                 });
               },
             ),
-            if (userRole == "Organizer")
 
             ListTile(
               leading: new Icon(FontAwesomeIcons.users, color: const Color(0xff1A2677),),
@@ -335,34 +543,42 @@ class _HomeFeed extends State<HomeFeed> {
                 });
               },
             ),
-            ListTile(
-              leading: new Icon(FontAwesomeIcons.wrench, color: const Color(0xff1A2677),),
-              title: Text("Moderation Settings"),
-              onTap: () {
-                FirebaseDatabase.instance.reference().once().then((DataSnapshot snapshot) {
-                  Map<dynamic, dynamic> map = snapshot.value;
+            if (userRole == "Organizer")
+              ListTile(
+                leading: new Icon(
+                  FontAwesomeIcons.wrench, color: const Color(0xff1A2677),),
+                title: Text("Moderation Settings"),
+                onTap: () {
+                  FirebaseDatabase.instance.reference().once().then((
+                      DataSnapshot snapshot) {
+                    Map<dynamic, dynamic> map = snapshot.value;
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) =>
+                            ModerationSettings(
+                                auth: auth,
+                                code: code,
+                                confId: confId,
+                                map: map
+                            )
+                    ));
+                    print(auth.currentUser.uid);
+                  });
+                },
+              ),
+              ListTile(
+                leading: new Icon(
+                  FontAwesomeIcons.signOutAlt, color: const Color(0xff1A2677),),
+                title: Text("LogOut"),
+                onTap: () {
+                  auth.signOut();
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => ModerationSettings(
-                          auth: auth,
-                          code: code,
-                          map: map
-                      )
-                  ));
-                  print(auth.currentUser.uid);
-                });
-              },
-            ),
-            ListTile(
-              leading: new Icon(FontAwesomeIcons.signOutAlt, color: const Color(0xff1A2677),),
-              title: Text("LogOut"),
-              onTap: () {
-                auth.signOut();
-                Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) => MyLogin(
-                      auth: auth,
-                    )));
-              },
-            ),
+                      builder: (context) =>
+                          MyLogin(
+                            auth: auth,
+                          )));
+                },
+              ),
+
           ],
         ),
       ),
@@ -505,8 +721,16 @@ class _HomeFeed extends State<HomeFeed> {
                       padding: EdgeInsets.only(bottom: 10.0, left: 20.0),
                       child: FloatingActionButton(
                         onPressed: () {
-                          Navigator.of(context).pushReplacement(MaterialPageRoute(
-                              builder: (context) => Post(auth: widget.auth,code: widget.code,)));
+                          if (canPost) {
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        Post(auth: widget.auth,
+                                          postsLeft: numPostsLeft,
+                                          code: widget.code,)));
+                          }
+                          else // posts are not allowed
+                            showLimitDialog(context);
                         },
                         backgroundColor: const Color(0xff1A2677),
                         child: Icon(
@@ -712,8 +936,16 @@ class _HomeFeed extends State<HomeFeed> {
                             padding: EdgeInsets.only(bottom: 10.0, right: 10.0),
                             child: FloatingActionButton(
                               onPressed: () {
-                                Navigator.of(context).pushReplacement(MaterialPageRoute(
-                                    builder: (context) => Post(auth: widget.auth,code: widget.code,)));
+                                if (canPost) {
+                                  Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              Post(auth: widget.auth,
+                                                postsLeft: numPostsLeft,
+                                                code: widget.code,)));
+                                }
+                                else // posts are not allowed
+                                  showLimitDialog(context);
                               },
                               backgroundColor: const Color(0xff1A2677),
                               child: Icon(

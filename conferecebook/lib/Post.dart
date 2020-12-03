@@ -35,10 +35,14 @@ class SizeConfig {
 }
 
 class Post extends StatefulWidget {
-  Post({Key key, this.auth, this.code}) : super(key: key);
+  Post({Key key,
+    this.auth,
+    this.postsLeft,
+    this.code}) : super(key: key);
 
   final FirebaseAuth auth;
   final String code;
+  final int postsLeft;
 
   @override
   State<StatefulWidget> createState() => _Post();
@@ -47,6 +51,7 @@ class Post extends StatefulWidget {
 class _Post extends State<Post> {
   String code;
   File _multiFile;
+  int postsLeft;
   final ImagePicker _picker = ImagePicker();
 
   showAlertDialog2(BuildContext context)
@@ -250,6 +255,8 @@ class _Post extends State<Post> {
   @override
   Widget build(BuildContext context) {
     code = widget.code;
+    postsLeft = widget.postsLeft;
+
     SizeConfig().init(context);
     return WillPopScope(
         onWillPop: () async => false,
@@ -299,7 +306,17 @@ class _Post extends State<Post> {
               )),
             resizeToAvoidBottomPadding: false,
             appBar: AppBar(
-              title: Text("New Post"),
+              title: RichText(
+                text: TextSpan(
+                  text: 'New Post \n',
+                  style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+                  children: <TextSpan>[
+                    TextSpan(text: "Number of Posts left: $postsLeft",
+                        style: TextStyle(fontSize: 17, color: Colors.white60)),
+                  ],
+                ),
+              ),
+
               backgroundColor: const Color(0xff1A2677),
             ),
             body: Form(
