@@ -14,10 +14,10 @@ class CreateProfile2 extends StatefulWidget {
   final String userId;
 
   @override
-  State<StatefulWidget> createState() => MyProfileState2();
+  State<StatefulWidget> createState() => _CreateProfile2();
 }
 
-class MyProfileState2 extends State<CreateProfile2> {
+class _CreateProfile2 extends State<CreateProfile2> {
   String name = "";
   String bio = "";
   String city = "";

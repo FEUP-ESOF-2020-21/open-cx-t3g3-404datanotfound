@@ -23,8 +23,8 @@ class SizeConfig {
   }
 }
 
-class MyProfile extends StatefulWidget {
-  MyProfile({
+class MyProfile1 extends StatefulWidget {
+  MyProfile1({
     Key key,
     this.auth,
     this.image,
@@ -58,10 +58,10 @@ class MyProfile extends StatefulWidget {
   final String code;
 
   @override
-  State<StatefulWidget> createState() => Profile();
+  State<StatefulWidget> createState() => _MyProfile1();
 }
 
-class Profile extends State<MyProfile> {
+class _MyProfile1 extends State<MyProfile1> {
   String image;
   String name;
   String job;

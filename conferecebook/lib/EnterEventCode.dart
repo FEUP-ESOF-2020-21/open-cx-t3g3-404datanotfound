@@ -32,10 +32,10 @@ class EnterEventCode extends StatefulWidget{
 
   @override
   State<StatefulWidget> createState() =>
-      EventCode();
+      _EnterEventCode();
 }
 
-class EventCode extends State<EnterEventCode>{
+class _EnterEventCode extends State<EnterEventCode>{
 
   @override
   void dispose() {

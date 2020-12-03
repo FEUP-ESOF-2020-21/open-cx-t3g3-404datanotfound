@@ -102,7 +102,6 @@ class _ParticipantsList extends State<ParticipantsList> {
     map = widget.map;
     code = widget.code;
 
-
     int numConferences = map.values.toList()[0].length;
 
     String confName; // to save the value 'WS2020', 'WS2019', ...
@@ -242,7 +241,6 @@ class _ParticipantsList extends State<ParticipantsList> {
             ]
 
     ));
-
 
   }
 }

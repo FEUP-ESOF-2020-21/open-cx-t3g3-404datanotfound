@@ -1,162 +1,154 @@
-  import 'package:ConfereceBook/EnterEventCode.dart';
-  import 'package:ConfereceBook/JoinAnEvent.dart';
-  import 'package:ConfereceBook/Login.dart';
-  import 'package:ConfereceBook/MyProfile.dart';
-  import 'package:ConfereceBook/Post.dart';
-  import 'package:firebase_auth/firebase_auth.dart';
-  import 'package:firebase_database/firebase_database.dart';
-  import 'package:flutter/material.dart';
-  import 'package:adobe_xd/pinned.dart';
-  import 'package:adobe_xd/page_link.dart';
-  import 'package:flutter/rendering.dart';
-  import 'package:ConfereceBook/ParticipantsList.dart';
-  import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-  import './Search.dart';
-  import './NotificationsPanel.dart';
-  import 'package:flutter_svg/flutter_svg.dart';
-  import 'package:flutter/widgets.dart';
-  import 'package:video_player/video_player.dart';
-  import 'package:video_player/video_player.dart';
-  import 'package:flutter/material.dart';
-  import 'ViewProfile1.dart';
+import 'package:ConfereceBook/EnterEventCode.dart';
+import 'package:ConfereceBook/JoinAnEvent.dart';
+import 'package:ConfereceBook/Login.dart';
+import 'package:ConfereceBook/MyProfile.dart';
+import 'package:ConfereceBook/Post.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/material.dart';
+import 'package:adobe_xd/pinned.dart';
+import 'package:adobe_xd/page_link.dart';
+import 'package:flutter/rendering.dart';
+import 'package:ConfereceBook/ParticipantsList.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter/widgets.dart';
+import 'package:video_player/video_player.dart';
+import 'package:video_player/video_player.dart';
+import 'package:flutter/material.dart';
+import 'ModerationSettings.dart';
+import 'ViewProfile1.dart';
 
-  class SizeConfig {
-    static MediaQueryData _mediaQueryData;
-    static double screenWidth;
-    static double screenHeight;
-    static double blockSizeHorizontal;
-    static double blockSizeVertical;
+class SizeConfig {
+  static MediaQueryData _mediaQueryData;
+  static double screenWidth;
+  static double screenHeight;
+  static double blockSizeHorizontal;
+  static double blockSizeVertical;
 
-    void init(BuildContext context) {
-      _mediaQueryData = MediaQuery.of(context);
-      screenWidth = _mediaQueryData.size.width / 412;
-      screenHeight = _mediaQueryData.size.height / 870;
-    }
+  void init(BuildContext context) {
+    _mediaQueryData = MediaQuery.of(context);
+    screenWidth = _mediaQueryData.size.width / 412;
+    screenHeight = _mediaQueryData.size.height / 870;
   }
+}
 
-  class HomeFeed extends StatefulWidget {
-    HomeFeed({
-      Key key,
-      this.auth,
-      this.code,
-      this.map,
-    }) : super(key: key);
+class HomeFeed extends StatefulWidget {
+  HomeFeed({
+    Key key,
+    this.auth,
+    this.code,
+    this.map,
+  }) : super(key: key);
 
-    final FirebaseAuth auth;
-    final String code;
-    final Map<dynamic, dynamic> map;
-    @override
-    State<StatefulWidget> createState() => MyHomeFeed();
-  }
+  final FirebaseAuth auth;
+  final String code;
+  final Map<dynamic, dynamic> map;
+  @override
+  State<StatefulWidget> createState() => _HomeFeed();
+}
 
-  class MyHomeFeed extends State<HomeFeed> {
-    VideoPlayerController _controller;
-    FirebaseAuth auth;
-    String image;
-    String name;
-    String city;
-    String bio;
-    String area;
-    String job;
-    String interests;
-    String facebook;
-    String instagram;
-    String linkedin;
-    String twitter;
-    String github;
-    String code;
-    Map<dynamic, dynamic> myMap;
-    int numPosts;
-    final GlobalKey<ScaffoldState> _scaffoldState = GlobalKey();
-    var likes;
+class _HomeFeed extends State<HomeFeed> {
+  VideoPlayerController _controller;
+  FirebaseAuth auth;
+  String image;
+  String name;
+  String city;
+  String bio;
+  String area;
+  String job;
+  String interests;
+  String facebook;
+  String instagram;
+  String linkedin;
+  String twitter;
+  String github;
+  String code;
+  Map<dynamic, dynamic> myMap;
+  int numPosts;
+  final GlobalKey<ScaffoldState> _scaffoldState = GlobalKey();
+  var likes;
 
+  @override
+  Widget build(BuildContext context) {
+    auth = widget.auth;
+    myMap = widget.map;
+    code = widget.code;
+    image = myMap.values.toList()[2][auth.currentUser.uid]["photo"];
+    print("Beginning" + code);
 
-    @override
-    Widget build(BuildContext context) {
-      auth = widget.auth;
-      myMap = widget.map;
-      code = widget.code;
-      print(auth.currentUser.uid);
-      image = myMap.values.toList()[2][auth.currentUser.uid]["photo"];
-      print("Beginning" + code);
+    // get the role of current user
+    int numConferences = myMap.values.toList()[0].length;
 
-      // get the role of current user
-      int numConferences = myMap.values.toList()[0].length;
+    String confName; // to save the value 'WS2020', 'WS2019', ...
+    String confId; // to save the value 'id1', 'id2',...
 
-
-      String confName; // to save the value 'WS2020', 'WS2019', ...
-      String confId; // to save the value 'id1', 'id2',...
-
-      // get the conference we're in
-      for(int i = 1; i <= numConferences; i++) {
-        String aux = "id" + i.toString();
-        confName = myMap.values.toList()[0][aux]["code"];
-        if(confName == code) {
-          confId = aux;
-        }
-      } // from here we get the id of conference we're in
-      // with the id, we'll get the role of the user
-
-      String userRole = myMap.values.toList()[0][confId]["users"][auth.currentUser.uid];
-      print("Authenticated user is $userRole");
-
-      //each like attribute has the users ids
-      //number of likes: size of list
-      //function to know if user auth has its name on each post
-
-      // method that shows up when organizer wants to delete a post
-      showDeleteDialog(BuildContext context, String postID){
-        // configura o button cancel
-        Widget cancel = FlatButton(
-          child: Text("Cancel"),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        );
-        // configures button delete
-        Widget delete = FlatButton(
-          child: Text("Delete"),
-          onPressed: () {
-            FirebaseDatabase.instance // delete from Firebase
-                .reference()
-                .child("Posts")
-                .child(code)
-                .child(postID)
-                .remove();
-
-            FirebaseDatabase.instance // update the map and rebuild
-                .reference()
-                .once()
-                .then((DataSnapshot snapshot) {
-              Map<dynamic, dynamic> map = snapshot.value;
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (context) =>
-                      HomeFeed(
-                        auth: this.auth,
-                        code: this.code,
-                        map: map,
-                      )));
-            });
-
-          },
-        );
-        // configura o  AlertDialog
-        AlertDialog alerta = AlertDialog(
-          title: Text("Delete this post?"),
-          content: Text("Are you sure you want to delete this post?"),
-          actions: [
-            cancel,
-            delete
-          ],
-        );
-        // exibe o dialog
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return alerta;
-          },
-        );
+    // get the conference we're in
+    for(int i = 1; i <= numConferences; i++) {
+      String aux = "id" + i.toString();
+      confName = myMap.values.toList()[0][aux]["code"];
+      if(confName == code) {
+        confId = aux;
       }
+    } // from here we get the id of conference we're in
+    // with the id, we'll get the role of the user
+
+    String userRole = myMap.values.toList()[0][confId]["users"][auth.currentUser.uid];
+    print("Authenticated user is $userRole");
+
+    // method that shows up whe organizer wants to delete a post
+    showDeleteDialog(BuildContext context, String postID){
+      // configura o button cancel
+      Widget cancel = FlatButton(
+        child: Text("Cancel"),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+      );
+      // configures button delete
+      Widget delete = FlatButton(
+        child: Text("Delete"),
+        onPressed: () {
+          FirebaseDatabase.instance // delete from Firebase
+              .reference()
+              .child("Posts")
+              .child(code)
+              .child(postID)
+              .remove();
+
+          FirebaseDatabase.instance // update the map and rebuild
+              .reference()
+              .once()
+              .then((DataSnapshot snapshot) {
+            Map<dynamic, dynamic> map = snapshot.value;
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (context) =>
+                    HomeFeed(
+                      auth: this.auth,
+                      code: this.code,
+                      map: map,
+                    )));
+          });
+
+        },
+      );
+      // configura o  AlertDialog
+      AlertDialog alerta = AlertDialog(
+        title: Text("Delete this post?"),
+        content: Text("Are you sure you want to delete this post?"),
+        actions: [
+          cancel,
+          delete
+        ],
+      );
+      // exibe o dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alerta;
+        },
+      );
+    }
 
       //function to see if post is liked by specific user
       bool postIsLiked(var likes, String user){
@@ -229,7 +221,7 @@
                     this.github = map.values.toList()[2][user]["github"];
                     print(name);
                     Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => MyProfile(
+                        builder: (context) => MyProfile1(
                             auth: auth,
                             image: image,
                             name: name,
@@ -286,7 +278,7 @@
                     this.github = map.values.toList()[2][user]["github"];
                     print(name);
                     Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => MyProfile(
+                        builder: (context) => MyProfile1(
                             auth: auth,
                             image: image,
                             name: name,

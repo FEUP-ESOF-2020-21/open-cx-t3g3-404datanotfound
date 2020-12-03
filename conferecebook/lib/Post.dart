@@ -39,10 +39,10 @@ class Post extends StatefulWidget {
   final String code;
 
   @override
-  State<StatefulWidget> createState() => MyPost();
+  State<StatefulWidget> createState() => _Post();
 }
 
-class MyPost extends State<Post> {
+class _Post extends State<Post> {
   String code;
   File _multiFile;
   final ImagePicker _picker = ImagePicker();
