@@ -315,6 +315,7 @@ class MyEditProfile extends State<EditProfile> {
     area = widget.area;
     job = widget.job;
     bio = widget.bio;
+    final bottom = MediaQuery.of(context).viewInsets.bottom;
     return WillPopScope(
         onWillPop: () async => false,
         child: Scaffold(
@@ -375,18 +376,6 @@ class MyEditProfile extends State<EditProfile> {
                   ),)
                 ),
               ),
-              Container(),
-              Container(),
-              Container(),
-              Container(),
-              Container(),
-              Container(),
-              Container(),
-              Container(),
-              Container(),
-              Container(),
-              Container(),
-              Container(),
               Transform.translate(
                 offset: Offset(
                     SizeConfig.screenWidth * 70, SizeConfig.screenHeight * 405),
@@ -518,7 +507,7 @@ class MyEditProfile extends State<EditProfile> {
                   ),
                 ),
               ),
-              Container(),
+
               Transform.translate(
                 offset: Offset(SizeConfig.screenWidth * 150,
                     SizeConfig.screenHeight * 100.0),
