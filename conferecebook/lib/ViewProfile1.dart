@@ -12,7 +12,6 @@ import 'package:flutter/rendering.dart';
 import 'package:ConfereceBook/ParticipantsList.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import './Search.dart';
-import './NewPost.dart';
 import './NotificationsPanel.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/widgets.dart';
