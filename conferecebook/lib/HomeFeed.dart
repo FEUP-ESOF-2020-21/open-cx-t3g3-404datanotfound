@@ -599,8 +599,9 @@ class _HomeFeed extends State<HomeFeed> {
           children: <Widget>[
             Transform.translate(
                 offset: Offset(SizeConfig.screenWidth *  0.0, SizeConfig.screenHeight *  0.0),
-                child: ListView.builder( //por post: for por ciclo
-                  shrinkWrap:true,
+                child: ListView.builder(
+                  padding: EdgeInsets.only(bottom:40),//por post: for por ciclo
+                  shrinkWrap: true,
                   itemCount: numPosts,
                   itemBuilder: (context, position) {
 
@@ -660,6 +661,13 @@ class _HomeFeed extends State<HomeFeed> {
                             height: multimedia != " " ? SizeConfig.screenHeight * 500 : SizeConfig.screenWidth * 200,
                             child: Stack(
                               children: <Widget>[
+                                if (userRole == "Organizer")
+                                  IconButton(
+                                      icon: Icon(FontAwesomeIcons.times, color: Color(0xff8d0000)),
+                                      onPressed: () {
+                                        showDeleteDialog(context, postID);
+                                      }
+                                  ),
                                 Transform.translate(
                                     offset: Offset(SizeConfig.screenWidth *  0.0, SizeConfig.screenHeight *  0.0),
                                     child: Row(
@@ -691,19 +699,36 @@ class _HomeFeed extends State<HomeFeed> {
                                         )],
                                     )
                                 ),
+
                                 Transform.translate(
-                                    offset: Offset(SizeConfig.screenWidth *  0.0, multimedia != " " ? SizeConfig.screenHeight *  470.0 : SizeConfig.screenHeight * 190.0),
+                                  offset: Offset(SizeConfig.screenWidth * 60.0, SizeConfig.screenHeight * 50.0),
+                                  child:  SizedBox(
+                                      width: SizeConfig.screenWidth * 250 ,
+                                      height: SizeConfig.screenHeight * 500 ,
+                                      child: text != null ? Text(text, style: TextStyle(color: const Color(0xff000000)),) : Container()
+                                  ),),
+                                Transform.translate(
+                                  offset: Offset(SizeConfig.screenWidth *  0.0, SizeConfig.screenHeight * 95.0),
+                                  child: SizedBox(
+                                    width: multimedia != " " ? SizeConfig.screenWidth * 360 : 0,
+                                    height: multimedia != " " ? SizeConfig.screenHeight * 360 : 0,
+                                    child: Container(
+                                      child: multimedia != " " ? (type == "image") ? Image(image: NetworkImage(multimedia)) :
+                                      Container(
+                                        child:Scaffold(
+                                          body: Center(
+                                              child: Container(
+                                                child: Text('Unable to show media'),
+                                              )),),) : Container(),
+                                    ),),),
+                                Container(
+                                    alignment: Alignment.bottomCenter,
+                                    //offset: Offset(SizeConfig.screenWidth *  0.0, multimedia != " " ? SizeConfig.screenHeight *  470.0 : SizeConfig.screenHeight * 190.0),
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: <Widget>[
-                                        if (userRole == "Organizer")
-                                          IconButton(
-                                              icon: Icon(FontAwesomeIcons.times, color: Colors.red),
-                                              onPressed: () {
-                                                showDeleteDialog(context, postID);
-                                              }
-                                          ),
-                                        SizedBox(width: 180), // separates trash icon from reactions
+                                        // separates trash icon from reactions
+                                        //SizedBox(width: 15),
                                         Text("    "+numComments.toString()+"   "),
                                         Icon(FontAwesomeIcons.commentAlt),
                                         SizedBox(width: 25),
@@ -766,28 +791,11 @@ class _HomeFeed extends State<HomeFeed> {
                                         ),
                                       ],
                                     )
-                                ),
-                                Transform.translate(
-                                  offset: Offset(SizeConfig.screenWidth * 60.0, SizeConfig.screenHeight * 50.0),
-                                  child:  SizedBox(
-                                      width: SizeConfig.screenWidth * 250 ,
-                                      height: SizeConfig.screenHeight * 500 ,
-                                      child: text != null ? Text(text, style: TextStyle(color: const Color(0xff000000)),) : Container()
-                                  ),),
-                                Transform.translate(
-                                  offset: Offset(SizeConfig.screenWidth *  0.0, SizeConfig.screenHeight * 95.0),
-                                  child: SizedBox(
-                                    width: multimedia != " " ? SizeConfig.screenWidth * 360 : 0,
-                                    height: multimedia != " " ? SizeConfig.screenHeight * 360 : 0,
-                                    child: Container(
-                                      child: multimedia != " " ? (type == "image") ? Image(image: NetworkImage(multimedia)) :
-                                      Container(
-                                        child:Scaffold(
-                                          body: Center(
-                                              child: Container(
-                                                child: Text('Unable to show media'),
-                                              )),),) : Container(),
-                                    ),),),],)));},)),],),
+                                ),],)));},)),
+
+          ],
+
+        ),
         floatingActionButton: Container(
             child: Column(
               children: <Widget>[
