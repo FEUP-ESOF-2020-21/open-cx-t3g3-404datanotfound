@@ -813,6 +813,7 @@ class _HomeFeed extends State<HomeFeed> {
                                       builder: (context) =>
                                           Post(auth: widget.auth,
                                             postsLeft: numPostsLeft,
+                                            userRole: userRole,
                                             code: widget.code,)));
                             }
                             else // posts are not allowed
@@ -1025,6 +1026,7 @@ class _HomeFeed extends State<HomeFeed> {
                                           builder: (context) =>
                                               Post(auth: widget.auth,
                                                 postsLeft: numPostsLeft,
+                                                userRole: userRole,
                                                 code: widget.code,)));
                                 }
                                 else // posts are not allowed

@@ -36,11 +36,13 @@ class Post extends StatefulWidget {
   Post({Key key,
     this.auth,
     this.postsLeft,
+    this.userRole,
     this.code}) : super(key: key);
 
   final FirebaseAuth auth;
   final String code;
   final int postsLeft;
+  final String userRole;
 
   @override
   State<StatefulWidget> createState() => _Post();
@@ -50,6 +52,7 @@ class _Post extends State<Post> {
   String code;
   File _multiFile;
   int postsLeft;
+  String userRole;
   final ImagePicker _picker = ImagePicker();
 
   showAlertDialog2(BuildContext context)
@@ -256,6 +259,13 @@ class _Post extends State<Post> {
   Widget build(BuildContext context) {
     code = widget.code;
     postsLeft = widget.postsLeft;
+    userRole = widget.userRole;
+    String textPostsLeft;
+
+    if(userRole != "Organizer")
+      textPostsLeft = "\nNumber of Posts left: $postsLeft";
+    else
+      textPostsLeft = null;
 
     SizeConfig().init(context);
     return WillPopScope(
@@ -308,10 +318,10 @@ class _Post extends State<Post> {
             appBar: AppBar(
               title: RichText(
                 text: TextSpan(
-                  text: 'New Post \n',
+                  text: "New Post",
                   style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
                   children: <TextSpan>[
-                    TextSpan(text: "Number of Posts left: $postsLeft",
+                    TextSpan(text: textPostsLeft,
                         style: TextStyle(fontSize: 17, color: Colors.white60)),
                   ],
                 ),
