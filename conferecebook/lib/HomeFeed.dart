@@ -69,6 +69,7 @@ class _HomeFeed extends State<HomeFeed> {
   final GlobalKey<ScaffoldState> _scaffoldState = GlobalKey();
   var likes;
 
+
   @override
   Widget build(BuildContext context) {
     auth = widget.auth;
@@ -83,6 +84,14 @@ class _HomeFeed extends State<HomeFeed> {
     String confName; // to save the value 'WS2020', 'WS2019', ...
     String confId; // to save the value 'id1', 'id2',...
 
+    bool postsFromSponsors;
+    bool postsFromSpeakers;
+    bool postsFromAttendees;
+
+    int maxPostsFromSponsors;
+    int maxPostsFromSpeakers;
+    int maxPostsFromAttendees;
+
     // get the conference we're in
     for(int i = 1; i <= numConferences; i++) {
       String aux = "id" + i.toString();
@@ -93,8 +102,163 @@ class _HomeFeed extends State<HomeFeed> {
     } // from here we get the id of conference we're in
     // with the id, we'll get the role of the user
 
+    // get the role of auth user
     String userRole = myMap.values.toList()[0][confId]["users"][auth.currentUser.uid];
     print("Authenticated user is $userRole");
+
+    // for post moderation
+    // get the reference to Firebase
+    DatabaseReference firebaseDatabaseRef =
+    FirebaseDatabase.instance.reference().child('Conferences').child(confId);
+
+    // if values are not defined, set default ones
+    if (myMap.values.toList()[0][confId]["postsControl"] == null) {
+
+      // default values for all conferences
+      postsFromSponsors = false;
+      postsFromSpeakers = true;
+      postsFromAttendees = true;
+      maxPostsFromSponsors = 3;
+      maxPostsFromSpeakers = 5;
+      maxPostsFromAttendees = 10;
+
+      // add default values to database
+      firebaseDatabaseRef
+          .child("postsControl")
+          .child("postsFromSponsors")
+          .set(postsFromSponsors);
+
+      firebaseDatabaseRef
+          .child("postsControl")
+          .child("postsFromSpeakers")
+          .set(postsFromSpeakers);
+
+      firebaseDatabaseRef
+          .child("postsControl")
+          .child("postsFromAttendees")
+          .set(postsFromAttendees);
+
+      firebaseDatabaseRef
+          .child("postsControl")
+          .child("maxPostsFromSponsors")
+          .set(maxPostsFromSponsors);
+
+      firebaseDatabaseRef
+          .child("postsControl")
+          .child("maxPostsFromSpeakers")
+          .set(maxPostsFromSpeakers);
+
+      firebaseDatabaseRef
+          .child("postsControl")
+          .child("maxPostsFromAttendees")
+          .set(maxPostsFromAttendees);
+
+    }
+    // if values are defined, get them!
+    else {
+      // get map with postsControl values
+      Map<dynamic, dynamic> postsControl = myMap.values.toList()[0][confId]["postsControl"];
+      // get each individual value
+      postsFromSponsors = postsControl["postsFromSponsors"];
+      postsFromSpeakers = postsControl["postsFromSpeakers"];
+      postsFromAttendees = postsControl["postsFromAttendees"];
+      maxPostsFromSponsors = postsControl["maxPostsFromSponsors"];
+      maxPostsFromSpeakers = postsControl["maxPostsFromSpeakers"];
+      maxPostsFromAttendees = postsControl["maxPostsFromAttendees"];
+
+    }
+
+    bool lockedPosts = false;
+    bool limitReached = false;
+    int limitForThisUser;
+    String typeOfControl;
+
+    int numPostsFromThisUser = 0;
+    int numTotalPosts = myMap.values.toList()[1][code].length;
+    int numPostsLeft;
+
+    // create list with the codes for existing posts
+    var posts = myMap.values.toList()[1][code].keys;
+
+    // compute number of posts from this user
+    for(int i = 0; i < numTotalPosts; i++) {
+      String post = posts.elementAt(i); // for each post
+      // get to know who has done the post
+      String userOfThisPost = myMap.values.toList()[1][code][post]["user"];
+      // check if the user who done post is the authenticated user
+      if (userOfThisPost == auth.currentUser.uid)
+        numPostsFromThisUser++;
+    }
+
+    // decide if it's locked or at limit for each userRole
+    // get number of posts yet to do
+    switch (userRole) {
+      case "Sponsor": {
+        if(postsFromSponsors == false) {
+          lockedPosts = true;
+          typeOfControl = "Lock";
+          print("$userRole has his posts locked");
+        }
+        else if(numPostsFromThisUser >=  maxPostsFromSponsors) {
+          limitReached = true;
+          limitForThisUser = maxPostsFromSponsors;
+          typeOfControl = "Limit";
+          print("Limit of posts reached: user has $numPostsFromThisUser, limit is $limitForThisUser");
+        }
+        else {
+          numPostsLeft = maxPostsFromSponsors - numPostsFromThisUser;
+          typeOfControl = "Allowed";
+          print("As a $userRole, you still have $numPostsLeft posts to do");
+        }
+      }
+      break;
+
+      case "Speaker": {
+        if(postsFromSpeakers == false) {
+          lockedPosts = true;
+          typeOfControl = "Lock";
+          print("$userRole has his posts locked");
+        }
+        else if(numPostsFromThisUser >=  maxPostsFromSpeakers) {
+          limitReached = true;
+          limitForThisUser = maxPostsFromSpeakers;
+
+          typeOfControl = "Limit";
+          print("Limit of posts reached: user has $numPostsFromThisUser, limit is $limitForThisUser");
+        }
+        else {
+          numPostsLeft = maxPostsFromSpeakers - numPostsFromThisUser;
+          typeOfControl = "Allowed";
+          print("As a $userRole, you still have $numPostsLeft posts to do");
+        }
+      }
+      break;
+
+      case "Attendee": {
+        if(postsFromAttendees == false) {
+          lockedPosts = true;
+          typeOfControl = "Lock";
+          print("$userRole has his posts locked");
+        }
+        else if(numPostsFromThisUser >=  maxPostsFromAttendees) {
+          limitReached = true;
+          limitForThisUser = maxPostsFromAttendees;
+          typeOfControl = "Limit";
+          print("Limit of posts reached: user has $numPostsFromThisUser, limit is $limitForThisUser");
+        }
+        else {
+          numPostsLeft = maxPostsFromAttendees - numPostsFromThisUser;
+          typeOfControl = "Allowed";
+          print("As a $userRole, you still have $numPostsLeft posts to do");
+        }
+      }
+      break;
+
+    }
+
+    // if limit is not reached nor posts are locked, user can post
+    bool canPost = !lockedPosts & !limitReached;
+    print("User can post: $canPost");
 
     // method that shows up whe organizer wants to delete a post
     showDeleteDialog(BuildContext context, String postID){
@@ -164,14 +328,505 @@ class _HomeFeed extends State<HomeFeed> {
 
       bool isLiked;
 
-      try {
-        numPosts = myMap.values.toList()[1][widget.code].length;
-      } catch(e) {
-        numPosts = 0;
+    showLimitDialog(BuildContext context){
+
+      String textToShow;
+      String subTextToShow;
+
+      switch (typeOfControl) {
+        case "Lock": {
+            textToShow = "Posts for $userRole are locked for now";
+            subTextToShow = "Ask an Organizer to unlock posts for $userRole";
+          }
+        break;
+
+        case "Limit": {
+          textToShow = "You have reached the limit for posts!";
+          subTextToShow = "The limit of posts for $userRole is now $limitForThisUser "
+              "and you have done $numPostsFromThisUser posts.";
+        }
+        break;
       }
 
-      SizeConfig().init(context);
-      if (numPosts != 0) {
+      // set the ok button
+      Widget ok = FlatButton(
+        child: Text("Ok", style: TextStyle(color: Color(0xff1A2677)),),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+      );
+
+       // configure  AlertDialog
+      AlertDialog alert = AlertDialog(
+        title: Text(textToShow),
+        content: Text(subTextToShow),
+        actions: [
+          ok
+        ],
+      );
+
+      // exhibit dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        },
+      );
+    }
+
+    try {
+      numPosts = myMap.values.toList()[1][widget.code].length;
+    } catch(e) {
+      numPosts = 0;
+    }
+    SizeConfig().init(context);
+    if (numPosts != 0) {
+    return WillPopScope(
+    onWillPop: () async => false, child: Scaffold(
+      key: _scaffoldState,
+      appBar: AppBar(
+        actions: <Widget>[
+          IconButton(icon: new Icon(FontAwesomeIcons.redoAlt, color: const Color(0xffffffff),), onPressed: () async {
+            FirebaseDatabase.instance
+                .reference()
+                .once()
+                .then((DataSnapshot snapshot) {
+              Map<dynamic, dynamic> map = snapshot.value;
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (context) => HomeFeed(
+                    auth: auth,
+                    map: map,
+                    code: code,
+                  )));
+            });
+          }),
+          IconButton(icon: new Icon(FontAwesomeIcons.users, color: const Color(0xffffffff),),
+              onPressed: () async {
+
+            FirebaseDatabase.instance
+                .reference()
+                .once()
+                .then((DataSnapshot snapshot) {
+                  Map<dynamic, dynamic> map = snapshot.value;
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (context) => ParticipantsList(
+                  auth: auth,
+                  map: map,
+                  code: code,
+                )));
+              });
+          }
+          ),
+
+          InkWell(
+              onTap: () async {
+                FirebaseDatabase.instance
+                    .reference()
+                    .once()
+                    .then((DataSnapshot snapshot) {
+                  Map<dynamic, dynamic> map = snapshot.value;
+                  String user = auth.currentUser.uid;
+                  this.image = map.values.toList()[2][user]["photo"];
+                  this.name = map.values.toList()[2][user]["name"];
+                  this.job = map.values.toList()[2][user]["job"];
+                  this.interests = map.values.toList()[2][user]["interests"];
+                  this.city = map.values.toList()[2][user]["city"];
+                  this.bio = map.values.toList()[2][user]["bio"];
+                  this.area = map.values.toList()[2][user]["area"];
+                  this.linkedin = map.values.toList()[2][user]["linkedin"];
+                  this.facebook = map.values.toList()[2][user]["facebook"];
+                  this.instagram = map.values.toList()[2][user]["instagram"];
+                  this.twitter = map.values.toList()[2][user]["twitter"];
+                  this.github = map.values.toList()[2][user]["github"];
+                  print(name);
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => MyProfile1(
+                          auth: auth,
+                          image: image,
+                          name: name,
+                          job: job,
+                          interests: interests,
+                          city: city,
+                          bio: bio,
+                          area: area,
+                          linkedin: linkedin,
+                          facebook: facebook,
+                          instagram: instagram,
+                          twitter: twitter,
+                          github: github,
+                      code: code)));
+                });
+              },
+              child: CircleAvatar(
+                backgroundImage: NetworkImage(this.image),
+                radius: 22,
+              )),
+        ],
+        title: Text(""),
+        backgroundColor: const Color(0xff1A2677),
+        leading: IconButton(icon: new Icon(FontAwesomeIcons.bars, color: const Color(0xffffffff),), onPressed: (){
+          _scaffoldState.currentState.openDrawer();
+        }),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            ListTile(),
+            ListTile(
+              leading: new Icon(FontAwesomeIcons.userAlt, color: const Color(0xff1A2677),),
+              title: Text("MyProfile"),
+              onTap: () async {
+                FirebaseDatabase.instance
+                    .reference()
+                    .once()
+                    .then((DataSnapshot snapshot) {
+                  Map<dynamic, dynamic> map = snapshot.value;
+                  String user = auth.currentUser.uid;
+                  this.image = map.values.toList()[2][user]["photo"];
+                  this.name = map.values.toList()[2][user]["name"];
+                  this.job = map.values.toList()[2][user]["job"];
+                  this.interests = map.values.toList()[2][user]["interests"];
+                  this.city = map.values.toList()[2][user]["city"];
+                  this.bio = map.values.toList()[2][user]["bio"];
+                  this.area = map.values.toList()[2][user]["area"];
+                  this.linkedin = map.values.toList()[2][user]["linkedin"];
+                  this.facebook = map.values.toList()[2][user]["facebook"];
+                  this.instagram = map.values.toList()[2][user]["instagram"];
+                  this.twitter = map.values.toList()[2][user]["twitter"];
+                  this.github = map.values.toList()[2][user]["github"];
+                  print(name);
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => MyProfile1(
+                          auth: auth,
+                          image: image,
+                          name: name,
+                          job: job,
+                          interests: interests,
+                          city: city,
+                          bio: bio,
+                          area: area,
+                          linkedin: linkedin,
+                          facebook: facebook,
+                          instagram: instagram,
+                          twitter: twitter,
+                          github: github)));
+                });
+              },
+            ),
+            ListTile(
+              leading: new Icon(FontAwesomeIcons.plusCircle, color: const Color(0xff1A2677),),
+              title: Text("Enter Event Code"),
+              onTap: () {
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => EnterEventCode(
+                      auth: widget.auth,
+                    )));
+              },
+            ),
+            ListTile(
+              leading: new Icon(FontAwesomeIcons.exchangeAlt, color: const Color(0xff1A2677),),
+              title: Text("Change to Other Event"),
+              onTap: () {
+                FirebaseDatabase.instance.reference().once().then((DataSnapshot snapshot) {
+                  Map<dynamic, dynamic> map = snapshot.value;
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => JoinAnEvent(auth: widget.auth, map: map,)
+                  ));
+                });
+              },
+            ),
+
+            ListTile(
+              leading: new Icon(FontAwesomeIcons.users, color: const Color(0xff1A2677),),
+              title: Text("Participants List"),
+              onTap: () async {
+                FirebaseDatabase.instance
+                    .reference()
+                    .once()
+                    .then((DataSnapshot snapshot) {
+                  Map<dynamic, dynamic> map = snapshot.value;
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => ParticipantsList(
+                          auth: auth,
+                          map: map,
+                          code: code,
+                    )));
+                });
+              },
+            ),
+            if (userRole == "Organizer")
+              ListTile(
+                leading: new Icon(
+                  FontAwesomeIcons.wrench, color: const Color(0xff1A2677),),
+                title: Text("Moderation Settings"),
+                onTap: () {
+                  FirebaseDatabase.instance.reference().once().then((
+                      DataSnapshot snapshot) {
+                    Map<dynamic, dynamic> map = snapshot.value;
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) =>
+                            ModerationSettings(
+                                auth: auth,
+                                code: code,
+                                confId: confId,
+                                map: map
+                            )
+                    ));
+                    print(auth.currentUser.uid);
+                  });
+                },
+              ),
+              ListTile(
+                leading: new Icon(
+                  FontAwesomeIcons.signOutAlt, color: const Color(0xff1A2677),),
+                title: Text("LogOut"),
+                onTap: () {
+                  auth.signOut();
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) =>
+                          MyLogin(
+                            auth: auth,
+                          )));
+                },
+              ),
+
+          ],
+        ),
+      ),
+      backgroundColor: const Color(0xffffffff),
+      body: Stack(
+        children: <Widget>[
+          Transform.translate(
+            offset: Offset(SizeConfig.screenWidth *  0.0, SizeConfig.screenHeight *  0.0),
+            child: ListView.builder( //por post: for por ciclo
+                shrinkWrap:true,
+                itemCount: numPosts,
+                itemBuilder: (context, position) {
+
+                  this.likes=null; //restart likes variable
+
+                  String user = auth.currentUser.uid;
+
+                  Map<dynamic, dynamic> postInfo = myMap.values.toList()[1][widget.code];
+                  String postID = postInfo.keys.toList()[position];
+                  String userUID = postInfo.values.toList()[position]["user"];
+                  String text = postInfo.values.toList()[position]["text"];
+                  String multimedia = postInfo.values.toList()[position]["multimedia"];
+
+                  if(postInfo.values.toList()[position]["likes"]!=null){
+                    this.likes=postInfo.values.toList()[position]["likes"].keys;}
+
+                  int numComments = postInfo.values.toList()[position]["numComments"];
+
+                  String name = myMap.values.toList()[2][userUID]["name"];
+                  String userPhoto = myMap.values.toList()[2][userUID]["photo"];
+                  Uri uri = Uri.parse(multimedia);
+                  String typeString = uri.path.substring(uri.path.length - 3)
+                      .toLowerCase();
+
+                  String type = "";
+                  if (typeString == "jpg") {
+                    type = "image";
+                  } else if (typeString == "mp4") {
+                    type = "video";
+                  }
+
+                  if(postIsLiked(likes, user)){
+                    isLiked=true;
+                  }else{
+                    isLiked=false;
+                  }
+                  //build string for number of likes in post
+                  String numLikes = "";
+                  if (likes==null) {
+                    numLikes = "0 ";
+                  } else {
+                    numLikes = this.likes.length.toString() + " ";
+                  }
+                return Container(
+                    margin: const EdgeInsets.all(15.0),
+                    padding: const EdgeInsets.all(3.0),
+                    decoration: BoxDecoration(
+                      color: const Color(0xffD3D3D3),
+                        border: Border.all(
+                          width: 2,
+                          color: const Color(0xffD3D3D3),
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                    ),
+                    child:  SizedBox(
+                        width: multimedia != " " ? SizeConfig.screenWidth * 500 : SizeConfig.screenWidth * 200,
+                        height: multimedia != " " ? SizeConfig.screenHeight * 500 : SizeConfig.screenWidth * 200,
+                    child: Stack(
+                      children: <Widget>[
+                    Transform.translate(
+                      offset: Offset(SizeConfig.screenWidth *  0.0, SizeConfig.screenHeight *  0.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+
+                        Text(name + "  ", style: TextStyle(color: const Color(0xff000000), fontWeight: FontWeight.bold),),
+                        InkWell(
+                          onTap: () async {
+                            FirebaseDatabase.instance
+                                .reference()
+                                .once()
+                                .then((DataSnapshot snapshot) {
+                              Map<dynamic, dynamic> map = snapshot.value;
+
+                              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                  builder: (context) => ViewProfile1(
+                                      auth: widget.auth,
+                                      userToSee: userUID,
+                                      map: map,
+                                      code: widget.code)));
+                            });
+                          },
+                          child: CircleAvatar(
+                            radius: 20.0,
+                            backgroundImage: NetworkImage(userPhoto),
+                            //default image
+                      ),
+                        )],
+                  )
+                    ),
+                        Transform.translate(
+                            offset: Offset(SizeConfig.screenWidth *  0.0, multimedia != " " ? SizeConfig.screenHeight *  470.0 : SizeConfig.screenHeight * 190.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                if (userRole == "Organizer")
+                                  IconButton(
+                                      icon: Icon(FontAwesomeIcons.trash, color: Colors.red),
+                                      onPressed: () {
+                                        showDeleteDialog(context, postID);
+                                      }
+                                  ),
+                                SizedBox(width: 180), // separates trash icon from reactions
+                                Text(likes.toString() + " "),
+                                Icon(FontAwesomeIcons.commentAlt),
+                                Text(numLikes),
+                                  IconButton(
+                                    icon: isLiked ? Icon(FontAwesomeIcons.solidHeart, color: Colors.red) : Icon(FontAwesomeIcons.heart, color: Colors.grey),
+                                    onPressed: () {
+                                    setState((){
+                                      likes=null;
+                                      FirebaseDatabase.instance //get current likes of post
+                                          .reference()
+                                            .once()
+                                          .then((DataSnapshot snapshot) {
+                                        Map<dynamic, dynamic> map = snapshot
+                                            .value;
+                                        postInfo =
+                                        map.values.toList()[1][widget.code];
+                                      });
+                                          if(postInfo.values.toList()[position]["likes"]!=null){
+                                            this.likes=postInfo.values.toList()[position]["likes"].keys;
+                                          }
+
+                                      isLiked = postIsLiked(likes, user); //get current state of like
+                                      isLiked =! isLiked; //change like state
+                                    if(isLiked) {
+                                      //add to firebase
+                                      DatabaseReference firebaseDatabaseRef =
+                                      FirebaseDatabase.instance.reference().child(
+                                          'Posts').child(code).child(postID);
+                                      firebaseDatabaseRef
+                                          .child("likes")
+                                          .child(widget.auth.currentUser.uid)
+                                          .set(1);
+                                    }else{
+                                      FirebaseDatabase.instance // delete from Firebase
+                                          .reference()
+                                          .child("Posts")
+                                          .child(code)
+                                          .child(postID)
+                                          .child("likes")
+                                          .child(widget.auth.currentUser.uid)
+                                          .remove();
+                                    }
+                                    //rebuild home feed
+                                    FirebaseDatabase.instance
+                                        .reference()
+                                        .once()
+                                        .then((DataSnapshot snapshot) {
+                                      Map<dynamic, dynamic> map = snapshot.value;
+                                      Navigator.of(context).pushReplacement(
+                                          MaterialPageRoute(
+                                              builder: (context) => HomeFeed(
+                                                  auth: auth,
+                                                  code: widget.code,
+                                                  map: map )));
+                                    });
+
+                                    });
+                                      },
+                                    ),
+                              ],
+                            )
+                        ),
+                        Transform.translate(
+                            offset: Offset(SizeConfig.screenWidth * 60.0, SizeConfig.screenHeight * 50.0),
+                            child:  SizedBox(
+                              width: SizeConfig.screenWidth * 250 ,
+                              height: SizeConfig.screenHeight * 500 ,
+                              child: text != null ? Text(text, style: TextStyle(color: const Color(0xff000000)),) : Container()
+                        ),),
+                  Transform.translate(
+                      offset: Offset(SizeConfig.screenWidth *  0.0, SizeConfig.screenHeight * 95.0),
+                      child: SizedBox(
+                          width: multimedia != " " ? SizeConfig.screenWidth * 360 : 0,
+                          height: multimedia != " " ? SizeConfig.screenHeight * 360 : 0,
+                          child: Container(
+                            child: multimedia != " " ? (type == "image") ? Image(image: NetworkImage(multimedia)) :
+                            Container(
+                              child:Scaffold(
+                                body: Center(
+                                  child: Container(
+                                    child: Text('Unable to show media'),
+                                  )
+                      ],)));
+              },
+            )
+          ),
+        ],
+      ),
+      floatingActionButton: Container(
+          child: Column(
+            children: <Widget>[
+              Container(
+                child: Expanded(
+                  child: Align(
+                    alignment: FractionalOffset.bottomLeft,
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: 10.0, left: 20.0),
+                      child: FloatingActionButton(
+                        onPressed: () {
+                          if (canPost) {
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        Post(auth: widget.auth,
+                                          postsLeft: numPostsLeft,
+                                          code: widget.code,)));
+                          }
+                          else // posts are not allowed
+                            showLimitDialog(context);
+                        },
+                        backgroundColor: const Color(0xff1A2677),
+                        child: Icon(
+                          FontAwesomeIcons.plus,
+                          color: const Color(0xffffffff),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            ],
+          )),
+    ));} else {
 
       return WillPopScope(
       onWillPop: () async => false, child: Scaffold(
@@ -195,10 +850,6 @@ class _HomeFeed extends State<HomeFeed> {
                 });
             }
             ),
-            IconButton(icon: new Icon(FontAwesomeIcons.bell, color: const Color(0xffffffff),), onPressed: (){
-              //Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  //builder: (context) => NotificationsPanel()));
-            }),
             InkWell(
                 onTap: () async {
                   FirebaseDatabase.instance
@@ -351,437 +1002,34 @@ class _HomeFeed extends State<HomeFeed> {
         ),
         backgroundColor: const Color(0xffffffff),
         body: Stack(
-          children: <Widget>[
-            Transform.translate(
-              offset: Offset(SizeConfig.screenWidth *  0.0, SizeConfig.screenHeight *  0.0),
-              child: ListView.builder( //por post: for por ciclo
-                shrinkWrap:true,
-                itemCount: numPosts,
-                itemBuilder: (context, position) {
-
-                  this.likes=null; //restart likes variable
-
-                  String user = auth.currentUser.uid;
-
-                  Map<dynamic, dynamic> postInfo = myMap.values.toList()[1][widget.code];
-                  String postID = postInfo.keys.toList()[position];
-                  String userUID = postInfo.values.toList()[position]["user"];
-                  String text = postInfo.values.toList()[position]["text"];
-                  String multimedia = postInfo.values.toList()[position]["multimedia"];
-
-                  if(postInfo.values.toList()[position]["likes"]!=null){
-                    this.likes=postInfo.values.toList()[position]["likes"].keys;}
-
-                  int numComments = postInfo.values.toList()[position]["numComments"];
-
-                  String name = myMap.values.toList()[2][userUID]["name"];
-                  String userPhoto = myMap.values.toList()[2][userUID]["photo"];
-                  Uri uri = Uri.parse(multimedia);
-                  String typeString = uri.path.substring(uri.path.length - 3)
-                      .toLowerCase();
-
-                  String type = "";
-                  if (typeString == "jpg") {
-                    type = "image";
-                  } else if (typeString == "mp4") {
-                    type = "video";
-                  }
-
-                  if(postIsLiked(likes, user)){
-                    isLiked=true;
-                  }else{
-                    isLiked=false;
-                  }
-                  //build string for number of likes in post
-                  String numLikes = "";
-                  if (likes==null) {
-                    numLikes = "0 ";
-                  } else {
-                    numLikes = this.likes.length.toString() + " ";
-                  }
-
-                  return Container(
-                      margin: const EdgeInsets.all(15.0),
-                      padding: const EdgeInsets.all(3.0),
-                      decoration: BoxDecoration(
-                        color: const Color(0xffD3D3D3),
-                          border: Border.all(
-                            width: 2,
-                            color: const Color(0xffD3D3D3),
-                          ),
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                      ),
-                      child:  SizedBox(
-                          width: multimedia != " " ? SizeConfig.screenWidth * 500 : SizeConfig.screenWidth * 200,
-                          height: multimedia != " " ? SizeConfig.screenHeight * 500 : SizeConfig.screenWidth * 200,
-                      child: Stack(
-                        children: <Widget>[
-                      Transform.translate(
-                        offset: Offset(SizeConfig.screenWidth *  0.0, SizeConfig.screenHeight *  0.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-
-                          Text(name + "  ", style: TextStyle(color: const Color(0xff000000), fontWeight: FontWeight.bold),),
-                          InkWell(
-                            onTap: () async {
-                              FirebaseDatabase.instance
-                                  .reference()
-                                  .once()
-                                  .then((DataSnapshot snapshot) {
-                                Map<dynamic, dynamic> map = snapshot.value;
-
-                                Navigator.of(context).pushReplacement(MaterialPageRoute(
-                                    builder: (context) => ViewProfile1(
-                                        auth: widget.auth,
-                                        userToSee: userUID,
-                                        map: map,
-                                        code: widget.code)));
-                              });
-                            },
-                            child: CircleAvatar(
-                              radius: 20.0,
-                              backgroundImage: NetworkImage(userPhoto),
-                              //default image
-                        ),
-                          )],
-                    )
-                      ),
-                          Transform.translate(
-                              offset: Offset(SizeConfig.screenWidth *  0.0, multimedia != " " ? SizeConfig.screenHeight *  470.0 : SizeConfig.screenHeight * 190.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: <Widget>[
-                                  if (userRole == "Organizer")
-                                    IconButton(
-                                        icon: Icon(FontAwesomeIcons.trash,
-                                            color: Colors.red),
-                                        onPressed: () {
-                                          showDeleteDialog(context, postID);
-                                        }
-                                    ),
-
-                                  SizedBox(width: 180), // separates trash icon from reactions
-                                  Text("    "+numComments.toString()+" "),
-                                  IconButton(
-                                      icon: Icon(FontAwesomeIcons.commentAlt),
-                                      onPressed: () {
-                                          //Navigator.of(context).pushReplacement(MaterialPageRoute(
-                                          //builder: (context) => Comment(auth: widget.auth,code: widget.code,)));
-                                      },
-                                  ),
-                                  Text(numLikes),
-                                  IconButton(
-                                    icon: isLiked ? Icon(FontAwesomeIcons.solidHeart, color: Colors.red) : Icon(FontAwesomeIcons.heart, color: Colors.grey),
-                                    onPressed: () {
-                                    setState((){
-                                      likes=null;
-                                      FirebaseDatabase.instance //get current likes of post
-                                          .reference()
-                                            .once()
-                                          .then((DataSnapshot snapshot) {
-                                        Map<dynamic, dynamic> map = snapshot
-                                            .value;
-                                        postInfo =
-                                        map.values.toList()[1][widget.code];
-                                      });
-                                          if(postInfo.values.toList()[position]["likes"]!=null){
-                                            this.likes=postInfo.values.toList()[position]["likes"].keys;
-                                          }
-
-                                      isLiked = postIsLiked(likes, user); //get current state of like
-                                      isLiked =! isLiked; //change like state
-                                    if(isLiked) {
-                                      //add to firebase
-                                      DatabaseReference firebaseDatabaseRef =
-                                      FirebaseDatabase.instance.reference().child(
-                                          'Posts').child(code).child(postID);
-                                      firebaseDatabaseRef
-                                          .child("likes")
-                                          .child(widget.auth.currentUser.uid)
-                                          .set(1);
-                                    }else{
-                                      FirebaseDatabase.instance // delete from Firebase
-                                          .reference()
-                                          .child("Posts")
-                                          .child(code)
-                                          .child(postID)
-                                          .child("likes")
-                                          .child(widget.auth.currentUser.uid)
-                                          .remove();
-                                    }
-                                    //rebuild home feed
-                                    FirebaseDatabase.instance
-                                        .reference()
-                                        .once()
-                                        .then((DataSnapshot snapshot) {
-                                      Map<dynamic, dynamic> map = snapshot.value;
-                                      Navigator.of(context).pushReplacement(
-                                          MaterialPageRoute(
-                                              builder: (context) => HomeFeed(
-                                                  auth: auth,
-                                                  code: widget.code,
-                                                  map: map )));
-                                    });
-
-                                    });
-                                      },
-                                    ),],
-                  )
-                  ),
-                  Transform.translate(
-                  offset: Offset(SizeConfig.screenWidth * 60.0, SizeConfig.screenHeight * 50.0),
-                  child:  SizedBox(
-                  width: SizeConfig.screenWidth * 250 ,
-                  height: SizeConfig.screenHeight * 500 ,
-                  child: text != null ? Text(text, style: TextStyle(color: const Color(0xff000000)),) : Container()
-                  ),),
-                    Transform.translate(
-                        offset: Offset(SizeConfig.screenWidth *  0.0, SizeConfig.screenHeight * 95.0),
-                        child: SizedBox(
-                            width: multimedia != " " ? SizeConfig.screenWidth * 360 : 0,
-                            height: multimedia != " " ? SizeConfig.screenHeight * 360 : 0,
-                            child: Container(
-                              child: multimedia != " " ? (type == "image") ? Image(image: NetworkImage(multimedia)) :
-                              Container(
-                                child:Scaffold(
-                                  body: Center(
-                                    child: Container(
-                                      child: Text('Unable to show media'),
-                                    )
-
-                                  ),
-                                ),
-                              ) : Container(),
-                            ),
-                          ),),
-
-                        ],)));
-                },
-              )
-            ),
-          ],
-        ),
-        floatingActionButton: Container(
-            child: Column(
-              children: <Widget>[
-                Container(
-                  child: Expanded(
-                    child: Align(
-                      alignment: FractionalOffset.bottomLeft,
-                      child: Padding(
-                        padding: EdgeInsets.only(bottom: 10.0, left: 20.0),
-                        child: FloatingActionButton(
-                          onPressed: () {
-                            Navigator.of(context).pushReplacement(MaterialPageRoute(
-                                builder: (context) => Post(auth: widget.auth,code: widget.code,)));
-                          },
-                          backgroundColor: const Color(0xff1A2677),
-                          child: Icon(
-                            FontAwesomeIcons.plus,
-                            color: const Color(0xffffffff),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            )),
-      ));} else {
-        return WillPopScope(
-            onWillPop: () async => false, child: Scaffold(
-          key: _scaffoldState,
-          appBar: AppBar(
-            actions: <Widget>[
-              IconButton(icon: new Icon(FontAwesomeIcons.users, color: const Color(0xffffffff),),
-                  onPressed: () async {
-
-                    FirebaseDatabase.instance
-                        .reference()
-                        .once()
-                        .then((DataSnapshot snapshot) {
-                      Map<dynamic, dynamic> map = snapshot.value;
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) => ParticipantsList(
-                            auth: auth,
-                            map: map,
-                            code: code,
-                          )));
-                    });
-                  }
-              ),
-              IconButton(icon: new Icon(FontAwesomeIcons.bell, color: const Color(0xffffffff),), onPressed: (){
-
-              }),
-              InkWell(
-                  onTap: () async {
-                    FirebaseDatabase.instance
-                        .reference()
-                        .once()
-                        .then((DataSnapshot snapshot) {
-                      Map<dynamic, dynamic> map = snapshot.value;
-                      String user = auth.currentUser.uid;
-                      this.image = map.values.toList()[2][user]["photo"];
-                      this.name = map.values.toList()[2][user]["name"];
-                      this.job = map.values.toList()[2][user]["job"];
-                      this.interests = map.values.toList()[2][user]["interests"];
-                      this.city = map.values.toList()[2][user]["city"];
-                      this.bio = map.values.toList()[2][user]["bio"];
-                      this.area = map.values.toList()[2][user]["area"];
-                      this.linkedin = map.values.toList()[2][user]["linkedin"];
-                      this.facebook = map.values.toList()[2][user]["facebook"];
-                      this.instagram = map.values.toList()[2][user]["instagram"];
-                      this.twitter = map.values.toList()[2][user]["twitter"];
-                      this.github = map.values.toList()[2][user]["github"];
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) => MyProfile(
-                              auth: auth,
-                              image: image,
-                              name: name,
-                              job: job,
-                              interests: interests,
-                              city: city,
-                              bio: bio,
-                              area: area,
-                              linkedin: linkedin,
-                              facebook: facebook,
-                              instagram: instagram,
-                              twitter: twitter,
-                              github: github,
-                          code: widget.code)));
-                    });
-                  },
-                  child: CircleAvatar(
-                    backgroundImage: NetworkImage(this.image),
-                    radius: 22,
-                  )),
-            ],
-            title: Text(""),
-            backgroundColor: const Color(0xff1A2677),
-            leading: IconButton(icon: new Icon(FontAwesomeIcons.bars, color: const Color(0xffffffff),), onPressed: (){
-              _scaffoldState.currentState.openDrawer();
-            }),
-          ),
-          drawer: Drawer(
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: [
-                ListTile(),
-                ListTile(
-                  leading: new Icon(FontAwesomeIcons.userAlt, color: const Color(0xff1A2677),),
-                  title: Text("MyProfile"),
-                  onTap: () async {
-                    FirebaseDatabase.instance
-                        .reference()
-                        .once()
-                        .then((DataSnapshot snapshot) {
-                      Map<dynamic, dynamic> map = snapshot.value;
-                      String user = auth.currentUser.uid;
-                      this.image = map.values.toList()[2][user]["photo"];
-                      this.name = map.values.toList()[2][user]["name"];
-                      this.job = map.values.toList()[2][user]["job"];
-                      this.interests = map.values.toList()[2][user]["interests"];
-                      this.city = map.values.toList()[2][user]["city"];
-                      this.bio = map.values.toList()[2][user]["bio"];
-                      this.area = map.values.toList()[2][user]["area"];
-                      this.linkedin = map.values.toList()[2][user]["linkedin"];
-                      this.facebook = map.values.toList()[2][user]["facebook"];
-                      this.instagram = map.values.toList()[2][user]["instagram"];
-                      this.twitter = map.values.toList()[2][user]["twitter"];
-                      this.github = map.values.toList()[2][user]["github"];
-                      print(name);
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) => MyProfile(
-                              auth: auth,
-                              image: image,
-                              name: name,
-                              job: job,
-                              interests: interests,
-                              city: city,
-                              bio: bio,
-                              area: area,
-                              linkedin: linkedin,
-                              facebook: facebook,
-                              instagram: instagram,
-                              twitter: twitter,
-                              github: github)));
-                    });
-                  },
-                ),
-                ListTile(
-                  leading: new Icon(FontAwesomeIcons.plusCircle, color: const Color(0xff1A2677),),
-                  title: Text("Enter Event Code"),
-                  onTap: () {
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => EnterEventCode(
-                          auth: widget.auth,
-                        )));
-                  },
-                ),
-                ListTile(
-                  leading: new Icon(FontAwesomeIcons.exchangeAlt, color: const Color(0xff1A2677),),
-                  title: Text("Change to Other Event"),
-                  onTap: () {
-                    FirebaseDatabase.instance.reference().once().then((DataSnapshot snapshot) {
-                      Map<dynamic, dynamic> map = snapshot.value;
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) => JoinAnEvent(auth: widget.auth, map: map,)
-                      ));
-                    });
-                  },
-                ),
-                ListTile(
-                  leading: new Icon(FontAwesomeIcons.users, color: const Color(0xff1A2677),),
-                  title: Text("Participants List"),
-                  onTap: () {
-                  },
-                ),
-                ListTile(
-                  leading: new Icon(FontAwesomeIcons.signOutAlt, color: const Color(0xff1A2677),),
-                  title: Text("LogOut"),
-                  onTap: () {
-                    auth.signOut();
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => MyLogin(
-                          auth: auth,
-                        )));
-                  },
-                ),
-              ],
-            ),
-          ),
-          backgroundColor: const Color(0xffffffff),
-          body: Stack(
             children: <Widget>[
               Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Icon(FontAwesomeIcons.frownOpen),
-                    Text("\n Ups! There isn't any \n post for this conference!", textAlign: TextAlign.center,),
-                  ],
-                )
-              ),
-              Container(
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        child: Expanded(
-                          child: Align(
-                            alignment: FractionalOffset.bottomRight,
-                            child: Padding(
-                              padding: EdgeInsets.only(bottom: 10.0, right: 10.0),
-                              child: FloatingActionButton(
-                                onPressed: () {
-                                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                                      builder: (context) => Post(auth: widget.auth,code: widget.code,)));
-                                },
-                                backgroundColor: const Color(0xff1A2677),
-                                child: Icon(
-                                  FontAwesomeIcons.plus,
-                                  color: const Color(0xffffffff),
-                                ),
+                    Container(
+                      child: Expanded(
+                        child: Align(
+                          alignment: FractionalOffset.bottomRight,
+                          child: Padding(
+                            padding: EdgeInsets.only(bottom: 10.0, right: 10.0),
+                            child: FloatingActionButton(
+                              onPressed: () {
+                                if (canPost) {
+                                  Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              Post(auth: widget.auth,
+                                                postsLeft: numPostsLeft,
+                                                code: widget.code,)));
+                                }
+                                else // posts are not allowed
+                                  showLimitDialog(context);
+                              },
+                              backgroundColor: const Color(0xff1A2677),
+                              child: Icon(
+                                FontAwesomeIcons.plus,
+                                color: const Color(0xffffffff),
                               ),
                             ),
                           ),
@@ -795,6 +1043,7 @@ class _HomeFeed extends State<HomeFeed> {
       }
     }
   }
+   
 
   const String _svg_xapkg0 =
       '<svg viewBox="18.5 34.5 25.0 1.0" ><path transform="translate(18.5, 34.5)" d="M 0 0 L 25 0" fill="none" stroke="#680aee" stroke-width="3" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
