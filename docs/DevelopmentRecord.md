@@ -351,6 +351,16 @@ In this section it is only expected to include the following:
  
 A good practice is to simplify this, avoiding repetitions, and automating the testing actions as much as possible.-->
 
+The features to be tested are the following ones:
+
+* [Insert an Event Code](https://github.com/FEUP-ESOF-2020-21/open-cx-t3g3-404datanotfound/issues/29)
+* [Make a Post](https://github.com/FEUP-ESOF-2020-21/open-cx-t3g3-404datanotfound/issues/16)
+* [See Participants List](https://github.com/FEUP-ESOF-2020-21/open-cx-t3g3-404datanotfound/issues/49)
+
+The implementation of the acceptance tests for these features will be done with Gherkin, with the aid of flutter_gherkin package for Flutter.
+
+The automation of these tests can be found here (to-do).
+
 ---
 ## Configuration and change management
 
@@ -374,3 +384,5 @@ Example of tools to do this are:
   * [Jira](https://www.atlassian.com/software/jira)
 
 We recommend to use the simplest tool that can possibly work for the team.-->
+
+The tool used for Project Management was GitHub Projects. The link for our board can be found [here](https://github.com/FEUP-ESOF-2020-21/open-cx-t3g3-404datanotfound/projects/1).
