@@ -269,7 +269,7 @@ This roll will belong to representatives of organizations or institutions that w
 
 #### User Story Map
 
-![User Story Map](US_Map.jpg)
+![User Story Map](US_Map.png)
 
 ### Domain model
 
