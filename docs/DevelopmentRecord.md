@@ -244,12 +244,9 @@ Briefly describe each use case mentioning the following:
 
  In the following sections, roles for every user story are described and an user story map is presented, allowing a more global view of all the user stories of this project.
 
-User story's mockups are present in the comments of each issue in GitHub Projects.
-
-<!--
-**Acceptance tests**.
-For each user story you should write also the acceptance tests (textually in Gherkin), i.e., a description of scenarios (situations) that will help to confirm that the system satisfies the requirements addressed by the user story.
--->
+ User story and their mockups are present in the comments of each issue in GitHub Projects, as well as the acceptance tests for each one of them.
+ 
+ The link for our board can be found [here](https://github.com/FEUP-ESOF-2020-21/open-cx-t3g3-404datanotfound/projects/1).
 
 #### Users
 
@@ -326,21 +323,8 @@ The UserInterface and the model relate to the controller, consisting of objects 
 
 It should describe also the technologies considered and justify the selections made. Examples of technologies relevant for openCX are, for example, frameworks for mobile applications (Flutter vs ReactNative vs ...), languages to program with microbit, and communication with things (beacons, sensors, etc.).-->
 
-### Prototype
-<!--To help on validating all the architectural, design and technological decisions made, we usually implement a vertical prototype, a thin vertical slice of the system.
-
-In this subsection please describe in more detail which, and how, user(s) story(ies) were implemented.-->
-
 ---
 
-## Implementation
-<!--Regular product increments are a good practice of product management. 
-
-While not necessary, sometimes it might be useful to explain a few aspects of the code that have the greatest potential to confuse software engineers about how it works. Since the code should speak by itself, try to keep this section as short and simple as possible.
-
-Use cross-links to the code repository and only embed real fragments of code when strictly needed, since they tend to become outdated very soon.-->
-
----
 ## Test
 
 <!--There are several ways of documenting testing activities, and quality assurance in general, being the most common: a strategy, a plan, test case specifications, and test checklists.
@@ -362,27 +346,7 @@ The implementation of the acceptance tests for these features will be done with 
 The automation of these tests can be found here (to-do).
 
 ---
-## Configuration and change management
-
-<!--Configuration and change management are key activities to control change to, and maintain the integrity of, a project’s artifacts (code, models, documents).
-
-For the purpose of ESOF, we will use a very simple approach, just to manage feature requests, bug fixes, and improvements, using GitHub issues and following the [GitHub flow](https://guides.github.com/introduction/flow/).-->
-
-
----
 
 ## Project management
-
-<!--Software project management is an art and science of planning and leading software projects, in which software projects are planned, implemented, monitored and controlled.
-
-In the context of ESOF, we expect that each team adopts a project management tool capable of registering tasks, assign tasks to people, add estimations to tasks, monitor tasks progress, and therefore being able to track their projects.
-
-Example of tools to do this are:
-  * [Trello.com](https://trello.com)
-  * [Github Projects](https://github.com/features/project-management/com)
-  * [Pivotal Tracker](https://www.pivotaltracker.com)
-  * [Jira](https://www.atlassian.com/software/jira)
-
-We recommend to use the simplest tool that can possibly work for the team.-->
 
 The tool used for Project Management was GitHub Projects. The link for our board can be found [here](https://github.com/FEUP-ESOF-2020-21/open-cx-t3g3-404datanotfound/projects/1).
