@@ -295,14 +295,24 @@ To document the architecture requires describing the decomposition of the system
 
 In this section you should start by briefly describing the overall components of the project and their interrelations. You should also describe how you solved typical problems you may have encountered, pointing to well-known architectural and design patterns, if applicable.-->
 
-### Logical architecture
+### Logical Architecture
 
+The best approach towards the simplification of the project structure is the MVC approach.
 
-### Physical architecture
+#### Package Diagram
+
+The View package represents every output to the user, which are subdivided into two packages, the UserInterface Package and the Presentation Package.
+The UserInterface package includes all files that have an active role on the interaction with the user, especially user input.
+The Presentation package is more focused on the files which have mainly the role on displaying information.
+The UserInterface package extends the Presentation package, as there is some need for information from the Presentation package in the UserInterface package.
+
+![Package Diagram](PackageDiagram.png)
+
+### Physical Architecture
 
 Our project's physical structure is very simple. The user installs ConferenceBook on their smartphone, and whenever the need to connect with our database arises, it communicates with it via HTTPS requests, where it will store and retrieve all the information needed.
 
-With this in mind, we wrote a general Deployment Diagram, with the two devices that compose our system. In addition, we also developed a component diagram with the detailing of system's components, their responsibilities and the technology details.
+With this in mind, we wrote a general Deployment Diagram, with the two devices that compose our system. In addition, we also developed a Component Diagram with the detailing of system's components, their responsibilities and the technology details.
 
 Our project was fully developed using Flutter - an emerging framework for mobile development that supports both iOS and Android - combined with Firebase to store participants data. We used Firebase for our database server because of its easy integration with flutter, as well as simple setup.
 
@@ -314,10 +324,8 @@ Our project was fully developed using Flutter - an emerging framework for mobile
 
 ![Component Diagram](ComponentDiagram.png)
 
-The best approach towards the simplification of the project structure is the MVC approach.
 As described on the Domain Model, the Model here contains all the data for the Conference, Users, etc.
-The UserInterface displays the pages and associated tools.
-The UserInterface and the model relate to the controller, consisting of objects that query the database and provide authentication funtions. The UserInterface asks the Controller to update the Model.
+The View displays the pages and associated tools. The View and the model relate to the controller, consisting of objects that query the database and provide authentication funtions. The UserInterface asks the Controller to update the Model.
 
 <!--The goal of this subsection is to document the high-level physical structure of the software system (machines, connections, software components installed, and their dependencies) using UML deployment diagrams or component diagrams (separate or integrated), showing the physical structure of the system.
 
