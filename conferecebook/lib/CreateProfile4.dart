@@ -38,10 +38,10 @@ class CreateProfile4 extends StatefulWidget {
   final File imageFile;
 
   @override
-  State<StatefulWidget> createState() => MyProfileState4();
+  State<StatefulWidget> createState() => _CreateProfile4();
 }
 
-class MyProfileState4 extends State<CreateProfile4> {
+class _CreateProfile4 extends State<CreateProfile4> {
   String userId;
 
   String facebook;

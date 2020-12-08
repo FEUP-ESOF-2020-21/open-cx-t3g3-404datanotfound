@@ -30,21 +30,22 @@ class SizeConfig {
 }
 
 class MyProfile2 extends StatefulWidget {
-  MyProfile2({Key key,
-    this.auth,
-    this.image,
-    this.name,
-    this.job,
-    this.interests,
-    this.city,
-    this.bio,
-    this.area,
-    this.facebook,
-    this.instagram,
-    this.linkedin,
-    this.twitter,
-    this.github,
-    this.code})
+  MyProfile2(
+      {Key key,
+      this.auth,
+      this.image,
+      this.name,
+      this.job,
+      this.interests,
+      this.city,
+      this.bio,
+      this.area,
+      this.facebook,
+      this.instagram,
+      this.linkedin,
+      this.twitter,
+      this.github,
+      this.code})
       : super(key: key);
 
   final FirebaseAuth auth;
@@ -63,10 +64,10 @@ class MyProfile2 extends StatefulWidget {
   final String code;
 
   @override
-  State<StatefulWidget> createState() => Profile2();
+  State<StatefulWidget> createState() => _MyProfile2();
 }
 
-class Profile2 extends State<MyProfile2> {
+class _MyProfile2 extends State<MyProfile2> {
   String image;
   String name;
   String job;
@@ -88,13 +89,6 @@ class Profile2 extends State<MyProfile2> {
     List<Item> lst = _tagStateKey.currentState?.getAllItem;
     if (lst != null)
       lst.where((a) => a.active == true).forEach((a) => print(a.title));
-  }
-
-  interestsToString() {
-    if (myInterests.length != 0) interests = "";
-    for (int i = 0; i < myInterests.length; i++) {
-      interests += myInterests[i] + ",";
-    }
   }
 
   showAlertDialog(BuildContext context, String text) {
@@ -168,6 +162,25 @@ class Profile2 extends State<MyProfile2> {
                   ),
                 ),
               ),
+              Transform.translate(
+                  offset: Offset(SizeConfig.screenWidth * 340,
+                      SizeConfig.screenHeight * 20 + 20),
+                  child: SizedBox.fromSize(
+                    size: Size(56, 56), // button width and height
+                    child: ClipOval(
+                      child: Material(
+                        color: const Color(0xff1A2677), // button color
+                        child: InkWell(
+                          splashColor: const Color(0xff1A2677), // splash color
+                          onTap: () async {}, // button pressed
+                          child: Icon(
+                            FontAwesomeIcons.pencilAlt,
+                            color: Colors.white,
+                          ), // icon
+                        ),
+                      ),
+                    ),
+                  )),
               Transform.translate(
                 offset: Offset(SizeConfig.screenWidth * 158.5,
                     SizeConfig.screenHeight * 290.0),
@@ -270,7 +283,9 @@ class Profile2 extends State<MyProfile2> {
                 child: Container(
                     child: IconButton(
                         icon: Icon(FontAwesomeIcons.linkedin,
-                            color: const Color(0xff1A2677)),
+                            color: this.linkedin != null
+                                ? const Color(0xff1A2677)
+                                : const Color(0xffdddddd)),
                         onPressed: () async {
                           if (this.linkedin == null)
                             showAlertDialog(context, "LinkedIn");
@@ -291,7 +306,9 @@ class Profile2 extends State<MyProfile2> {
                 child: Container(
                     child: IconButton(
                         icon: Icon(FontAwesomeIcons.twitter,
-                            color: const Color(0xff1A2677)),
+                            color: this.twitter != null
+                                ? const Color(0xff1A2677)
+                                : const Color(0xffdddddd)),
                         onPressed: () async {
                           if (this.twitter == null)
                             showAlertDialog(context, "Twitter");
@@ -311,7 +328,9 @@ class Profile2 extends State<MyProfile2> {
                 child: Container(
                     child: IconButton(
                         icon: Icon(FontAwesomeIcons.github,
-                            color: const Color(0xff1A2677)),
+                            color: this.github != null
+                                ? const Color(0xff1A2677)
+                                : const Color(0xffdddddd)),
                         onPressed: () async {
                           if (this.github == null)
                             showAlertDialog(context, "Github");
@@ -331,7 +350,9 @@ class Profile2 extends State<MyProfile2> {
                 child: Container(
                     child: IconButton(
                         icon: Icon(FontAwesomeIcons.instagram,
-                            color: const Color(0xff1A2677)),
+                            color: this.instagram != null
+                                ? const Color(0xff1A2677)
+                                : const Color(0xffdddddd)),
                         onPressed: () async {
                           if (this.instagram == null)
                             showAlertDialog(context, "Instagram");
@@ -352,7 +373,9 @@ class Profile2 extends State<MyProfile2> {
                 child: Container(
                     child: IconButton(
                         icon: Icon(FontAwesomeIcons.facebook,
-                            color: const Color(0xff1A2677)),
+                            color: this.facebook != null
+                                ? const Color(0xff1A2677)
+                                : const Color(0xffdddddd)),
                         onPressed: () async {
                           if (this.facebook == null)
                             showAlertDialog(context, "Facebook");
@@ -387,15 +410,29 @@ class Profile2 extends State<MyProfile2> {
                   ),
                 ),
               ),
+              Container(),
               Transform.translate(
-                offset: Offset(SizeConfig.screenWidth * 350.0,
-                    SizeConfig.screenHeight * 35),
-                child: Icon(
-                  FontAwesomeIcons.pencilAlt,
-                  color: const Color(0xff1A2677),
+                offset: Offset(SizeConfig.screenWidth * 270,
+                    SizeConfig.screenHeight * 710.0),
+                child:
+                    // Adobe XD layer: 'NoPath' (shape)
+                RaisedButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18.0),
+                      side: BorderSide(color: Colors.red)),
+                  onPressed: () {
+                    widget.auth.signOut();
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) => MyLogin(
+                          auth: widget.auth,
+                        )));
+                  },
+                  color: Colors.red,
+                  textColor: Colors.white,
+                  child: Text("Logout".toUpperCase(),
+                      style: TextStyle(fontSize: 14)),
                 ),
               ),
-              Container(),
               Transform.translate(
                 offset: Offset(SizeConfig.screenWidth * 150,
                     SizeConfig.screenHeight * 100.0),
@@ -408,57 +445,9 @@ class Profile2 extends State<MyProfile2> {
                   ),
                 ),
               ),
-              Container(
-                  child: Column(
-                children: <Widget>[
-                  Container(
-                    child: Expanded(
-                      child: Align(
-                        alignment: FractionalOffset.bottomLeft,
-                        child: Padding(
-                          padding: EdgeInsets.only(bottom: 10.0, left: 10.0),
-                          child: FloatingActionButton(
-                            onPressed: () async {
-                              interestsToString();
-                              FirebaseDatabase.instance
-                                  .reference()
-                                  .child('Users')
-                                  .child(widget.auth.currentUser.uid)
-                                  .update({interests: interests}).then((value) {
-                                Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                        builder: (context) => MyProfile(
-                                            auth: widget.auth,
-                                            image: image,
-                                            name: name,
-                                            job: job,
-                                            interests: interests,
-                                            city: city,
-                                            bio: bio,
-                                            area: area,
-                                            linkedin: linkedin,
-                                            facebook: facebook,
-                                            instagram: instagram,
-                                            twitter: twitter,
-                                            github: github,
-                                            code: widget.code)));
-                              });
-                            },
-                            backgroundColor: const Color(0xff1A2677),
-                            child: Icon(
-                              FontAwesomeIcons.arrowLeft,
-                              color: const Color(0xffffffff),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              )),
               Transform.translate(
                   offset: Offset(SizeConfig.screenWidth * 10,
-                      SizeConfig.screenHeight * 20),
+                      SizeConfig.screenHeight * 20 + 20),
                   child: SizedBox.fromSize(
                     size: Size(56, 56), // button width and height
                     child: ClipOval(
@@ -488,42 +477,40 @@ class Profile2 extends State<MyProfile2> {
                       ),
                     ),
                   )),
-              Transform.translate(
-                  offset: Offset(SizeConfig.screenWidth * 340,
-                      SizeConfig.screenHeight * 790),
-                  child: SizedBox.fromSize(
-                    size: Size(56, 56), // button width and height
-                    child: ClipOval(
-                      child: Material(
-                        color: const Color(0xff1A2677), // button color
-                        child: InkWell(
-                          splashColor: const Color(0xff1A2677), // splash color
-                          onTap: () async {
-                            widget.auth.signOut();
-                            Navigator.of(context)
-                                .pushReplacement(MaterialPageRoute(
-                                    builder: (context) => MyLogin(
-                                          auth: widget.auth,
-                                        )));
-                          }, // button pressed
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Icon(
-                                FontAwesomeIcons.signOutAlt,
-                                color: Colors.white,
-                              ), // icon
-                              Text(
-                                "LogOut",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 10),
-                              ), // text
-                            ],
-                          ),
-                        ),
+              Container(
+                child: Align(
+                  alignment: FractionalOffset.bottomLeft,
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: 75.0, left: 35.0),
+                    child: FloatingActionButton(
+                      onPressed: () async {
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                            builder: (context) => MyProfile1(
+                                auth: widget.auth,
+                                image: image,
+                                name: name,
+                                job: job,
+                                interests: interests,
+                                city: city,
+                                bio: bio,
+                                area: area,
+                                linkedin: linkedin,
+                                facebook: facebook,
+                                instagram: instagram,
+                                twitter: twitter,
+                                github: github,
+                                code: widget.code)));
+                      },
+                      backgroundColor: const Color(0xffdddddd),
+                      elevation: 0,
+                      child: Icon(
+                        FontAwesomeIcons.arrowLeft,
+                        color: const Color(0xff1A2677),
                       ),
                     ),
-                  )),
+                  ),
+                ),
+              ),
             ],
           ),
         ));

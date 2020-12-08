@@ -1,4 +1,6 @@
+
 import 'package:ConfereceBook/ConferenceHistory.dart';
+import 'package:ConfereceBook/EditProfile.dart';
 import 'package:ConfereceBook/MyProfile2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -26,8 +28,8 @@ class SizeConfig {
   }
 }
 
-class MyProfile extends StatefulWidget {
-  MyProfile({
+class MyProfile1 extends StatefulWidget {
+  MyProfile1({
     Key key,
     this.auth,
     this.image,
@@ -61,10 +63,10 @@ class MyProfile extends StatefulWidget {
   final String code;
 
   @override
-  State<StatefulWidget> createState() => Profile();
+  State<StatefulWidget> createState() => _MyProfile1();
 }
 
-class Profile extends State<MyProfile> {
+class _MyProfile1 extends State<MyProfile1> {
   String image;
   String name;
   String job;
@@ -261,14 +263,49 @@ class Profile extends State<MyProfile> {
                   ),
                 ),
               ),
-              Transform.translate(
-                offset: Offset(SizeConfig.screenWidth * 350.0,
-                    SizeConfig.screenHeight * 35),
-                child: Icon(
-                  FontAwesomeIcons.pencilAlt,
-                  color: const Color(0xff1A2677),
-                ),
-              ),
+              Container(
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        child: Expanded(
+                          child: Align(
+                            alignment: FractionalOffset.bottomRight,
+                            child: Padding(
+                              padding: EdgeInsets.only(bottom: 75.0, right: 35.0),
+                              child: FloatingActionButton(
+                                onPressed: () async {
+                                  Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                          builder: (context) => MyProfile2(
+                                              auth: auth,
+                                              image: image,
+                                              name: name,
+                                              job: job,
+                                              interests: interests,
+                                              city: city,
+                                              bio: bio,
+                                              area: area,
+                                              linkedin: linkedin,
+                                              facebook: facebook,
+                                              instagram: instagram,
+                                              twitter: twitter,
+                                              github: github,
+                                              code: widget.code)));
+                                },
+                                backgroundColor: const Color(0xffededed),
+                                elevation: 0,
+                                child: Icon(
+                                  FontAwesomeIcons.arrowRight,
+                                  color: const Color(0xff1A2677),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+
+                    ],
+                  )),
               Container(),
               Transform.translate(
                 offset: Offset(SizeConfig.screenWidth * 150,
@@ -282,47 +319,7 @@ class Profile extends State<MyProfile> {
                   ),
                 ),
               ),
-              Container(
-                  child: Column(
-                children: <Widget>[
-                  Container(
-                    child: Expanded(
-                      child: Align(
-                        alignment: FractionalOffset.bottomRight,
-                        child: Padding(
-                          padding: EdgeInsets.only(bottom: 10.0, right: 10.0),
-                          child: FloatingActionButton(
-                            heroTag: "btn1",
-                            onPressed: () async {
-                              Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                      builder: (context) => MyProfile2(
-                                          auth: auth,
-                                          image: image,
-                                          name: name,
-                                          job: job,
-                                          interests: interests,
-                                          city: city,
-                                          bio: bio,
-                                          area: area,
-                                          linkedin: linkedin,
-                                          facebook: facebook,
-                                          instagram: instagram,
-                                          twitter: twitter,
-                                          github: github,
-                                      code: widget.code)));
-                            },
-                            backgroundColor: const Color(0xff1A2677),
-                            child: Icon(
-                              FontAwesomeIcons.arrowRight,
-                              color: const Color(0xffffffff),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  ])),
+
               Transform.translate(
                   offset: Offset(
                       SizeConfig.screenWidth * 10, SizeConfig.screenHeight * 787),
@@ -382,7 +379,40 @@ class Profile extends State<MyProfile> {
 
               Transform.translate(
                   offset: Offset(
-                      SizeConfig.screenWidth * 10, SizeConfig.screenHeight * 20),
+                      SizeConfig.screenWidth * 340 , SizeConfig.screenHeight * 20 + 20),
+                  child: SizedBox.fromSize(
+                    size: Size(56, 56), // button width and height
+                    child: ClipOval(
+                      child: Material(
+                        color: const Color(0xff1A2677), // button color
+                        child: InkWell(
+                          splashColor: const Color(0xff1A2677), // splash color
+                          onTap: () async {
+                            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                builder: (context) => EditProfile(
+                                    auth: widget.auth,
+                                    image: image,
+                                    name: name,
+                                    job: job,
+                                    interests: interests,
+                                    city: city,
+                                    bio: bio,
+                                    area: area,
+                                    linkedin: linkedin,
+                                    facebook: facebook,
+                                    instagram: instagram,
+                                    twitter: twitter,
+                                    github: github,
+                                    code: widget.code)));
+                          }, // button pressed
+                          child: Icon(FontAwesomeIcons.pencilAlt, color: Colors.white,), // icon
+                        ),
+                      ),
+                    ),
+                  )),
+              Transform.translate(
+                  offset: Offset(
+                      SizeConfig.screenWidth * 10, SizeConfig.screenHeight * 20 + 20),
                   child: SizedBox.fromSize(
                     size: Size(56, 56), // button width and height
                     child: ClipOval(

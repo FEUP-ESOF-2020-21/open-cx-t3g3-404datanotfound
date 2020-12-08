@@ -32,10 +32,10 @@ class EnterEventCode extends StatefulWidget{
 
   @override
   State<StatefulWidget> createState() =>
-      EventCode();
+      _EnterEventCode();
 }
 
-class EventCode extends State<EnterEventCode>{
+class _EnterEventCode extends State<EnterEventCode>{
 
   @override
   void dispose() {
@@ -62,10 +62,8 @@ class EventCode extends State<EnterEventCode>{
 
       if ( // user == null, so not found => can join OR no users at all
         map.values.toList()[0][userEvent]["users"] == null ||
-            map.values.toList()[0][userEvent]["users"][widget.auth.currentUser.uid] == null
-      ) {
-        DatabaseReference firebaseDatabaseRef =
-        FirebaseDatabase.instance.reference().child('Conferences').child(userEvent);
+            map.values.toList()[0][userEvent]["users"][widget.auth.currentUser.uid] == null)
+      {
         /*
         // create a new child in users, where all are
         firebaseDatabaseRef
@@ -74,6 +72,8 @@ class EventCode extends State<EnterEventCode>{
             .set(widget.auth.currentUser.uid);
         */
         // save the user with its role, in proper child
+        DatabaseReference firebaseDatabaseRef =
+        FirebaseDatabase.instance.reference().child('Conferences').child(userEvent);
         firebaseDatabaseRef
             .child("users")
             .child(widget.auth.currentUser.uid)

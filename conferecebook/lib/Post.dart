@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:async';
 import 'dart:math';
-
 import 'package:ConfereceBook/CreateProfile4.dart';
 import 'package:ConfereceBook/HomeFeed.dart';
 import 'package:adobe_xd/pinned.dart';
@@ -17,7 +16,6 @@ import 'package:material_tag_editor/tag_editor.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
 import 'package:intl/intl.dart';
-
 import 'package:http/http.dart' as http;
 
 class SizeConfig {
@@ -35,18 +33,26 @@ class SizeConfig {
 }
 
 class Post extends StatefulWidget {
-  Post({Key key, this.auth, this.code}) : super(key: key);
+  Post({Key key,
+    this.auth,
+    this.postsLeft,
+    this.userRole,
+    this.code}) : super(key: key);
 
   final FirebaseAuth auth;
   final String code;
+  final int postsLeft;
+  final String userRole;
 
   @override
-  State<StatefulWidget> createState() => MyPost();
+  State<StatefulWidget> createState() => _Post();
 }
 
-class MyPost extends State<Post> {
+class _Post extends State<Post> {
   String code;
   File _multiFile;
+  int postsLeft;
+  String userRole;
   final ImagePicker _picker = ImagePicker();
 
   showAlertDialog2(BuildContext context)
@@ -202,6 +208,7 @@ class MyPost extends State<Post> {
 
   // ignore: non_constant_identifier_names
   String URL;
+  dynamic likes;
 
   Future insertDatabase() async {
     if (_multiFile != null) {
@@ -216,14 +223,13 @@ class MyPost extends State<Post> {
             FirebaseDatabase.instance.reference().child('Posts').child(code);
 
         DateTime now = DateTime.now();
-        String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(now);
+        String formattedDate = DateFormat('yyyy-MM-dd – HH:mm').format(now);
         if (text == "") text = " ";
         firebaseDatabaseRef.child(formattedDate).set({
           'text': text,
           'multimedia': URL,
           'user': widget.auth.currentUser.uid,
-          'likes': 0,
-          'numComments': 0
+          'likes': likes,
         });
       });
     } else {
@@ -231,15 +237,15 @@ class MyPost extends State<Post> {
           FirebaseDatabase.instance.reference().child('Posts').child(code);
 
       DateTime now = DateTime.now();
-      String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(now);
+      String formattedDate = DateFormat('yyyy-MM-dd – HH:mm').format(now);
       if (text == "") text = " ";
       URL = " ";
+
       firebaseDatabaseRef.child(formattedDate).set({
         'text': text,
         'multimedia': URL,
         'user': widget.auth.currentUser.uid,
-        'likes': 0,
-        'numComments': 0
+        'likes': likes,
       });
     }
   }
@@ -250,6 +256,17 @@ class MyPost extends State<Post> {
   @override
   Widget build(BuildContext context) {
     code = widget.code;
+    postsLeft = widget.postsLeft;
+    userRole = widget.userRole;
+    String textPostsLeft;
+
+
+
+    if(userRole != "Organizer")
+      textPostsLeft = "\nNumber of Posts left: $postsLeft";
+    else
+      textPostsLeft = null;
+
     SizeConfig().init(context);
     return WillPopScope(
         onWillPop: () async => false,
@@ -299,7 +316,17 @@ class MyPost extends State<Post> {
               )),
             resizeToAvoidBottomPadding: false,
             appBar: AppBar(
-              title: Text("New Post"),
+              title: RichText(
+                text: TextSpan(
+                  text: "New Post",
+                  style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+                  children: <TextSpan>[
+                    TextSpan(text: textPostsLeft,
+                        style: TextStyle(fontSize: 17, color: Colors.white60)),
+                  ],
+                ),
+              ),
+
               backgroundColor: const Color(0xff1A2677),
             ),
             body: Form(

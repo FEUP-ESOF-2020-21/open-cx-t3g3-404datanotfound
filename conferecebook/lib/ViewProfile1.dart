@@ -12,8 +12,6 @@ import 'package:adobe_xd/page_link.dart';
 import 'package:flutter/rendering.dart';
 import 'package:ConfereceBook/ParticipantsList.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import './Search.dart';
-import './NotificationsPanel.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/widgets.dart';
 import 'package:video_player/video_player.dart';
@@ -43,14 +41,13 @@ class ViewProfile1 extends StatefulWidget {
     this.auth,
     this.userToSee,
     this.map,
-    this.code
+    this.code,
   }) : super(key: key);
 
   final FirebaseAuth auth;
   final String userToSee;
   final Map<dynamic, dynamic> map;
   final String code;
-
 
   @override
   State<StatefulWidget> createState() => _ViewProfile1();
@@ -310,7 +307,11 @@ class _ViewProfile1 extends State<ViewProfile1> {
                                       builder: (context) => ParticipantsList(
                                           auth: widget.auth,
                                           code: widget.code,
-                                          map: map
+                                          map: map,
+                                        attendeeFilter: true,
+                                        speakerFilter: true,
+                                        sponsorFilter: true,
+                                        organizerFilter: true,
                                       )));
                                 });
                           }, // button pressed
