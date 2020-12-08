@@ -24,7 +24,7 @@ class CreateProfile4 extends StatefulWidget {
       this.bio,
       this.city,
       this.interests,
-      this.imageFile})
+      this.imageFile,})
       : super(key: key);
 
   final FirebaseAuth auth;
@@ -50,6 +50,7 @@ class MyProfileState4 extends State<CreateProfile4> {
   String linkedin;
   String github;
   String imageURL;
+  bool showConferenceHistory=true;
 
   Future insertDataBase() async {
     String image = basename(widget.imageFile.path);
@@ -74,6 +75,7 @@ class MyProfileState4 extends State<CreateProfile4> {
         'instagram': instagram,
         'linkedin': linkedin,
         'github': github,
+        'showConferenceHistory': showConferenceHistory,
       });
     });
   }

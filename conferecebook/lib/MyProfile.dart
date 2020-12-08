@@ -1,3 +1,4 @@
+import 'package:ConfereceBook/ConferenceHistory.dart';
 import 'package:ConfereceBook/MyProfile2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -8,6 +9,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import './HomeFeed.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/widgets.dart';
+
+import 'MyProfile2.dart';
 
 class SizeConfig {
   static MediaQueryData _mediaQueryData;
@@ -94,6 +97,8 @@ class Profile extends State<MyProfile> {
     twitter = widget.twitter;
     github = widget.github;
     code = widget.code;
+
+
     return WillPopScope(
         onWillPop: () async => false,
         child: Scaffold(
@@ -287,6 +292,7 @@ class Profile extends State<MyProfile> {
                         child: Padding(
                           padding: EdgeInsets.only(bottom: 10.0, right: 10.0),
                           child: FloatingActionButton(
+                            heroTag: "btn1",
                             onPressed: () async {
                               Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
@@ -315,9 +321,65 @@ class Profile extends State<MyProfile> {
                         ),
                       ),
                     ),
-                  )
-                ],
-              )),
+                  ),
+                  ])),
+              Transform.translate(
+                  offset: Offset(
+                      SizeConfig.screenWidth * 10, SizeConfig.screenHeight * 787),
+                  child: SizedBox.fromSize(
+                    size: Size(56, 56), // button width and height
+                    child: ClipOval(
+                      child: Material(
+                        color: const Color(0xff1A2677), // button color
+                        child: InkWell(
+                          splashColor: const Color(0xff1A2677), // splash color
+                          onTap: () async {
+                            FirebaseDatabase.instance
+                                .reference()
+                                .once()
+                                .then((DataSnapshot snapshot) {
+                              Map<dynamic, dynamic> map = snapshot.value;
+                              String user = auth.currentUser.uid;
+                              this.image = map.values.toList()[2][user]["photo"];
+                              this.name = map.values.toList()[2][user]["name"];
+                              this.job = map.values.toList()[2][user]["job"];
+                              this.interests = map.values.toList()[2][user]["interests"];
+                              this.city = map.values.toList()[2][user]["city"];
+                              this.bio = map.values.toList()[2][user]["bio"];
+                              this.area = map.values.toList()[2][user]["area"];
+                              this.linkedin = map.values.toList()[2][user]["linkedin"];
+                              this.facebook = map.values.toList()[2][user]["facebook"];
+                              this.instagram = map.values.toList()[2][user]["instagram"];
+                              this.twitter = map.values.toList()[2][user]["twitter"];
+                              this.github = map.values.toList()[2][user]["github"];
+                              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                  builder: (context) => ConferenceHistory(
+                                    auth: auth,
+                                    image: image,
+                                    name: name,
+                                    job: job,
+                                    interests: interests,
+                                    city: city,
+                                    bio: bio,
+                                    area: area,
+                                    linkedin: linkedin,
+                                    facebook: facebook,
+                                    instagram: instagram,
+                                    twitter: twitter,
+                                    github: github,
+                                    code: code,
+                                    map: map,)));
+                            });
+                          }, // button pressed
+                          child: Icon(FontAwesomeIcons.history, color: Colors.white,), // icon
+
+                        ),
+                      ),
+                    ),
+                  )),
+
+
+
               Transform.translate(
                   offset: Offset(
                       SizeConfig.screenWidth * 10, SizeConfig.screenHeight * 20),
