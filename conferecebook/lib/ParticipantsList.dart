@@ -1,4 +1,3 @@
-
 import 'dart:collection';
 
 import 'package:ConfereceBook/JoinAnEvent.dart';
@@ -351,13 +350,13 @@ class _ParticipantsList extends State<ParticipantsList> {
                               onPressed: () async {
                                 Navigator.of(context)
                                     .pushReplacement(MaterialPageRoute(
-                                        builder: (context) => ViewProfile1(
-                                              auth: auth,
-                                              userToSee: userToSee,
-                                              // id of user pressed
-                                              map: map,
-                                              code: widget.code,
-                                            )));
+                                    builder: (context) => ViewProfile1(
+                                      auth: auth,
+                                      userToSee: userToSee,
+                                      // id of user pressed
+                                      map: map,
+                                      code: widget.code,
+                                    )));
                               })),
                       semanticContainer: true,
                       clipBehavior: Clip.antiAliasWithSaveLayer,
