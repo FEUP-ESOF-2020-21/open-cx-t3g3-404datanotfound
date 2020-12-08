@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:async';
 
-import 'package:ConfereceBook/MyProfile.dart';
+import 'package:ConfereceBook/MyProfile1.dart';
 import 'package:ConfereceBook/MyProfile2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';

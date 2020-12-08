@@ -17,7 +17,7 @@ import 'dart:async';
 import 'package:lite_rolling_switch/lite_rolling_switch.dart';
 import 'package:flutter_spinbox/flutter_spinbox.dart';
 
-import 'MyProfile.dart';
+import 'MyProfile1.dart';
 import 'SearchParticipants.dart';
 
 class ConferenceHistory extends StatefulWidget{
@@ -71,12 +71,24 @@ class _ConferenceHistoryState extends State<ConferenceHistory>{
 
 
   @override
-void initState() {
-super.initState();
+    void initState() {
+    super.initState();
 
-auth = widget.auth;
-map = widget.map;
+    auth = widget.auth;
+    map = widget.map;
     code = widget.code;
+    image = widget.image;
+    name = widget.name;
+    job = widget.job;
+    interests = widget.interests;
+    city = widget.city;
+    bio = widget.bio;
+    area = widget.area;
+    facebook = widget.facebook;
+    instagram = widget.instagram;
+    linkedin = widget.linkedin;
+    twitter = widget.twitter;
+    github = widget.github;
     showConferenceHistory=this.showConferenceHistory;
 
     showConferenceHistory=map.values.toList()[2][auth.currentUser.uid]["showConferenceHistory"];
@@ -133,8 +145,8 @@ map = widget.map;
                   this.github = map.values.toList()[2][user]["github"];
                   Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
-                          builder: (context) => MyProfile(
-                              auth: auth,
+                          builder: (context) => MyProfile1(
+                              auth: widget.auth,
                               image: image,
                               name: name,
                               job: job,
@@ -146,83 +158,14 @@ map = widget.map;
                               facebook: facebook,
                               instagram: instagram,
                               twitter: twitter,
-                              github: github)));
+                              github: github,
+                              code: widget.code)));
                 });
               }
           ),
           title: Text("Conference History"),
           backgroundColor: Color(0xff1A2677),
       ),
-      /*body: Stack(
-      children: <Widget>[
-        ListView(
-      padding: EdgeInsets.only(top:10),
-        children: [
-        ListTile( // setting of ON or OFF for Sponsors
-          title: Text("Show Conference History"),
-          trailing: Transform.scale(  // reduce default size of switch
-              scale: 0.9,
-              child: LiteRollingSwitch(
-                //initial value
-                value: this.showConferenceHistory,
-                textOn: 'Allowed',
-                textOff: 'Not Allowed',
-                colorOn: Color(0xff1A2677),
-                colorOff: Colors.black54,
-                iconOn: Icons.done,
-                iconOff: Icons.lock,
-                textSize: 16.0,
-                onChanged: (bool state) {
-                  print("This:");
-                  print(state );
-                  this.showConferenceHistory = state;
-                  firebaseDatabaseRef
-                      .child("showConferenceHistory")
-                      .set(this.showConferenceHistory);
-                },
-              )
-          ),
-        ),
-        ]),
-
-          new ListView.builder(
-            padding: EdgeInsets.only(top:70.0),
-          itemCount: conferenceHistory.length,
-          itemBuilder: (BuildContext context, int index) {
-            String conference=conferenceHistory[index];
-            String role=conferenceHistoryRole[index];
-
-          return Container(
-          padding: EdgeInsets.all(10),
-
-              child: Card(
-
-                child:new ListTile(
-                    title: Text(conference, style: TextStyle(
-                        fontSize: 17.0,
-                        color: const Color(0xff333333),
-                        fontWeight: FontWeight.bold
-                    )
-                    ),
-                    subtitle: Text(role, style: TextStyle(
-                        fontSize: 14.0,
-                        color: const Color(0xff111111)
-                    )
-                    ),
-
-                ),
-                semanticContainer: true,
-                clipBehavior: Clip.antiAliasWithSaveLayer,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(100.0),
-                ),
-                //elevation: 5,
-                margin: EdgeInsets.all(0),
-                color: const Color(0xfff5f5f5),
-              ));
-      }
-      ),
-    ])*/
       body:
       ListView(
           padding: EdgeInsets.only(top:10),
@@ -290,11 +233,7 @@ map = widget.map;
                       ));
                 }
             ),
-
           ]),
-
-
-
     );
   }
 

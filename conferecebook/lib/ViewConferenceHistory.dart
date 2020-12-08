@@ -17,7 +17,7 @@ import 'dart:async';
 import 'package:lite_rolling_switch/lite_rolling_switch.dart';
 import 'package:flutter_spinbox/flutter_spinbox.dart';
 
-import 'MyProfile.dart';
+import 'MyProfile1.dart';
 import 'SearchParticipants.dart';
 
 class ViewConferenceHistory extends StatefulWidget{

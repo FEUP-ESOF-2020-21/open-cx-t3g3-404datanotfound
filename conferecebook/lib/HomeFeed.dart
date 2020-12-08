@@ -3,7 +3,7 @@ import 'package:ConfereceBook/ConferenceHistory.dart';
 import 'package:ConfereceBook/EnterEventCode.dart';
 import 'package:ConfereceBook/JoinAnEvent.dart';
 import 'package:ConfereceBook/Login.dart';
-import 'package:ConfereceBook/MyProfile.dart';
+import 'package:ConfereceBook/MyProfile1.dart';
 import 'package:ConfereceBook/Post.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -552,48 +552,6 @@ class _HomeFeed extends State<HomeFeed> {
                 },
               ),
               ListTile(
-              leading: new Icon(FontAwesomeIcons.history, color: const Color(0xff1A2677),),
-              title: Text("Conference History"),
-              onTap: () async {
-                FirebaseDatabase.instance
-                    .reference()
-                    .once()
-                    .then((DataSnapshot snapshot) {
-                  Map<dynamic, dynamic> map = snapshot.value;
-                  String user = auth.currentUser.uid;
-                  this.image = map.values.toList()[2][user]["photo"];
-                  this.name = map.values.toList()[2][user]["name"];
-                  this.job = map.values.toList()[2][user]["job"];
-                  this.interests = map.values.toList()[2][user]["interests"];
-                  this.city = map.values.toList()[2][user]["city"];
-                  this.bio = map.values.toList()[2][user]["bio"];
-                  this.area = map.values.toList()[2][user]["area"];
-                  this.linkedin = map.values.toList()[2][user]["linkedin"];
-                  this.facebook = map.values.toList()[2][user]["facebook"];
-                  this.instagram = map.values.toList()[2][user]["instagram"];
-                  this.twitter = map.values.toList()[2][user]["twitter"];
-                  this.github = map.values.toList()[2][user]["github"];
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => ConferenceHistory(
-                          auth: auth,
-                          image: image,
-                          name: name,
-                          job: job,
-                          interests: interests,
-                          city: city,
-                          bio: bio,
-                          area: area,
-                          linkedin: linkedin,
-                          facebook: facebook,
-                          instagram: instagram,
-                          twitter: twitter,
-                          github: github,
-                          code: code,
-                          map: map,)));
-                });
-              },
-            ),
-              ListTile(
                 leading: new Icon(FontAwesomeIcons.plusCircle, color: const Color(0xff1A2677),),
                 title: Text("Enter Event Code"),
                 onTap: () {
@@ -1076,48 +1034,6 @@ class _HomeFeed extends State<HomeFeed> {
                   });
                 },
               ),
-              ListTile(
-              leading: new Icon(FontAwesomeIcons.history, color: const Color(0xff1A2677),),
-              title: Text("Conference History"),
-              onTap: () async {
-                FirebaseDatabase.instance
-                    .reference()
-                    .once()
-                    .then((DataSnapshot snapshot) {
-                  Map<dynamic, dynamic> map = snapshot.value;
-                  String user = auth.currentUser.uid;
-                  this.image = map.values.toList()[2][user]["photo"];
-                  this.name = map.values.toList()[2][user]["name"];
-                  this.job = map.values.toList()[2][user]["job"];
-                  this.interests = map.values.toList()[2][user]["interests"];
-                  this.city = map.values.toList()[2][user]["city"];
-                  this.bio = map.values.toList()[2][user]["bio"];
-                  this.area = map.values.toList()[2][user]["area"];
-                  this.linkedin = map.values.toList()[2][user]["linkedin"];
-                  this.facebook = map.values.toList()[2][user]["facebook"];
-                  this.instagram = map.values.toList()[2][user]["instagram"];
-                  this.twitter = map.values.toList()[2][user]["twitter"];
-                  this.github = map.values.toList()[2][user]["github"];
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => ConferenceHistory(
-                          auth: auth,
-                          image: image,
-                          name: name,
-                          job: job,
-                          interests: interests,
-                          city: city,
-                          bio: bio,
-                          area: area,
-                          linkedin: linkedin,
-                          facebook: facebook,
-                          instagram: instagram,
-                          twitter: twitter,
-                          github: github,
-                          code: code,
-                          map: map,)));
-                });
-              },
-            ),
               ListTile(
                 leading: new Icon(FontAwesomeIcons.plusCircle, color: const Color(0xff1A2677),),
                 title: Text("Enter Event Code"),

@@ -1,7 +1,7 @@
 import 'package:ConfereceBook/EnterEventCode.dart';
 import 'package:ConfereceBook/JoinAnEvent.dart';
 import 'package:ConfereceBook/Login.dart';
-import 'package:ConfereceBook/MyProfile.dart';
+import 'package:ConfereceBook/MyProfile1.dart';
 import 'package:ConfereceBook/Post.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';

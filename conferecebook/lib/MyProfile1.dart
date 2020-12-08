@@ -8,10 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import './HomeFeed.dart';
+import 'HomeFeed.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/widgets.dart';
-
 import 'MyProfile2.dart';
 
 class SizeConfig {
@@ -319,18 +318,18 @@ class _MyProfile1 extends State<MyProfile1> {
                   ),
                 ),
               ),
-
               Transform.translate(
                   offset: Offset(
-                      SizeConfig.screenWidth * 10, SizeConfig.screenHeight * 787),
+                      SizeConfig.screenWidth * 43, SizeConfig.screenHeight * 705),
                   child: SizedBox.fromSize(
                     size: Size(56, 56), // button width and height
                     child: ClipOval(
                       child: Material(
-                        color: const Color(0xff1A2677), // button color
+                        color: const Color(0xffededed), // button color
                         child: InkWell(
-                          splashColor: const Color(0xff1A2677), // splash color
+                          splashColor: const Color(0xffededed), // splash color
                           onTap: () async {
+
                             FirebaseDatabase.instance
                                 .reference()
                                 .once()
@@ -368,15 +367,12 @@ class _MyProfile1 extends State<MyProfile1> {
                                     map: map,)));
                             });
                           }, // button pressed
-                          child: Icon(FontAwesomeIcons.history, color: Colors.white,), // icon
+                          child: Icon(FontAwesomeIcons.history, color: const Color(0xff1A2677),), // icon
 
                         ),
                       ),
                     ),
                   )),
-
-
-
               Transform.translate(
                   offset: Offset(
                       SizeConfig.screenWidth * 340 , SizeConfig.screenHeight * 20 + 20),
@@ -430,7 +426,7 @@ class _MyProfile1 extends State<MyProfile1> {
                               Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
                                       builder: (context) => HomeFeed(
-                                          auth: auth,
+                                          auth: widget.auth,
                                           code: widget.code,
                                           map: map
                                       )));
