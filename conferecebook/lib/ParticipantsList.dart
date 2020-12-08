@@ -372,7 +372,3 @@ class _ParticipantsList extends State<ParticipantsList> {
         ]));
   }
 }
-
-/*
-
-*/

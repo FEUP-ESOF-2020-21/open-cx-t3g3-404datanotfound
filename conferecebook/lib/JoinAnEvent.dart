@@ -206,6 +206,26 @@ class _JoinAnEvent extends State<JoinAnEvent> {
     } else {
       return WillPopScope(
           onWillPop: () async => false, child: Scaffold(
+        floatingActionButton: Align(
+            alignment: FractionalOffset.bottomCenter,
+            child: Padding(
+              padding: EdgeInsets.only(bottom: 15.0, left: 35.0),
+              child:  RaisedButton(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(18.0),
+              side: BorderSide(color: Colors.red)),
+          onPressed: () {
+            widget.auth.signOut();
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (context) => MyLogin(
+                  auth: widget.auth,
+                )));
+          },
+          color: Colors.red,
+          textColor: Colors.white,
+          child: Text("Logout".toUpperCase(),
+              style: TextStyle(fontSize: 14)),
+        ),)),
         backgroundColor: const Color(0xff1a2677),
         body: Stack(
           children: <Widget>[

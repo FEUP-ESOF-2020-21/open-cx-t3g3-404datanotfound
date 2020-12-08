@@ -81,7 +81,8 @@ class _ViewConferenceHistoryState extends State<ViewConferenceHistory>{
   @override
   Widget build(BuildContext context) {
     if (showConferenceHistory == true) {
-      return Scaffold(
+      return WillPopScope(
+          onWillPop: () async => false, child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
               icon: Icon(FontAwesomeIcons.arrowLeft, color: Colors.white),
@@ -146,10 +147,11 @@ class _ViewConferenceHistoryState extends State<ViewConferenceHistory>{
             ]),
 
 
-      );
+      ));
     }
     else{
-      return Scaffold(
+      return WillPopScope(
+          onWillPop: () async => false, child:Scaffold(
         appBar: AppBar(
           leading: IconButton(
               icon: Icon(FontAwesomeIcons.arrowLeft, color: Colors.white),
@@ -179,7 +181,7 @@ class _ViewConferenceHistoryState extends State<ViewConferenceHistory>{
         )
 
 
-      );
+      ));
     }
   }
 

@@ -120,7 +120,8 @@ class _ConferenceHistoryState extends State<ConferenceHistory>{
 
     DatabaseReference firebaseDatabaseRef =
     FirebaseDatabase.instance.reference().child('Users').child(widget.auth.currentUser.uid);
-    return Scaffold(
+    return WillPopScope(
+        onWillPop: () async => false, child: Scaffold(
       appBar: AppBar(
           leading: IconButton(
               icon: Icon(FontAwesomeIcons.arrowLeft, color: Colors.white),
@@ -234,7 +235,7 @@ class _ConferenceHistoryState extends State<ConferenceHistory>{
                 }
             ),
           ]),
-    );
+    ));
   }
 
 }
