@@ -56,6 +56,7 @@ class _ParticipantsList extends State<ParticipantsList> {
   List<String> usersTwitters = new List();
   List<String> usersGitHubs = new List();
   List<String> usersRoles = new List();
+  Map<dynamic, dynamic> usersInConf;
 
   var users; // iterable class to be, which will save the usersUIDs in conference
 
@@ -120,6 +121,7 @@ class _ParticipantsList extends State<ParticipantsList> {
     int numUsersInConference = map.values.toList()[0][confId]["users"].length;
     // get users of the conference we're in (iterable class)
     this.users = map.values.toList()[0][confId]["users"].keys;
+
 
     for(int i = 0; i < numUsersInConference; i++) {
       String user = users.elementAt(i); // get user no. i

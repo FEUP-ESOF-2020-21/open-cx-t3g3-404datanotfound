@@ -177,11 +177,28 @@ class _HomeFeed extends State<HomeFeed> {
     String typeOfControl;
 
     int numPostsFromThisUser = 0;
-    int numTotalPosts = myMap.values.toList()[1][code].length;
+    int numTotalPosts;
     int numPostsLeft;
+    var posts;
+    List<String> postsIDs = new List();
 
-    // create list with the codes for existing posts
-    var posts = myMap.values.toList()[1][code].keys;
+
+    if(myMap.values.toList()[1][code]==null)
+      numTotalPosts = 0;
+    else{
+      numTotalPosts = myMap.values.toList()[1][code].length;
+
+      // get posts
+      posts = myMap.values.toList()[1][code].keys;
+
+      //get postsIDs
+      for(int i = 0; i < numTotalPosts; i++) {
+        String postID = posts.elementAt(i); // get post no. i
+        postsIDs.add(postID);
+      }
+      postsIDs.sort((b,a) => a.compareTo(b)); //sort posts
+
+    }
 
     // compute number of posts from this user
     for(int i = 0; i < numTotalPosts; i++) {
@@ -475,7 +492,7 @@ class _HomeFeed extends State<HomeFeed> {
                   radius: 22,
                 )),
           ],
-          title: Text(""),
+          title: Text(myMap.values.toList()[0][confId]["name"]), //display conference name
           backgroundColor: const Color(0xff1A2677),
           leading: IconButton(icon: new Icon(FontAwesomeIcons.bars, color: const Color(0xffffffff),), onPressed: (){
             _scaffoldState.currentState.openDrawer();
@@ -622,23 +639,27 @@ class _HomeFeed extends State<HomeFeed> {
 
                     String user = auth.currentUser.uid;
                     String confId=widget.code;
-                    Map<dynamic, dynamic> postInfo = myMap.values.toList()[1][confId];
 
-                    String postID = postInfo.keys.toList()[position];
+                    String postID = postsIDs[position];
+                    String userUID = myMap.values.toList()[1][confId][postID]["user"];
+                    String text = myMap.values.toList()[1][confId][postID]["text"];
+                    String multimedia = myMap.values.toList()[1][confId][postID]["multimedia"];
+                    String name = myMap.values.toList()[2][userUID]["name"];
+                    String userPhoto = myMap.values.toList()[2][userUID]["photo"];
+                    Uri uri = Uri.parse(multimedia);
+                    String typeString = uri.path.substring(uri.path.length - 3)
+                        .toLowerCase();
 
-                    String userUID = postInfo.values.toList()[position]["user"];
-                    String text = postInfo.values.toList()[position]["text"];
-                    String multimedia = postInfo.values.toList()[position]["multimedia"];
 
-                    if(postInfo.values.toList()[position]["likes"]!=null){
-                      this.likes=postInfo.values.toList()[position]["likes"].keys;}
+                    if(myMap.values.toList()[1][confId][postID]["likes"]!=null){
+                      this.likes=myMap.values.toList()[1][confId][postID]["likes"].keys;}
 
-                    if(postInfo.values.toList()[position]["likes"]!=null){
-                      this.likes=postInfo.values.toList()[position]["likes"].keys;}
+                    if(myMap.values.toList()[1][confId][postID]["likes"]!=null){
+                      this.likes=myMap.values.toList()[1][confId][postID]["likes"].keys;}
 
-                    if(postInfo.values.toList()[position]["comments"]!=null){
-                      comments = postInfo.values.toList()[position]["comments"];
-                      numComments = postInfo.values.toList()[position]["comments"].length;
+                    if(myMap.values.toList()[1][confId][postID]["comments"]!=null){
+                      comments = myMap.values.toList()[1][confId][postID]["comments"];
+                      numComments = myMap.values.toList()[1][confId][postID]["comments"].length;
                       if (postIsCommented(comments, user)) {
                           isCommented = true;
                       }
@@ -649,12 +670,6 @@ class _HomeFeed extends State<HomeFeed> {
                       numComments = 0;
                       isCommented=false; //by default
                     }
-
-                    String name = myMap.values.toList()[2][userUID]["name"];
-                    String userPhoto = myMap.values.toList()[2][userUID]["photo"];
-                    Uri uri = Uri.parse(multimedia);
-                    String typeString = uri.path.substring(uri.path.length - 3)
-                        .toLowerCase();
 
                     String type = "";
                     if (typeString == "jpg") {
@@ -705,7 +720,6 @@ class _HomeFeed extends State<HomeFeed> {
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: <Widget>[
-
                                         Text(name + "  ", style: TextStyle(color: const Color(0xff000000), fontWeight: FontWeight.bold),),
                                         InkWell(
                                           onTap: () async {
@@ -759,8 +773,8 @@ class _HomeFeed extends State<HomeFeed> {
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: <Widget>[
-                                        // separates trash icon from reactions
-                                        //SizedBox(width: 15),
+                                        Text("      " + postID, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black54,), ),
+                                        Expanded(child: SizedBox()),
                                         Text("    "+numComments.toString()+"   "),
                                         IconButton(
                                           icon: isCommented ? Icon(FontAwesomeIcons.commentAlt, color: Colors.black) : Icon(FontAwesomeIcons.commentAlt, color: Colors.grey),
@@ -771,7 +785,7 @@ class _HomeFeed extends State<HomeFeed> {
                                                   .then((DataSnapshot snapshot) {
                                                 Map<dynamic, dynamic> map = snapshot
                                                     .value;
-                                                postInfo = map.values.toList()[1][widget.code];
+                                                Map<dynamic, dynamic> postInfo = map.values.toList()[1][widget.code];
 
                                                 Navigator.of(context).pushReplacement(MaterialPageRoute(
                                                     builder: (context) => CommentsPage(
@@ -799,11 +813,10 @@ class _HomeFeed extends State<HomeFeed> {
                                                   .then((DataSnapshot snapshot) {
                                                 Map<dynamic, dynamic> map = snapshot
                                                     .value;
-                                                postInfo =
-                                                map.values.toList()[1][widget.code];
+                                                Map<dynamic, dynamic> postInfo = map.values.toList()[1][widget.code];
                                               });
-                                              if(postInfo.values.toList()[position]["likes"]!=null){
-                                                this.likes=postInfo.values.toList()[position]["likes"].keys;
+                                              if(myMap.values.toList()[1][confId][postID]["likes"]!=null){
+                                                this.likes=myMap.values.toList()[1][confId][postID]["likes"].keys;
                                               }
 
                                               isLiked = postIsLiked(likes, user); //get current state of like
