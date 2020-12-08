@@ -426,6 +426,10 @@ class _HomeFeed extends State<HomeFeed> {
                           auth: auth,
                           map: map,
                           code: code,
+                          attendeeFilter: true,
+                          speakerFilter: true,
+                          sponsorFilter: true,
+                          organizerFilter: true,
                         )));
                   });
                 }
@@ -564,6 +568,10 @@ class _HomeFeed extends State<HomeFeed> {
                           auth: auth,
                           map: map,
                           code: code,
+                          attendeeFilter: true,
+                          speakerFilter: true,
+                          sponsorFilter: true,
+                          organizerFilter: true,
                         )));
                   });
                 },
@@ -906,6 +914,10 @@ class _HomeFeed extends State<HomeFeed> {
                           auth: auth,
                           map: map,
                           code: code,
+                          attendeeFilter: true,
+                          speakerFilter: true,
+                          sponsorFilter: true,
+                          organizerFilter: true,
                         )));
                   });
                 }
@@ -1042,6 +1054,10 @@ class _HomeFeed extends State<HomeFeed> {
                           auth: auth,
                           map: map,
                           code: code,
+                          attendeeFilter: true,
+                          speakerFilter: true,
+                          sponsorFilter: true,
+                          organizerFilter: true,
                         )));
                   });
                 },
