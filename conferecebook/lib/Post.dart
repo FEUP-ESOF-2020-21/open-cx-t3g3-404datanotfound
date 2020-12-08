@@ -223,7 +223,7 @@ class _Post extends State<Post> {
             FirebaseDatabase.instance.reference().child('Posts').child(code);
 
         DateTime now = DateTime.now();
-        String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(now);
+        String formattedDate = DateFormat('yyyy-MM-dd – HH:mm').format(now);
         if (text == "") text = " ";
         firebaseDatabaseRef.child(formattedDate).set({
           'text': text,
@@ -237,7 +237,7 @@ class _Post extends State<Post> {
           FirebaseDatabase.instance.reference().child('Posts').child(code);
 
       DateTime now = DateTime.now();
-      String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(now);
+      String formattedDate = DateFormat('yyyy-MM-dd – HH:mm').format(now);
       if (text == "") text = " ";
       URL = " ";
 
@@ -259,6 +259,8 @@ class _Post extends State<Post> {
     postsLeft = widget.postsLeft;
     userRole = widget.userRole;
     String textPostsLeft;
+
+
 
     if(userRole != "Organizer")
       textPostsLeft = "\nNumber of Posts left: $postsLeft";

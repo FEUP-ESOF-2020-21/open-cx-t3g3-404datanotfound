@@ -62,6 +62,7 @@ class _ParticipantsList extends State<ParticipantsList> {
   List<String> usersTwitters = new List();
   List<String> usersGitHubs = new List();
   List<String> usersRoles = new List();
+  Map<dynamic, dynamic> usersInConf;
 
   var users; // iterable class to be, which will save the usersUIDs in conference
 
@@ -130,8 +131,6 @@ class _ParticipantsList extends State<ParticipantsList> {
     // get users of the conference we're in (iterable class)
     this.users = map.values.toList()[0][confId]["users"].keys;
 
-
-
     Map<String, String> mymap = new HashMap<String, String>();
     for (int i = 0; i < numUsersInConference; i++) {
       String user = users.elementAt(i);
@@ -143,6 +142,7 @@ class _ParticipantsList extends State<ParticipantsList> {
     for (int i = 0; i < numUsersInConference; i++) {
 
       String user = treeMap.values.elementAt(i); // get user no. i
+
       // knowing the name of each user, save its properties in profile
 
       bool show = false;
