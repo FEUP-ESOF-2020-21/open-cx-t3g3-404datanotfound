@@ -445,7 +445,11 @@ class _ViewProfile2 extends State<ViewProfile2> {
                                       builder: (context) => ParticipantsList(
                                           auth: widget.auth,
                                           code: widget.code,
-                                          map: map
+                                          map: map,
+                                        attendeeFilter: true,
+                                        speakerFilter: true,
+                                        sponsorFilter: true,
+                                        organizerFilter: true,
                                       )));
                             });
                           }, // button pressed
