@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
               primarySwatch: Colors.blue,
             ),
             home:
-            (_auth.currentUser.uid == null) ? MyLogin(auth: _auth) : JoinAnEvent(auth: _auth, map: map)
+            (_auth.currentUser == null) ? MyLogin(auth: _auth) : JoinAnEvent(auth: _auth, map: map)
           );
   }
 }

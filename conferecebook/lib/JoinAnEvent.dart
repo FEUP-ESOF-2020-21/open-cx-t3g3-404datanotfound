@@ -70,7 +70,6 @@ class _JoinAnEvent extends State<JoinAnEvent> {
       String nameConf = conf["name"];  // name of conference i
       String codeConf = conf["code"]; // code of conference i
       conferenceIDs.add(aux);
-      print(conferenceIDs);
 
       if (conf["users"] != null) {
         String user = conf["users"][widget.auth.currentUser.uid];
@@ -219,7 +218,6 @@ class _JoinAnEvent extends State<JoinAnEvent> {
                   nameEvent = conferenceCodes[position];
                   userRole = conferenceRoles[position];
 
-                  //print(conferenceCodes);
                   return Container(
                     child: Card(
                       child: new ListTile(
