@@ -230,7 +230,6 @@ class _Post extends State<Post> {
           'multimedia': URL,
           'user': widget.auth.currentUser.uid,
           'likes': likes,
-          'numComments': 0
         });
       });
     } else {
@@ -247,7 +246,6 @@ class _Post extends State<Post> {
         'multimedia': URL,
         'user': widget.auth.currentUser.uid,
         'likes': likes,
-        'numComments': 0
       });
     }
   }

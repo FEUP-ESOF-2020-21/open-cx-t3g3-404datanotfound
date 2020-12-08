@@ -18,6 +18,7 @@ import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
 import 'ModerationSettings.dart';
 import 'ViewProfile1.dart';
+import 'CommentsPage.dart';
 
 class SizeConfig {
   static MediaQueryData _mediaQueryData;
@@ -68,6 +69,8 @@ class _HomeFeed extends State<HomeFeed> {
   int numPosts;
   final GlobalKey<ScaffoldState> _scaffoldState = GlobalKey();
   var likes;
+  Map<dynamic, dynamic> comments;
+  int numComments;
 
 
   @override
@@ -326,7 +329,17 @@ class _HomeFeed extends State<HomeFeed> {
       }
     }
 
+    //function to see if post is liked by specific user
+    bool postIsCommented(Map<dynamic, dynamic> comments, String user){
+      for (int i=0; i<comments.keys.toList().length; i++){
+        if(comments.values.toList()[i]["author"].toString()==user)
+          return true; //the user is on the list of users who commented the post
+      }
+      return false; //the user is not on the list of users who liked the post
+    }
+
     bool isLiked;
+    bool isCommented;
 
     showLimitDialog(BuildContext context){
 
@@ -608,9 +621,11 @@ class _HomeFeed extends State<HomeFeed> {
                     this.likes=null; //restart likes variable
 
                     String user = auth.currentUser.uid;
+                    String confId=widget.code;
+                    Map<dynamic, dynamic> postInfo = myMap.values.toList()[1][confId];
 
-                    Map<dynamic, dynamic> postInfo = myMap.values.toList()[1][widget.code];
                     String postID = postInfo.keys.toList()[position];
+
                     String userUID = postInfo.values.toList()[position]["user"];
                     String text = postInfo.values.toList()[position]["text"];
                     String multimedia = postInfo.values.toList()[position]["multimedia"];
@@ -618,7 +633,22 @@ class _HomeFeed extends State<HomeFeed> {
                     if(postInfo.values.toList()[position]["likes"]!=null){
                       this.likes=postInfo.values.toList()[position]["likes"].keys;}
 
-                    int numComments = postInfo.values.toList()[position]["numComments"];
+                    if(postInfo.values.toList()[position]["likes"]!=null){
+                      this.likes=postInfo.values.toList()[position]["likes"].keys;}
+
+                    if(postInfo.values.toList()[position]["comments"]!=null){
+                      comments = postInfo.values.toList()[position]["comments"];
+                      numComments = postInfo.values.toList()[position]["comments"].length;
+                      if (postIsCommented(comments, user)) {
+                          isCommented = true;
+                      }
+                      if(isCommented==null)
+                        isCommented=false;
+                    }
+                    else {
+                      numComments = 0;
+                      isCommented=false; //by default
+                    }
 
                     String name = myMap.values.toList()[2][userUID]["name"];
                     String userPhoto = myMap.values.toList()[2][userUID]["photo"];
@@ -638,6 +668,7 @@ class _HomeFeed extends State<HomeFeed> {
                     }else{
                       isLiked=false;
                     }
+
                     //build string for number of likes in post
                     String numLikes = "";
                     if (likes==null) {
@@ -645,6 +676,7 @@ class _HomeFeed extends State<HomeFeed> {
                     } else {
                       numLikes = this.likes.length.toString();
                     }
+
                     return Container(
                         margin: const EdgeInsets.all(15.0),
                         padding: const EdgeInsets.all(3.0),
@@ -730,7 +762,30 @@ class _HomeFeed extends State<HomeFeed> {
                                         // separates trash icon from reactions
                                         //SizedBox(width: 15),
                                         Text("    "+numComments.toString()+"   "),
-                                        Icon(FontAwesomeIcons.commentAlt),
+                                        IconButton(
+                                          icon: isCommented ? Icon(FontAwesomeIcons.commentAlt, color: Colors.black) : Icon(FontAwesomeIcons.commentAlt, color: Colors.grey),
+                                          onPressed: () async {
+                                              FirebaseDatabase.instance
+                                                  .reference()
+                                                  .once()
+                                                  .then((DataSnapshot snapshot) {
+                                                Map<dynamic, dynamic> map = snapshot
+                                                    .value;
+                                                postInfo = map.values.toList()[1][widget.code];
+
+                                                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                                    builder: (context) => CommentsPage(
+                                                        auth: widget.auth, //user that will comment
+                                                        map: map,
+                                                        postID: postID,
+                                                        confId: confId,
+                                                    )));
+                                              });
+
+                                              //Navigator.push(context, MaterialPageRoute(builder: (context) => CommentsPage()));
+                                          }
+                                        ),
+
                                         SizedBox(width: 25),
                                         Text(numLikes),
                                         IconButton(
