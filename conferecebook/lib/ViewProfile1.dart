@@ -3,6 +3,7 @@ import 'package:ConfereceBook/JoinAnEvent.dart';
 import 'package:ConfereceBook/Login.dart';
 import 'package:ConfereceBook/MyProfile.dart';
 import 'package:ConfereceBook/Post.dart';
+import 'package:ConfereceBook/ViewConferenceHistory.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -256,7 +257,9 @@ class _ViewProfile1 extends State<ViewProfile1> {
                             alignment: FractionalOffset.bottomRight,
                             child: Padding(
                               padding: EdgeInsets.only(bottom: 75.0, right: 35.0),
+
                               child: FloatingActionButton(
+                                heroTag: "btn1",
                                 onPressed: () async {
                                   Navigator.of(context).pushReplacement(
                                       MaterialPageRoute(
@@ -278,7 +281,7 @@ class _ViewProfile1 extends State<ViewProfile1> {
                             ),
                           ),
                         ),
-                      )
+                      ),
 
                     ],
                   )),
@@ -350,7 +353,31 @@ class _ViewProfile1 extends State<ViewProfile1> {
                       ),
                     ),
                   )),
+              Transform.translate(
+                  offset: Offset(
+                      SizeConfig.screenWidth * 43, SizeConfig.screenHeight * 705),
+                  child: SizedBox.fromSize(
+                    size: Size(56, 56), // button width and height
+                    child: ClipOval(
+                      child: Material(
+                        color: const Color(0xffededed), // button color
+                        child: InkWell(
+                          splashColor: const Color(0xffededed), // splash color
+                          onTap: () async {
+                              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                          builder: (context) => ViewConferenceHistory(
+                                            auth: auth,
+                                            userToSee:userToSee,
+                                            code: code,
+                                            map: map,)));
 
+                          }, // button pressed
+                          child: Icon(FontAwesomeIcons.history, color: const Color(0xff1A2677),), // icon
+
+                        ),
+                      ),
+                    ),
+                  )),
             ],
           ),
         ));

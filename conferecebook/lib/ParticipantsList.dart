@@ -71,6 +71,7 @@ class _ParticipantsList extends State<ParticipantsList> {
   bool sponsorFilter;
   bool organizerFilter;
 
+
   showTextAlertDialog(BuildContext context) async {
     return showDialog(
         context: context,
