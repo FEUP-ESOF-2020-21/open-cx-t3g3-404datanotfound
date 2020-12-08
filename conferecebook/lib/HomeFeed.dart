@@ -19,6 +19,7 @@ import 'package:flutter/material.dart';
 import 'ModerationSettings.dart';
 import 'ViewProfile1.dart';
 import 'CommentsPage.dart';
+import 'package:intl/intl.dart';
 
 class SizeConfig {
   static MediaQueryData _mediaQueryData;
@@ -72,6 +73,22 @@ class _HomeFeed extends State<HomeFeed> {
   Map<dynamic, dynamic> comments;
   int numComments;
 
+  String checkSameDay(String date) {
+    DateTime now = DateTime.now();
+    String today = DateFormat('yyyy-MM-dd').format(now);
+
+    DateTime yesterday = now.subtract(Duration(days: 1));
+    String yester = DateFormat('yyyy-MM-dd').format(yesterday);
+
+    String hour = date.substring(13, 18);
+    String day = date.substring(0, 10);
+
+    if (date.contains(today))
+      return "Today (" + hour + ")";
+    else if (date.contains(yester))
+      return "Yesterday (" + hour + ")";
+    return day + " (" + hour + ")";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -496,7 +513,7 @@ class _HomeFeed extends State<HomeFeed> {
                   radius: 22,
                 )),
           ],
-          title: Text(myMap.values.toList()[0][confId]["name"]), //display conference name
+          title: Text(myMap.values.toList()[0][confId]["name"], style: TextStyle(fontSize: 15),), //display conference name
           backgroundColor: const Color(0xff1A2677),
           leading: IconButton(icon: new Icon(FontAwesomeIcons.bars, color: const Color(0xffffffff),), onPressed: (){
             _scaffoldState.currentState.openDrawer();
@@ -712,8 +729,12 @@ class _HomeFeed extends State<HomeFeed> {
                           borderRadius: BorderRadius.all(Radius.circular(20)),
                         ),
                         child:  SizedBox(
-                            width: multimedia != " " ? SizeConfig.screenWidth * 500 : SizeConfig.screenWidth * 200,
-                            height: multimedia != " " ? SizeConfig.screenHeight * 500 : SizeConfig.screenWidth * 200,
+                            width: multimedia != " " ?
+                              SizeConfig.screenWidth * 500 :
+                              SizeConfig.screenWidth * 200 ,
+                            height: multimedia != " " ?
+                            (text != null ? SizeConfig.screenHeight * 500 + (text.length/30)*10 : SizeConfig.screenHeight * 500) :
+                              SizeConfig.screenHeight * 130 + (text.length/30)*10,
                             child: Stack(
                               children: <Widget>[
                                 if (userRole == "Organizer")
@@ -757,14 +778,14 @@ class _HomeFeed extends State<HomeFeed> {
                                 Transform.translate(
                                   offset: Offset(SizeConfig.screenWidth * 60.0, SizeConfig.screenHeight * 50.0),
                                   child:  SizedBox(
-                                      width: SizeConfig.screenWidth * 250 ,
-                                      height: SizeConfig.screenHeight * 500 ,
+                                      width: text != null ? SizeConfig.screenWidth * 250 : 0,
+                                      height: text != null ? SizeConfig.screenHeight * 500 : 0,
                                       child: text != null ? Text(text, style: TextStyle(color: const Color(0xff000000)),) : Container()
                                   ),),
                                 Transform.translate(
-                                  offset: Offset(SizeConfig.screenWidth *  0.0, SizeConfig.screenHeight * 95.0),
+                                  offset: text != null ? Offset(SizeConfig.screenWidth *  10, SizeConfig.screenHeight * 80.0 + (text.length/30)*10) : Offset(SizeConfig.screenWidth *  10, SizeConfig.screenHeight * 80.0),
                                   child: SizedBox(
-                                    width: multimedia != " " ? SizeConfig.screenWidth * 360 : 0,
+                                    width: multimedia != " " ? SizeConfig.screenWidth * 350 : 0,
                                     height: multimedia != " " ? SizeConfig.screenHeight * 360 : 0,
                                     child: Container(
                                       child: multimedia != " " ? (type == "image") ? Image(image: NetworkImage(multimedia)) :
@@ -781,7 +802,10 @@ class _HomeFeed extends State<HomeFeed> {
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: <Widget>[
-                                        Text("      " + postID, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black54,), ),
+                                        Text("      " + checkSameDay(postID), style: new TextStyle(
+                                          fontSize: 10.0,
+                                          color: Colors.grey,
+                                        ),),
                                         Expanded(child: SizedBox()),
                                         Text("    "+numComments.toString()+"   "),
                                         IconButton(
