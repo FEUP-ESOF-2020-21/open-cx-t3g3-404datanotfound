@@ -77,10 +77,16 @@ class CommentsPageState extends State<CommentsPage>{
       // get comments of the post we choose (iterable class)
       this.postComments = map.values.toList()[1][confId][postID]["comments"].keys;
 
+      //get comments IDs
       for(int i = 0; i < numComments; i++) {
-      String commentID = postComments.elementAt(i); // get comment no. i
+        String commentID = postComments.elementAt(i); // get comment no. i
+        commentIDs.add(commentID);
+      }
+      commentIDs.sort((b,a) => a.compareTo(b)); //sort comments
+
+      for(int i = 0; i < numComments; i++) {
+      String commentID = commentIDs[i]; // get comment no. i
       // knowing the id of each comment, save its text and author
-      commentIDs.add(commentID);
       commentsText.add(map.values.toList()[1][confId][postID]["comments"][commentID]["text"]);
       commentsAuthor.add(map.values.toList()[1][confId][postID]["comments"][commentID]["author"]);
       }
@@ -146,7 +152,7 @@ class CommentsPageState extends State<CommentsPage>{
     FirebaseDatabase.instance.reference().child('Posts').child(confId).child(postID).child("comments");
 
     DateTime now = DateTime.now();
-    String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(now);
+    String formattedDate = DateFormat('yyyy-MM-dd – HH:mm').format(now);
 
     firebaseDatabaseRef.child(formattedDate).set({
       'text': val,
