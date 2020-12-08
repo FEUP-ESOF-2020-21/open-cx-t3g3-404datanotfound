@@ -36,23 +36,23 @@ class SizeConfig {
 }
 
 class EditProfile extends StatefulWidget {
-  EditProfile({
-    Key key,
-    this.auth,
-    this.image,
-    this.name,
-    this.job,
-    this.interests,
-    this.city,
-    this.bio,
-    this.area,
-    this.facebook,
-    this.instagram,
-    this.linkedin,
-    this.twitter,
-    this.github,
-    this.code
-  }) : super(key: key);
+  EditProfile(
+      {Key key,
+      this.auth,
+      this.image,
+      this.name,
+      this.job,
+      this.interests,
+      this.city,
+      this.bio,
+      this.area,
+      this.facebook,
+      this.instagram,
+      this.linkedin,
+      this.twitter,
+      this.github,
+      this.code})
+      : super(key: key);
 
   final FirebaseAuth auth;
   final String image;
@@ -155,7 +155,7 @@ class MyEditProfile extends State<EditProfile> {
 // get temporary path from temporary directory.
     String tempPath = tempDir.path;
 // create a new file in temporary path with random file name.
-    File file = new File('$tempPath'+ (rng.nextInt(100)).toString() +'.png');
+    File file = new File('$tempPath' + (rng.nextInt(100)).toString() + '.png');
 // call http.get method and pass imageUrl into it to get response.
     http.Response response = await http.get(imageUrl);
 // write bodyBytes received in response to file.
@@ -165,8 +165,7 @@ class MyEditProfile extends State<EditProfile> {
     return file;
   }
 
-  check(BuildContext context)
-  {
+  check(BuildContext context) {
     // configura o button
     Widget stay = FlatButton(
       child: Text("Stay"),
@@ -182,13 +181,9 @@ class MyEditProfile extends State<EditProfile> {
             .once()
             .then((DataSnapshot snapshot) {
           Map<dynamic, dynamic> map = snapshot.value;
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                  builder: (context) => HomeFeed(
-                      auth: auth,
-                      code: widget.code,
-                      map: map
-                  )));
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) =>
+                  HomeFeed(auth: auth, code: widget.code, map: map)));
         });
       },
     );
@@ -196,10 +191,7 @@ class MyEditProfile extends State<EditProfile> {
     AlertDialog alerta = AlertDialog(
       title: Text("Discard changes?"),
       content: Text("You've changed some of your profile information."),
-      actions: [
-        stay,
-        leave
-      ],
+      actions: [stay, leave],
     );
     // exibe o dialog
     showDialog(
@@ -214,13 +206,13 @@ class MyEditProfile extends State<EditProfile> {
     if (_imageFile != null) {
       String image = basename(_imageFile.path);
       Reference firebaseStorageRef =
-      FirebaseStorage.instance.ref().child('profilePics/$image');
+          FirebaseStorage.instance.ref().child('profilePics/$image');
       UploadTask uploadTask = firebaseStorageRef.putFile(_imageFile);
       TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => null);
       taskSnapshot.ref.getDownloadURL().then((value) async {
         String imageURL = value;
         DatabaseReference firebaseDatabaseRef =
-        FirebaseDatabase.instance.reference().child('Users');
+            FirebaseDatabase.instance.reference().child('Users');
         firebaseDatabaseRef.child(widget.auth.currentUser.uid).update({
           'name': nameController.value.text,
           'area': areaController.value.text,
@@ -230,39 +222,9 @@ class MyEditProfile extends State<EditProfile> {
           'photo': imageURL,
         }).then((value) {
           Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (context) =>
-                  MyProfile1(
-                      auth: auth,
-                      image: imageURL,
-                      name: nameController.value.text,
-                      job: jobController.value.text,
-                      interests: interests,
-                      city: cityController.value.text,
-                      bio: bioController.value.text,
-                      area: areaController.value.text,
-                      linkedin: linkedin,
-                      facebook: facebook,
-                      instagram: instagram,
-                      twitter: twitter,
-                      github: github,
-                      code: code)));
-        });
-      });
-    } else {
-      DatabaseReference firebaseDatabaseRef =
-      FirebaseDatabase.instance.reference().child('Users');
-      await firebaseDatabaseRef.child(widget.auth.currentUser.uid).update({
-        'name': nameController.value.text,
-        'area': areaController.value.text,
-        'job': jobController.value.text,
-        'bio': bioController.value.text,
-        'city': cityController.value.text,
-      });
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) =>
-              MyProfile1(
+              builder: (context) => MyProfile1(
                   auth: auth,
-                  image: image,
+                  image: imageURL,
                   name: nameController.value.text,
                   job: jobController.value.text,
                   interests: interests,
@@ -275,6 +237,34 @@ class MyEditProfile extends State<EditProfile> {
                   twitter: twitter,
                   github: github,
                   code: code)));
+        });
+      });
+    } else {
+      DatabaseReference firebaseDatabaseRef =
+          FirebaseDatabase.instance.reference().child('Users');
+      await firebaseDatabaseRef.child(widget.auth.currentUser.uid).update({
+        'name': nameController.value.text,
+        'area': areaController.value.text,
+        'job': jobController.value.text,
+        'bio': bioController.value.text,
+        'city': cityController.value.text,
+      });
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => MyProfile1(
+              auth: auth,
+              image: image,
+              name: nameController.value.text,
+              job: jobController.value.text,
+              interests: interests,
+              city: cityController.value.text,
+              bio: bioController.value.text,
+              area: areaController.value.text,
+              linkedin: linkedin,
+              facebook: facebook,
+              instagram: instagram,
+              twitter: twitter,
+              github: github,
+              code: code)));
     }
   }
 
@@ -319,6 +309,21 @@ class MyEditProfile extends State<EditProfile> {
     return WillPopScope(
         onWillPop: () async => false,
         child: Scaffold(
+          floatingActionButton: Align(
+              alignment: FractionalOffset.topRight,
+              child: Padding(
+                padding: EdgeInsets.only(top: 52.0, right: 0.0),
+                child: FloatingActionButton(
+                  onPressed: () {
+                    updateDataBase(context);
+                  },
+                  backgroundColor: const Color(0xff1A2677),
+                  child: Icon(
+                    FontAwesomeIcons.check,
+                    color: const Color(0xffffffff),
+                  ),
+                ),
+              )),
           backgroundColor: const Color(0xffffffff),
           body: Stack(
             children: <Widget>[
@@ -351,50 +356,49 @@ class MyEditProfile extends State<EditProfile> {
                 offset: Offset(SizeConfig.screenWidth * 79,
                     SizeConfig.screenHeight * 320.0),
                 child: SizedBox(
-                  width: SizeConfig.screenWidth * 260.0,
-                  child: Container(
-                    width: 260,
-                    height: 20,
-                    child: TextField(
-                    controller: cityController,
-                    onChanged: (String value) async {
-                        city = value;
-                    },
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderRadius:BorderRadius.circular(0.1)),
-                    ),
-                    style: TextStyle(
-                      fontFamily: 'Roboto',
-                      fontSize: 12,
-                      color: const Color(0xff1A2677),
-                      letterSpacing: 0.1875,
-                      fontWeight: FontWeight.w500,
-                      height: 1.2,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),)
-                ),
+                    width: SizeConfig.screenWidth * 260.0,
+                    child: Container(
+                      width: 260,
+                      height: 20,
+                      child: TextField(
+                        controller: cityController,
+                        onChanged: (String value) async {
+                          city = value;
+                        },
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(0.1)),
+                        ),
+                        style: TextStyle(
+                          fontFamily: 'Roboto',
+                          fontSize: 12,
+                          color: const Color(0xff1A2677),
+                          letterSpacing: 0.1875,
+                          fontWeight: FontWeight.w500,
+                          height: 1.2,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    )),
               ),
               Transform.translate(
-                offset: Offset(
-                    SizeConfig.screenWidth * 70, SizeConfig.screenHeight * 405),
-                    child: Container(
-                      width: 250,
-                      height: 50,
-                      child: TextField(
+                  offset: Offset(SizeConfig.screenWidth * 70,
+                      SizeConfig.screenHeight * 405),
+                  child: Container(
+                    width: 250,
+                    height: 50,
+                    child: TextField(
                       controller: bioController,
                       onChanged: (String value) async {
-                          this.bio = value;
+                        this.bio = value;
                       },
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.zero)
-                      ),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.zero)),
                       style: TextStyle(fontWeight: FontWeight.bold),
                       textAlign: TextAlign.left,
-                    ),)
-                ),
+                    ),
+                  )),
               Transform.translate(
                 offset: Offset(SizeConfig.screenWidth * 59.5,
                     SizeConfig.screenHeight * 376.5),
@@ -412,24 +416,23 @@ class MyEditProfile extends State<EditProfile> {
                 ),
               ),
               Transform.translate(
-                offset: Offset(
-                    SizeConfig.screenWidth * 70, SizeConfig.screenHeight * 505),
-                child: Container(
-                  width: 250,
-                  height: 50,
-                  child: TextField(
-                  controller: jobController,
-                  onChanged: (String value) async {
-                      job = value;
-                  },
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.zero)
+                  offset: Offset(SizeConfig.screenWidth * 70,
+                      SizeConfig.screenHeight * 505),
+                  child: Container(
+                    width: 250,
+                    height: 50,
+                    child: TextField(
+                      controller: jobController,
+                      onChanged: (String value) async {
+                        job = value;
+                      },
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.zero)),
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.left,
                     ),
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.left,
-                ),)
-              ),
+                  )),
               Transform.translate(
                 offset: Offset(SizeConfig.screenWidth * 59.5,
                     SizeConfig.screenHeight * 476.5),
@@ -447,24 +450,23 @@ class MyEditProfile extends State<EditProfile> {
                 ),
               ),
               Transform.translate(
-                offset: Offset(
-                    SizeConfig.screenWidth * 70, SizeConfig.screenHeight * 605),
-                child: Container(
-                  width: 250,
-                  height: 50,
-                  child: TextField(
-                  controller: areaController,
-                  onChanged: (String value) async {
-                      area = value;
-                  },
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.zero)
-                  ),
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.left,
-                ),)
-              ),
+                  offset: Offset(SizeConfig.screenWidth * 70,
+                      SizeConfig.screenHeight * 605),
+                  child: Container(
+                    width: 250,
+                    height: 50,
+                    child: TextField(
+                      controller: areaController,
+                      onChanged: (String value) async {
+                        area = value;
+                      },
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.zero)),
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.left,
+                    ),
+                  )),
               Transform.translate(
                 offset: Offset(SizeConfig.screenWidth * 59.5,
                     SizeConfig.screenHeight * 576.5),
@@ -489,12 +491,11 @@ class MyEditProfile extends State<EditProfile> {
                   child: TextField(
                     controller: nameController,
                     onChanged: (String value) async {
-                        name = value;
+                      name = value;
                     },
                     decoration: InputDecoration(
                         border: OutlineInputBorder(
-                            borderRadius: BorderRadius.zero)
-                    ),
+                            borderRadius: BorderRadius.zero)),
                     style: TextStyle(
                       fontFamily: 'Roboto',
                       fontSize: 30,
@@ -507,77 +508,58 @@ class MyEditProfile extends State<EditProfile> {
                   ),
                 ),
               ),
-
               Transform.translate(
                 offset: Offset(SizeConfig.screenWidth * 150,
                     SizeConfig.screenHeight * 100.0),
                 child:
                     // Adobe XD layer: 'NoPath' (shape)
                     Container(
-                  child: Stack(children: <Widget>[ CircleAvatar(
+                        child: Stack(children: <Widget>[
+                  CircleAvatar(
                     backgroundImage: _imageFile == null
                         ? NetworkImage(this.image)
                         : FileImage(File(_imageFile.path)),
                     radius: 50,
                   ),
-                    Positioned(
-                      bottom: 35.0,
-                      right: 55.0,
-                      child: InkWell(
-                        onTap: () {
-                          showModalBottomSheet(
-                            context: context,
-                            builder: ((builder) => bottomSheet()),
-                          );
-                        },
-                        child: Icon(
-                          FontAwesomeIcons.retweet,
-                          color: const Color(0xffffffff),
-                          size: 30.0,
-                        ),
+                  Positioned(
+                    bottom: 35.0,
+                    right: 55.0,
+                    child: InkWell(
+                      onTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          builder: ((builder) => bottomSheet()),
+                        );
+                      },
+                      child: Icon(
+                        FontAwesomeIcons.retweet,
+                        color: const Color(0xffffffff),
+                        size: 30.0,
                       ),
                     ),
-                    Positioned(
-                      bottom: 35.0,
-                      right: 15.0,
-                      child: InkWell(
-                        onTap: () {
-                          showModalBottomSheet(
-                            context: context,
-                            builder: ((builder) => bottomSheet()),
-                          );
-                        },
-                        child: Icon(
-                          FontAwesomeIcons.camera,
-                          color: const Color(0xffffffff),
-                          size: 30.0,
-                        ),
+                  ),
+                  Positioned(
+                    bottom: 35.0,
+                    right: 15.0,
+                    child: InkWell(
+                      onTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          builder: ((builder) => bottomSheet()),
+                        );
+                      },
+                      child: Icon(
+                        FontAwesomeIcons.camera,
+                        color: const Color(0xffffffff),
+                        size: 30.0,
                       ),
                     ),
-                  ])
-                ),
+                  ),
+                ])),
               ),
               Transform.translate(
-                  offset: Offset(
-                      SizeConfig.screenWidth * 340 , SizeConfig.screenHeight * 20 + 20),
-                  child: SizedBox.fromSize(
-                    size: Size(56, 56), // button width and height
-                    child: ClipOval(
-                      child: Material(
-                        color: const Color(0xff1A2677), // button color
-                        child: InkWell(
-                          splashColor: const Color(0xff1A2677), // splash color
-                          onTap: () {
-                            updateDataBase(context);
-                          }, // button pressed
-                          child: Icon(FontAwesomeIcons.check, color: Colors.white,), // icon
-                        ),
-                      ),
-                    ),
-                  )),
-              Transform.translate(
-                  offset: Offset(
-                      SizeConfig.screenWidth * 10, SizeConfig.screenHeight * 20 + 20),
+                  offset: Offset(SizeConfig.screenWidth * 10,
+                      SizeConfig.screenHeight * 20 + 20),
                   child: SizedBox.fromSize(
                     size: Size(56, 56), // button width and height
                     child: ClipOval(
@@ -593,28 +575,28 @@ class MyEditProfile extends State<EditProfile> {
                                 (bio != bioController.value.text)) {
                               check(context);
                             } else {
-                            FirebaseDatabase.instance
-                                .reference()
-                                .once()
-                                .then((DataSnapshot snapshot) {
-                              Map<dynamic, dynamic> map = snapshot.value;
-                              Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                      builder: (context) => HomeFeed(
-                                          auth: auth,
-                                          code: widget.code,
-                                          map: map
-                                      )));
-                            });
+                              FirebaseDatabase.instance
+                                  .reference()
+                                  .once()
+                                  .then((DataSnapshot snapshot) {
+                                Map<dynamic, dynamic> map = snapshot.value;
+                                Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                        builder: (context) => HomeFeed(
+                                            auth: auth,
+                                            code: widget.code,
+                                            map: map)));
+                              });
                             }
                           }, // button pressed
-                          child: Icon(FontAwesomeIcons.home, color: Colors.white,), // icon
-
+                          child: Icon(
+                            FontAwesomeIcons.home,
+                            color: Colors.white,
+                          ), // icon
                         ),
                       ),
                     ),
                   )),
-
             ],
           ),
         ));
