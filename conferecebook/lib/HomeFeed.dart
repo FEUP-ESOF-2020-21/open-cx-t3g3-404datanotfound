@@ -678,7 +678,6 @@ class _HomeFeed extends State<HomeFeed> {
                     String typeString = uri.path.substring(uri.path.length - 3)
                         .toLowerCase();
 
-
                     if(myMap.values.toList()[1][confId][postID]["likes"]!=null){
                       this.likes=myMap.values.toList()[1][confId][postID]["likes"].keys;}
 

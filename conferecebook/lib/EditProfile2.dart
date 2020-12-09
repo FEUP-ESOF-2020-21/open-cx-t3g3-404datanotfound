@@ -15,7 +15,7 @@ import 'package:flutter/widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 
-import 'EditProfile2.dart';
+import 'MyProfile2.dart';
 
 class SizeConfig {
   static MediaQueryData _mediaQueryData;
@@ -31,33 +31,33 @@ class SizeConfig {
   }
 }
 
-class MyProfile2 extends StatefulWidget {
-  MyProfile2(
+class EditProfile2 extends StatefulWidget {
+  EditProfile2(
       {Key key,
-      this.auth,
-      this.image,
-      this.name,
-      this.job,
-      this.interests,
-      this.city,
-      this.bio,
-      this.area,
-      this.facebook,
-      this.instagram,
-      this.linkedin,
-      this.twitter,
-      this.github,
-      this.code})
+        this.auth,
+        this.image,
+        this.name,
+        this.job,
+        this.interests,
+        this.city,
+        this.bio,
+        this.area,
+        this.facebook,
+        this.instagram,
+        this.linkedin,
+        this.twitter,
+        this.github,
+        this.code})
       : super(key: key);
 
   final FirebaseAuth auth;
   final String image;
   final String name;
   final String job;
-  final String interests;
-  final String city;
   final String bio;
   final String area;
+  final String interests;
+  final String city;
   final String facebook;
   final String instagram;
   final String linkedin;
@@ -66,10 +66,11 @@ class MyProfile2 extends StatefulWidget {
   final String code;
 
   @override
-  State<StatefulWidget> createState() => _MyProfile2();
+  State<StatefulWidget> createState() => _EditProfile2();
 }
 
-class _MyProfile2 extends State<MyProfile2> {
+class _EditProfile2 extends State<EditProfile2> {
+  FirebaseAuth auth;
   String image;
   String name;
   String job;
@@ -83,6 +84,9 @@ class _MyProfile2 extends State<MyProfile2> {
   String twitter;
   String github;
   List<String> myInterests;
+  String code;
+
+  TextEditingController _textFieldController = TextEditingController();
 
   final GlobalKey<TagsState> _tagStateKey = GlobalKey<TagsState>();
 
@@ -117,9 +121,115 @@ class _MyProfile2 extends State<MyProfile2> {
     );
   }
 
+  updateDataBase(BuildContext context, String socialNetwork, String newNickname) async {
+
+      socialNetwork = socialNetwork.toLowerCase();
+
+      switch (socialNetwork) {
+        case "facebook":
+          facebook = newNickname;
+          break;
+
+        case "instagram":
+          instagram = newNickname;
+          break;
+
+        case "twitter":
+          twitter = newNickname;
+          break;
+
+        case "github":
+          github = newNickname;
+          break;
+
+        case "linkedin":
+          linkedin = newNickname;
+          break;
+      }
+
+        DatabaseReference firebaseDatabaseRef =
+        FirebaseDatabase.instance.reference().child('Users');
+
+        firebaseDatabaseRef.child(widget.auth.currentUser.uid)
+            .child(socialNetwork)
+            .set(newNickname)
+            .then((value) {
+
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) => EditProfile2(
+                  auth: auth,
+                  image: image,
+                  name: name,
+                  job: job,
+                  interests: interests,
+                  city: city,
+                  bio: bio,
+                  area: area,
+                  linkedin: linkedin,
+                  facebook: facebook,
+                  instagram: instagram,
+                  twitter: twitter,
+                  github: github,
+                  code: code)));
+        });
+  }
+
+  showTextEditDialog(BuildContext context, String socialNetwork) async {
+    String attribute = socialNetwork.toLowerCase();
+    String textHint;
+
+    switch (attribute) {
+      case "facebook":
+        textHint = facebook;
+        break;
+
+      case "instagram":
+        textHint = instagram;
+        break;
+
+      case "twitter":
+        textHint = twitter;
+        break;
+
+      case "github":
+        textHint = github;
+        break;
+
+      case "linkedin":
+        textHint = linkedin;
+        break;
+    }
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+              title: Text("Edit here your nickname for $socialNetwork"),
+              content: TextField(
+                controller: _textFieldController,
+                textInputAction: TextInputAction.go,
+                keyboardType: TextInputType.text,
+                decoration: InputDecoration(hintText: textHint),
+              ),
+              actions: <Widget>[
+                new FlatButton(
+                    child : new Text('Back'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    }),
+                new FlatButton(
+                    child: new Text('Confirm'),
+                    onPressed: () async {
+                      updateDataBase(context, socialNetwork, _textFieldController.text);
+                    }),
+
+              ]);
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+    auth = widget.auth;
     image = widget.image;
     name = widget.name;
     job = widget.job;
@@ -133,13 +243,44 @@ class _MyProfile2 extends State<MyProfile2> {
     twitter = widget.twitter;
     github = widget.github;
     myInterests = interests.split(',').toList();
+    code = widget.code;
 
     return WillPopScope(
         onWillPop: () async => false,
         child: Scaffold(
+          floatingActionButton: Align(
+          alignment: Alignment(1.04,-0.84),
+          child: FloatingActionButton(
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 0, right: 0.0),
+                      child: Icon(
+                        FontAwesomeIcons.check,
+                        color: const Color(0xffffffff),
+                      )),
+                  backgroundColor: const Color(0xff1A2677),
+                  onPressed: () {
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => MyProfile2(
+                        auth: auth,
+                        image: image,
+                        name: name,
+                        job: job,
+                        interests: interests,
+                        city: city,
+                        bio: bio,
+                        area: area,
+                        linkedin: linkedin,
+                        facebook: facebook,
+                        instagram: instagram,
+                        twitter: twitter,
+                        github: github,
+                        code: code)));
+                  },
+          )),
           backgroundColor: const Color(0xffffffff),
           body: Stack(
             children: <Widget>[
+
               Transform.translate(
                 offset: Offset(SizeConfig.screenWidth * 34.0,
                     SizeConfig.screenHeight * 150.0),
@@ -160,47 +301,12 @@ class _MyProfile2 extends State<MyProfile2> {
                   height: SizeConfig.screenHeight * 194.0,
                   decoration: BoxDecoration(
                     borderRadius:
-                        BorderRadius.all(Radius.elliptical(9999.0, 9999.0)),
+                    BorderRadius.all(Radius.elliptical(9999.0, 9999.0)),
                     color: const Color(0xfff5f5f5),
                   ),
                 ),
               ),
-              Transform.translate(
-                  offset: Offset(SizeConfig.screenWidth * 340,
-                      SizeConfig.screenHeight * 20 + 20),
-                  child: SizedBox.fromSize(
-                    size: Size(56, 56), // button width and height
-                    child: ClipOval(
-                      child: Material(
-                        color: const Color(0xff1A2677), // button color
-                        child: InkWell(
-                          splashColor: const Color(0xff1A2677), // splash color
-                          onTap: () async {
-                            Navigator.of(context).pushReplacement(MaterialPageRoute(
-                                builder: (context) => EditProfile2(
-                                    auth: widget.auth,
-                                    image: image,
-                                    name: name,
-                                    job: job,
-                                    interests: interests,
-                                    city: city,
-                                    bio: bio,
-                                    area: area,
-                                    linkedin: linkedin,
-                                    facebook: facebook,
-                                    instagram: instagram,
-                                    twitter: twitter,
-                                    github: github,
-                                    code: widget.code)));
-                          }, // button pressed
-                          child: Icon(
-                            FontAwesomeIcons.pencilAlt,
-                            color: Colors.white,
-                          ), // icon
-                        ),
-                      ),
-                    ),
-                  )),
+
               Transform.translate(
                 offset: Offset(SizeConfig.screenWidth * 158.5,
                     SizeConfig.screenHeight * 290.0),
@@ -220,18 +326,6 @@ class _MyProfile2 extends State<MyProfile2> {
                   ),
                 ),
               ),
-              Container(),
-              Container(),
-              Container(),
-              Container(),
-              Container(),
-              Container(),
-              Container(),
-              Container(),
-              Container(),
-              Container(),
-              Container(),
-              Container(),
               Transform.translate(
                 offset: Offset(SizeConfig.screenWidth * 130,
                     SizeConfig.screenHeight * 350),
@@ -307,18 +401,9 @@ class _MyProfile2 extends State<MyProfile2> {
                                 ? const Color(0xff1A2677)
                                 : const Color(0xffdddddd)),
                         onPressed: () async {
-                          if (this.linkedin == null)
-                            showAlertDialog(context, "LinkedIn");
-                          else {
-                            String url =
-                                'https://linkedin.com/in/' + this.linkedin;
-                            if (await canLaunch(url)) {
-                              await launch(url);
-                            } else {
-                              throw 'Could not launch $url';
-                            }
+                          showTextEditDialog(context, "LinkedIn");
                           }
-                        })),
+                        )),
               ),
               Transform.translate(
                 offset: Offset(SizeConfig.screenWidth * 220,
@@ -330,16 +415,7 @@ class _MyProfile2 extends State<MyProfile2> {
                                 ? const Color(0xff1A2677)
                                 : const Color(0xffdddddd)),
                         onPressed: () async {
-                          if (this.twitter == null)
-                            showAlertDialog(context, "Twitter");
-                          else {
-                            String url = 'https://twitter.com/' + this.twitter;
-                            if (await canLaunch(url)) {
-                              await launch(url);
-                            } else {
-                              throw 'Could not launch $url';
-                            }
-                          }
+                          showTextEditDialog(context, "Twitter");
                         })),
               ),
               Transform.translate(
@@ -352,16 +428,7 @@ class _MyProfile2 extends State<MyProfile2> {
                                 ? const Color(0xff1A2677)
                                 : const Color(0xffdddddd)),
                         onPressed: () async {
-                          if (this.github == null)
-                            showAlertDialog(context, "Github");
-                          else {
-                            String url = 'https://github.com/' + this.github;
-                            if (await canLaunch(url)) {
-                              await launch(url);
-                            } else {
-                              throw 'Could not launch $url';
-                            }
-                          }
+                          showTextEditDialog(context, "GitHub");
                         })),
               ),
               Transform.translate(
@@ -374,17 +441,7 @@ class _MyProfile2 extends State<MyProfile2> {
                                 ? const Color(0xff1A2677)
                                 : const Color(0xffdddddd)),
                         onPressed: () async {
-                          if (this.instagram == null)
-                            showAlertDialog(context, "Instagram");
-                          else {
-                            String url =
-                                'https://instagram.com/' + this.instagram;
-                            if (await canLaunch(url)) {
-                              await launch(url);
-                            } else {
-                              throw 'Could not launch $url';
-                            }
-                          }
+                          showTextEditDialog(context, "Instagram");
                         })),
               ),
               Transform.translate(
@@ -397,18 +454,7 @@ class _MyProfile2 extends State<MyProfile2> {
                                 ? const Color(0xff1A2677)
                                 : const Color(0xffdddddd)),
                         onPressed: () async {
-                          if (this.facebook == null)
-                            showAlertDialog(context, "Facebook");
-                          else {
-                            String url =
-                                'https://facebook.com/' + this.facebook;
-
-                            if (await canLaunch(url)) {
-                              await launch(url);
-                            } else {
-                              throw 'Could not launch $url';
-                            }
-                          }
+                          showTextEditDialog(context, "Facebook");
                         })),
               ),
               Transform.translate(
@@ -435,7 +481,7 @@ class _MyProfile2 extends State<MyProfile2> {
                 offset: Offset(SizeConfig.screenWidth * 270,
                     SizeConfig.screenHeight * 710.0),
                 child:
-                    // Adobe XD layer: 'NoPath' (shape)
+                // Adobe XD layer: 'NoPath' (shape)
                 RaisedButton(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(18.0),
@@ -457,8 +503,8 @@ class _MyProfile2 extends State<MyProfile2> {
                 offset: Offset(SizeConfig.screenWidth * 150,
                     SizeConfig.screenHeight * 100.0),
                 child:
-                    // Adobe XD layer: 'NoPath' (shape)
-                    Container(
+                // Adobe XD layer: 'NoPath' (shape)
+                Container(
                   child: CircleAvatar(
                     backgroundImage: NetworkImage(this.image),
                     radius: 50,
@@ -476,19 +522,20 @@ class _MyProfile2 extends State<MyProfile2> {
                         child: InkWell(
                           splashColor: const Color(0xff1A2677), // splash color
                           onTap: () async {
-                            FirebaseDatabase.instance
-                                .reference()
-                                .once()
-                                .then((DataSnapshot snapshot) {
-                              Map<dynamic, dynamic> map = snapshot.value;
-                              Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                      builder: (context) => HomeFeed(
-                                          auth: widget.auth,
-                                          code: widget.code,
-                                          map: map)));
-                            });
-                          }, // button pressed
+                              FirebaseDatabase.instance
+                                  .reference()
+                                  .once()
+                                  .then((DataSnapshot snapshot) {
+                                Map<dynamic, dynamic> map = snapshot.value;
+                                Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                        builder: (context) => HomeFeed(
+                                            auth: auth,
+                                            code: widget.code,
+                                            map: map)));
+                              });
+                            },
+                           // button pressed
                           child: Icon(
                             FontAwesomeIcons.home,
                             color: Colors.white,
@@ -497,40 +544,6 @@ class _MyProfile2 extends State<MyProfile2> {
                       ),
                     ),
                   )),
-              Container(
-                child: Align(
-                  alignment: FractionalOffset.bottomLeft,
-                  child: Padding(
-                    padding: EdgeInsets.only(bottom: 75.0, left: 35.0),
-                    child: FloatingActionButton(
-                      onPressed: () async {
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (context) => MyProfile1(
-                                auth: widget.auth,
-                                image: image,
-                                name: name,
-                                job: job,
-                                interests: interests,
-                                city: city,
-                                bio: bio,
-                                area: area,
-                                linkedin: linkedin,
-                                facebook: facebook,
-                                instagram: instagram,
-                                twitter: twitter,
-                                github: github,
-                                code: widget.code)));
-                      },
-                      backgroundColor: const Color(0xffdddddd),
-                      elevation: 0,
-                      child: Icon(
-                        FontAwesomeIcons.arrowLeft,
-                        color: const Color(0xff1A2677),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
             ],
           ),
         ));

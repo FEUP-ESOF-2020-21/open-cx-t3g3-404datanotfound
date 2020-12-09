@@ -179,15 +179,13 @@ class _ConferenceHistoryState extends State<ConferenceHistory>{
                     //initial value
                     value: this.showConferenceHistory,
                     textOn: 'Allowed',
-                    textOff: 'Not Allowed',
+                    textOff: 'No',
                     colorOn: Color(0xff1A2677),
                     colorOff: Colors.black54,
                     iconOn: Icons.done,
                     iconOff: Icons.lock,
                     textSize: 16.0,
                     onChanged: (bool state) {
-                      print("This:");
-                      print(state );
                       this.showConferenceHistory = state;
                       firebaseDatabaseRef
                           .child("showConferenceHistory")

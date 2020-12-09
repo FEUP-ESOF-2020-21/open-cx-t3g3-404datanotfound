@@ -35,8 +35,8 @@ class SizeConfig {
   }
 }
 
-class EditProfile extends StatefulWidget {
-  EditProfile(
+class EditProfile1 extends StatefulWidget {
+  EditProfile1(
       {Key key,
       this.auth,
       this.image,
@@ -70,10 +70,10 @@ class EditProfile extends StatefulWidget {
   final String code;
 
   @override
-  State<StatefulWidget> createState() => MyEditProfile();
+  State<StatefulWidget> createState() => _EditProfile1();
 }
 
-class MyEditProfile extends State<EditProfile> {
+class _EditProfile1 extends State<EditProfile1> {
   String image;
   String interests;
   String facebook;
