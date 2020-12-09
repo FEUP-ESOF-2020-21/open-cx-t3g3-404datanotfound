@@ -223,14 +223,13 @@ class _Post extends State<Post> {
             FirebaseDatabase.instance.reference().child('Posts').child(code);
 
         DateTime now = DateTime.now();
-        String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(now);
+        String formattedDate = DateFormat('yyyy-MM-dd – HH:mm').format(now);
         if (text == "") text = " ";
         firebaseDatabaseRef.child(formattedDate).set({
           'text': text,
           'multimedia': URL,
           'user': widget.auth.currentUser.uid,
           'likes': likes,
-          'numComments': 0
         });
       });
     } else {
@@ -238,7 +237,7 @@ class _Post extends State<Post> {
           FirebaseDatabase.instance.reference().child('Posts').child(code);
 
       DateTime now = DateTime.now();
-      String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(now);
+      String formattedDate = DateFormat('yyyy-MM-dd – HH:mm').format(now);
       if (text == "") text = " ";
       URL = " ";
 
@@ -247,7 +246,6 @@ class _Post extends State<Post> {
         'multimedia': URL,
         'user': widget.auth.currentUser.uid,
         'likes': likes,
-        'numComments': 0
       });
     }
   }
@@ -262,6 +260,8 @@ class _Post extends State<Post> {
     userRole = widget.userRole;
     String textPostsLeft;
 
+
+
     if(userRole != "Organizer")
       textPostsLeft = "\nNumber of Posts left: $postsLeft";
     else
@@ -271,51 +271,32 @@ class _Post extends State<Post> {
     return WillPopScope(
         onWillPop: () async => false,
         child: Scaffold(
-          floatingActionButton: Container(
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    child: Expanded(
-                      child: Align(
-                        alignment: FractionalOffset.topLeft,
-                        child: Padding(
-                          padding:
-                          EdgeInsets.only(left: 20.0, top: 35.0),
-                          child: FloatingActionButton(
-                            onPressed: () async {
-                              if (text == null && _multiFile == null) {
-                                FirebaseDatabase.instance
-                                    .reference()
-                                    .once()
-                                    .then((DataSnapshot snapshot) {
-                                  Map<dynamic, dynamic> map = snapshot.value;
-                                  String image = map.values.toList()[2][widget
-                                      .auth.currentUser.uid]["photo"];
-                                  Navigator.of(context).pushReplacement(
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              HomeFeed(auth: widget.auth,
-                                                code: widget.code,
-                                                map: map,)));
-                                });
-                              } else {
-                                showAlertDialog2(context);
-                              }
-                            },
-                            backgroundColor: const Color(0xff1A2677),
-                            child: Icon(
-                              FontAwesomeIcons.arrowLeft,
-                              color: const Color(0xffffffff),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              )),
             resizeToAvoidBottomPadding: false,
             appBar: AppBar(
+              leading: IconButton(
+                //button to return to feed
+                icon: Icon(FontAwesomeIcons.arrowLeft),
+                onPressed: () async {
+                  if (text == null && _multiFile == null) {
+                    FirebaseDatabase.instance
+                        .reference()
+                        .once()
+                        .then((DataSnapshot snapshot) {
+                      Map<dynamic, dynamic> map = snapshot.value;
+                      String image = map.values.toList()[2][widget
+                          .auth.currentUser.uid]["photo"];
+                      Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  HomeFeed(auth: widget.auth,
+                                    code: widget.code,
+                                    map: map,)));
+                    });
+                  } else {
+                    showAlertDialog2(context);
+                  }
+                },
+              ),
               title: RichText(
                 text: TextSpan(
                   text: "New Post",

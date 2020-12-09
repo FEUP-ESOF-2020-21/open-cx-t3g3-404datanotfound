@@ -36,6 +36,7 @@ dependencies:
   video_player:
   flutter_tags: "^0.4.9+1"
   flutter_search_bar: ^2.1.0
+
   lite_rolling_switch: ^0.1.1
   flutter_spinbox: ^0.2.1
 

@@ -1,8 +1,9 @@
 import 'package:ConfereceBook/EnterEventCode.dart';
 import 'package:ConfereceBook/JoinAnEvent.dart';
 import 'package:ConfereceBook/Login.dart';
-import 'package:ConfereceBook/MyProfile.dart';
+import 'package:ConfereceBook/MyProfile1.dart';
 import 'package:ConfereceBook/Post.dart';
+import 'package:ConfereceBook/ViewConferenceHistory.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -40,14 +41,13 @@ class ViewProfile1 extends StatefulWidget {
     this.auth,
     this.userToSee,
     this.map,
-    this.code
+    this.code,
   }) : super(key: key);
 
   final FirebaseAuth auth;
   final String userToSee;
   final Map<dynamic, dynamic> map;
   final String code;
-
 
   @override
   State<StatefulWidget> createState() => _ViewProfile1();
@@ -257,7 +257,9 @@ class _ViewProfile1 extends State<ViewProfile1> {
                             alignment: FractionalOffset.bottomRight,
                             child: Padding(
                               padding: EdgeInsets.only(bottom: 75.0, right: 35.0),
+
                               child: FloatingActionButton(
+                                heroTag: "btn1",
                                 onPressed: () async {
                                   Navigator.of(context).pushReplacement(
                                       MaterialPageRoute(
@@ -279,7 +281,7 @@ class _ViewProfile1 extends State<ViewProfile1> {
                             ),
                           ),
                         ),
-                      )
+                      ),
 
                     ],
                   )),
@@ -305,7 +307,11 @@ class _ViewProfile1 extends State<ViewProfile1> {
                                       builder: (context) => ParticipantsList(
                                           auth: widget.auth,
                                           code: widget.code,
-                                          map: map
+                                          map: map,
+                                        attendeeFilter: true,
+                                        speakerFilter: true,
+                                        sponsorFilter: true,
+                                        organizerFilter: true,
                                       )));
                                 });
                           }, // button pressed
@@ -347,7 +353,31 @@ class _ViewProfile1 extends State<ViewProfile1> {
                       ),
                     ),
                   )),
+              Transform.translate(
+                  offset: Offset(
+                      SizeConfig.screenWidth * 43, SizeConfig.screenHeight * 705),
+                  child: SizedBox.fromSize(
+                    size: Size(56, 56), // button width and height
+                    child: ClipOval(
+                      child: Material(
+                        color: const Color(0xffededed), // button color
+                        child: InkWell(
+                          splashColor: const Color(0xffededed), // splash color
+                          onTap: () async {
+                              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                          builder: (context) => ViewConferenceHistory(
+                                            auth: auth,
+                                            userToSee:userToSee,
+                                            code: code,
+                                            map: map,)));
 
+                          }, // button pressed
+                          child: Icon(FontAwesomeIcons.history, color: const Color(0xff1A2677),), // icon
+
+                        ),
+                      ),
+                    ),
+                  )),
             ],
           ),
         ));

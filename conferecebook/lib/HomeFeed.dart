@@ -1,7 +1,9 @@
+
+import 'package:ConfereceBook/ConferenceHistory.dart';
 import 'package:ConfereceBook/EnterEventCode.dart';
 import 'package:ConfereceBook/JoinAnEvent.dart';
 import 'package:ConfereceBook/Login.dart';
-import 'package:ConfereceBook/MyProfile.dart';
+import 'package:ConfereceBook/MyProfile1.dart';
 import 'package:ConfereceBook/Post.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -18,6 +20,8 @@ import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
 import 'ModerationSettings.dart';
 import 'ViewProfile1.dart';
+import 'CommentsPage.dart';
+import 'package:intl/intl.dart';
 
 class SizeConfig {
   static MediaQueryData _mediaQueryData;
@@ -68,7 +72,25 @@ class _HomeFeed extends State<HomeFeed> {
   int numPosts;
   final GlobalKey<ScaffoldState> _scaffoldState = GlobalKey();
   var likes;
+  Map<dynamic, dynamic> comments;
+  int numComments;
 
+  String checkSameDay(String date) {
+    DateTime now = DateTime.now();
+    String today = DateFormat('yyyy-MM-dd').format(now);
+
+    DateTime yesterday = now.subtract(Duration(days: 1));
+    String yester = DateFormat('yyyy-MM-dd').format(yesterday);
+
+    String hour = date.substring(13, 18);
+    String day = date.substring(0, 10);
+
+    if (date.contains(today))
+      return "Today (" + hour + ")";
+    else if (date.contains(yester))
+      return "Yesterday (" + hour + ")";
+    return day + " (" + hour + ")";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -174,11 +196,28 @@ class _HomeFeed extends State<HomeFeed> {
     String typeOfControl;
 
     int numPostsFromThisUser = 0;
-    int numTotalPosts = myMap.values.toList()[1][code].length;
+    int numTotalPosts;
     int numPostsLeft;
+    var posts;
+    List<String> postsIDs = new List();
 
-    // create list with the codes for existing posts
-    var posts = myMap.values.toList()[1][code].keys;
+
+    if(myMap.values.toList()[1][code]==null)
+      numTotalPosts = 0;
+    else{
+      numTotalPosts = myMap.values.toList()[1][code].length;
+
+      // get posts
+      posts = myMap.values.toList()[1][code].keys;
+
+      //get postsIDs
+      for(int i = 0; i < numTotalPosts; i++) {
+        String postID = posts.elementAt(i); // get post no. i
+        postsIDs.add(postID);
+      }
+      postsIDs.sort((b,a) => a.compareTo(b)); //sort posts
+
+    }
 
     // compute number of posts from this user
     for(int i = 0; i < numTotalPosts; i++) {
@@ -326,7 +365,17 @@ class _HomeFeed extends State<HomeFeed> {
       }
     }
 
+    //function to see if post is liked by specific user
+    bool postIsCommented(Map<dynamic, dynamic> comments, String user){
+      for (int i=0; i<comments.keys.toList().length; i++){
+        if(comments.values.toList()[i]["author"].toString()==user)
+          return true; //the user is on the list of users who commented the post
+      }
+      return false; //the user is not on the list of users who liked the post
+    }
+
     bool isLiked;
+    bool isCommented;
 
     showLimitDialog(BuildContext context){
 
@@ -381,6 +430,7 @@ class _HomeFeed extends State<HomeFeed> {
     }
     SizeConfig().init(context);
     if (numPosts != 0) {
+  
       return WillPopScope(
           onWillPop: () async => false, child: Scaffold(
         key: _scaffoldState,
@@ -413,6 +463,10 @@ class _HomeFeed extends State<HomeFeed> {
                           auth: auth,
                           map: map,
                           code: code,
+                          attendeeFilter: true,
+                          speakerFilter: true,
+                          sponsorFilter: true,
+                          organizerFilter: true,
                         )));
                   });
                 }
@@ -462,7 +516,7 @@ class _HomeFeed extends State<HomeFeed> {
                   radius: 22,
                 )),
           ],
-          title: Text(""),
+          title: Text(myMap.values.toList()[0][confId]["name"], style: TextStyle(fontSize: 15),), //display conference name
           backgroundColor: const Color(0xff1A2677),
           leading: IconButton(icon: new Icon(FontAwesomeIcons.bars, color: const Color(0xffffffff),), onPressed: (){
             _scaffoldState.currentState.openDrawer();
@@ -551,6 +605,10 @@ class _HomeFeed extends State<HomeFeed> {
                           auth: auth,
                           map: map,
                           code: code,
+                          attendeeFilter: true,
+                          speakerFilter: true,
+                          sponsorFilter: true,
+                          organizerFilter: true,
                         )));
                   });
                 },
@@ -608,23 +666,38 @@ class _HomeFeed extends State<HomeFeed> {
                     this.likes=null; //restart likes variable
 
                     String user = auth.currentUser.uid;
+                    String confId=widget.code;
 
-                    Map<dynamic, dynamic> postInfo = myMap.values.toList()[1][widget.code];
-                    String postID = postInfo.keys.toList()[position];
-                    String userUID = postInfo.values.toList()[position]["user"];
-                    String text = postInfo.values.toList()[position]["text"];
-                    String multimedia = postInfo.values.toList()[position]["multimedia"];
-
-                    if(postInfo.values.toList()[position]["likes"]!=null){
-                      this.likes=postInfo.values.toList()[position]["likes"].keys;}
-
-                    int numComments = postInfo.values.toList()[position]["numComments"];
-
+                    String postID = postsIDs[position];
+                    String userUID = myMap.values.toList()[1][confId][postID]["user"];
+                    String text = myMap.values.toList()[1][confId][postID]["text"];
+                    String multimedia = myMap.values.toList()[1][confId][postID]["multimedia"];
                     String name = myMap.values.toList()[2][userUID]["name"];
                     String userPhoto = myMap.values.toList()[2][userUID]["photo"];
                     Uri uri = Uri.parse(multimedia);
                     String typeString = uri.path.substring(uri.path.length - 3)
                         .toLowerCase();
+
+
+                    if(myMap.values.toList()[1][confId][postID]["likes"]!=null){
+                      this.likes=myMap.values.toList()[1][confId][postID]["likes"].keys;}
+
+                    if(myMap.values.toList()[1][confId][postID]["likes"]!=null){
+                      this.likes=myMap.values.toList()[1][confId][postID]["likes"].keys;}
+
+                    if(myMap.values.toList()[1][confId][postID]["comments"]!=null){
+                      comments = myMap.values.toList()[1][confId][postID]["comments"];
+                      numComments = myMap.values.toList()[1][confId][postID]["comments"].length;
+                      if (postIsCommented(comments, user)) {
+                          isCommented = true;
+                      }
+                      if(isCommented==null)
+                        isCommented=false;
+                    }
+                    else {
+                      numComments = 0;
+                      isCommented=false; //by default
+                    }
 
                     String type = "";
                     if (typeString == "jpg") {
@@ -638,6 +711,7 @@ class _HomeFeed extends State<HomeFeed> {
                     }else{
                       isLiked=false;
                     }
+
                     //build string for number of likes in post
                     String numLikes = "";
                     if (likes==null) {
@@ -645,6 +719,7 @@ class _HomeFeed extends State<HomeFeed> {
                     } else {
                       numLikes = this.likes.length.toString();
                     }
+
                     return Container(
                         margin: const EdgeInsets.all(15.0),
                         padding: const EdgeInsets.all(3.0),
@@ -657,8 +732,12 @@ class _HomeFeed extends State<HomeFeed> {
                           borderRadius: BorderRadius.all(Radius.circular(20)),
                         ),
                         child:  SizedBox(
-                            width: multimedia != " " ? SizeConfig.screenWidth * 500 : SizeConfig.screenWidth * 200,
-                            height: multimedia != " " ? SizeConfig.screenHeight * 500 : SizeConfig.screenWidth * 200,
+                            width: multimedia != " " ?
+                              SizeConfig.screenWidth * 500 :
+                              SizeConfig.screenWidth * 200 ,
+                            height: multimedia != " " ?
+                            (text != null ? SizeConfig.screenHeight * 500 + (text.length/30)*10 : SizeConfig.screenHeight * 500) :
+                              SizeConfig.screenHeight * 130 + (text.length/30)*10,
                             child: Stack(
                               children: <Widget>[
                                 if (userRole == "Organizer")
@@ -673,7 +752,6 @@ class _HomeFeed extends State<HomeFeed> {
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: <Widget>[
-
                                         Text(name + "  ", style: TextStyle(color: const Color(0xff000000), fontWeight: FontWeight.bold),),
                                         InkWell(
                                           onTap: () async {
@@ -703,14 +781,14 @@ class _HomeFeed extends State<HomeFeed> {
                                 Transform.translate(
                                   offset: Offset(SizeConfig.screenWidth * 60.0, SizeConfig.screenHeight * 50.0),
                                   child:  SizedBox(
-                                      width: SizeConfig.screenWidth * 250 ,
-                                      height: SizeConfig.screenHeight * 500 ,
+                                      width: text != null ? SizeConfig.screenWidth * 250 : 0,
+                                      height: text != null ? SizeConfig.screenHeight * 500 : 0,
                                       child: text != null ? Text(text, style: TextStyle(color: const Color(0xff000000)),) : Container()
                                   ),),
                                 Transform.translate(
-                                  offset: Offset(SizeConfig.screenWidth *  0.0, SizeConfig.screenHeight * 95.0),
+                                  offset: text != null ? Offset(SizeConfig.screenWidth *  10, SizeConfig.screenHeight * 80.0 + (text.length/30)*10) : Offset(SizeConfig.screenWidth *  10, SizeConfig.screenHeight * 80.0),
                                   child: SizedBox(
-                                    width: multimedia != " " ? SizeConfig.screenWidth * 360 : 0,
+                                    width: multimedia != " " ? SizeConfig.screenWidth * 350 : 0,
                                     height: multimedia != " " ? SizeConfig.screenHeight * 360 : 0,
                                     child: Container(
                                       child: multimedia != " " ? (type == "image") ? Image(image: NetworkImage(multimedia)) :
@@ -727,10 +805,36 @@ class _HomeFeed extends State<HomeFeed> {
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: <Widget>[
-                                        // separates trash icon from reactions
-                                        //SizedBox(width: 15),
+                                        Text("      " + checkSameDay(postID), style: new TextStyle(
+                                          fontSize: 10.0,
+                                          color: Colors.grey,
+                                        ),),
+                                        Expanded(child: SizedBox()),
                                         Text("    "+numComments.toString()+"   "),
-                                        Icon(FontAwesomeIcons.commentAlt),
+                                        IconButton(
+                                          icon: isCommented ? Icon(FontAwesomeIcons.commentAlt, color: Colors.black) : Icon(FontAwesomeIcons.commentAlt, color: Colors.grey),
+                                          onPressed: () async {
+                                              FirebaseDatabase.instance
+                                                  .reference()
+                                                  .once()
+                                                  .then((DataSnapshot snapshot) {
+                                                Map<dynamic, dynamic> map = snapshot
+                                                    .value;
+                                                Map<dynamic, dynamic> postInfo = map.values.toList()[1][widget.code];
+
+                                                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                                    builder: (context) => CommentsPage(
+                                                        auth: widget.auth, //user that will comment
+                                                        map: map,
+                                                        postID: postID,
+                                                        confId: confId,
+                                                    )));
+                                              });
+
+                                              //Navigator.push(context, MaterialPageRoute(builder: (context) => CommentsPage()));
+                                          }
+                                        ),
+
                                         SizedBox(width: 25),
                                         Text(numLikes),
                                         IconButton(
@@ -744,11 +848,10 @@ class _HomeFeed extends State<HomeFeed> {
                                                   .then((DataSnapshot snapshot) {
                                                 Map<dynamic, dynamic> map = snapshot
                                                     .value;
-                                                postInfo =
-                                                map.values.toList()[1][widget.code];
+                                                Map<dynamic, dynamic> postInfo = map.values.toList()[1][widget.code];
                                               });
-                                              if(postInfo.values.toList()[position]["likes"]!=null){
-                                                this.likes=postInfo.values.toList()[position]["likes"].keys;
+                                              if(myMap.values.toList()[1][confId][postID]["likes"]!=null){
+                                                this.likes=myMap.values.toList()[1][confId][postID]["likes"].keys;
                                               }
 
                                               isLiked = postIsLiked(likes, user); //get current state of like
@@ -851,6 +954,10 @@ class _HomeFeed extends State<HomeFeed> {
                           auth: auth,
                           map: map,
                           code: code,
+                          attendeeFilter: true,
+                          speakerFilter: true,
+                          sponsorFilter: true,
+                          organizerFilter: true,
                         )));
                   });
                 }
@@ -987,6 +1094,10 @@ class _HomeFeed extends State<HomeFeed> {
                           auth: auth,
                           map: map,
                           code: code,
+                          attendeeFilter: true,
+                          speakerFilter: true,
+                          sponsorFilter: true,
+                          organizerFilter: true,
                         )));
                   });
                 },

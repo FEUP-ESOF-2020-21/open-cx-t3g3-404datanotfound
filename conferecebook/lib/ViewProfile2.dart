@@ -1,7 +1,7 @@
 import 'package:ConfereceBook/EnterEventCode.dart';
 import 'package:ConfereceBook/JoinAnEvent.dart';
 import 'package:ConfereceBook/Login.dart';
-import 'package:ConfereceBook/MyProfile.dart';
+import 'package:ConfereceBook/MyProfile1.dart';
 import 'package:ConfereceBook/Post.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -445,7 +445,11 @@ class _ViewProfile2 extends State<ViewProfile2> {
                                       builder: (context) => ParticipantsList(
                                           auth: widget.auth,
                                           code: widget.code,
-                                          map: map
+                                          map: map,
+                                        attendeeFilter: true,
+                                        speakerFilter: true,
+                                        sponsorFilter: true,
+                                        organizerFilter: true,
                                       )));
                             });
                           }, // button pressed

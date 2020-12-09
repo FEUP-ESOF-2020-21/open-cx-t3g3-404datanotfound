@@ -1,7 +1,7 @@
 import 'dart:core';
 
 import 'package:ConfereceBook/Login.dart';
-import 'package:ConfereceBook/MyProfile.dart';
+import 'package:ConfereceBook/MyProfile1.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -131,6 +131,7 @@ class _MyProfile2 extends State<MyProfile2> {
     twitter = widget.twitter;
     github = widget.github;
     myInterests = interests.split(',').toList();
+
     return WillPopScope(
         onWillPop: () async => false,
         child: Scaffold(

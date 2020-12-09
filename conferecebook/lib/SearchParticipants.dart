@@ -17,7 +17,7 @@ import 'dart:async';
 import 'package:flutter_search_bar/flutter_search_bar.dart';
 
 
-import 'MyProfile.dart';
+import 'MyProfile1.dart';
 
 class SearchParticipants extends StatefulWidget {
 
@@ -140,7 +140,11 @@ class _SearchParticipants extends State<SearchParticipants> {
                               ParticipantsList(
                                   auth: auth,
                                   code: code,
-                                  map: map)));
+                                  map: map,
+                                attendeeFilter: true,
+                                speakerFilter: true,
+                                sponsorFilter: true,
+                                organizerFilter: true,)));
                 });
               }
           ),
