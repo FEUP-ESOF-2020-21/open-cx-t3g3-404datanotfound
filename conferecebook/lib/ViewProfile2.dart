@@ -395,12 +395,11 @@ class _ViewProfile2 extends State<ViewProfile2> {
                               padding: EdgeInsets.only(bottom: 75.0, left: 35.0),
                               child: FloatingActionButton(
                                 onPressed: () async {
-                                  interestsToString();
                                   FirebaseDatabase.instance
-                                      .reference()
-                                      .child('Users')
-                                      .child(widget.auth.currentUser.uid)
-                                      .update({interests: interests}).then((value) {
+                                .reference()
+                                .once()
+                                .then((DataSnapshot snapshot) {
+                              Map<dynamic, dynamic> map = snapshot.value;
                                     Navigator.of(context).pushReplacement(
                                         MaterialPageRoute(
                                             builder: (context) => ViewProfile1(
@@ -408,7 +407,7 @@ class _ViewProfile2 extends State<ViewProfile2> {
                                                 userToSee: userToSee,
                                                 map: map,
                                                 code: widget.code)));
-                                  });
+                                });
                                 },
                                 backgroundColor: const Color(0xffdddddd),
                                 elevation: 0,
