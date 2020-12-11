@@ -345,7 +345,7 @@ class _EditProfile2 extends State<EditProfile2> {
               ),
 
               Container(
-                padding: EdgeInsets.only(top: 570, right: 90, left: 90),
+                padding: EdgeInsets.only(top: 670 * SizeConfig.screenHeight, right: 90, left: 90),
                 child: Text(
                   'Tap the Icons to edit',
                   style: TextStyle(
@@ -361,52 +361,42 @@ class _EditProfile2 extends State<EditProfile2> {
               ),
 
               Container(
-                  padding: EdgeInsets.only(top: 600, right: 50, left: 50),
+                  padding: EdgeInsets.only(top: 700 * SizeConfig.screenHeight, right: 50, left: 50),
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         IconButton(
                           icon: Icon(FontAwesomeIcons.linkedin,
-                              color: this.linkedin != null
-                                  ? const Color(0xff1A2677)
-                                  : const Color(0xffdddddd)),
+                              color: const Color(0xff1A2677)),
                           onPressed: () async {
                             showTextEditDialog(context, "LinkedIn");
                             }
                           ),
 
-                         IconButton(
+                        IconButton(
                                   icon: Icon(FontAwesomeIcons.twitter,
-                                      color: this.twitter != null
-                                          ? const Color(0xff1A2677)
-                                          : const Color(0xffdddddd)),
+                                      color: const Color(0xff1A2677)),
                                   onPressed: () async {
                                     showTextEditDialog(context, "Twitter");
                                   }),
 
-                          IconButton(
+                        IconButton(
                                     icon: Icon(FontAwesomeIcons.github,
-                                        color: this.github != null
-                                            ? const Color(0xff1A2677)
-                                            : const Color(0xffdddddd)),
+                                        color: const Color(0xff1A2677)),
                                     onPressed: () async {
                                       showTextEditDialog(context, "GitHub");
                                     }),
 
-                          IconButton(
+                        IconButton(
                                   icon: Icon(FontAwesomeIcons.instagram,
-                                      color: this.instagram != null
-                                          ? const Color(0xff1A2677)
-                                          : const Color(0xffdddddd)),
+                                      color: const Color(0xff1A2677)),
                                   onPressed: () async {
                                     showTextEditDialog(context, "Instagram");
                                   }),
 
-                          IconButton(
+                        IconButton(
                           icon: Icon(FontAwesomeIcons.facebook,
-                              color: this.facebook != null
-                                  ? const Color(0xff1A2677)
-                                  : const Color(0xffdddddd)),
+                              color: const Color(0xff1A2677)),
                           onPressed: () async {
                             showTextEditDialog(context, "Facebook");
                           }),
