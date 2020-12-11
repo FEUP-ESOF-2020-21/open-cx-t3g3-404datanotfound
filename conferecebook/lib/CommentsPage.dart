@@ -5,6 +5,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart';
 import "dart:async";
+import 'ViewProfile1.dart';
 import "main.dart"; //for current user
 import "HomeFeed.dart";
 import 'package:intl/intl.dart';
@@ -31,12 +32,16 @@ class CommentsPage extends StatefulWidget {
     this.map,
     this.postID,
     this.confId,
+    this.userRole,
+    this.code
   }) : super(key: key);
 
   final FirebaseAuth auth;
   final Map<dynamic, dynamic> map;
   final String postID;
   final String confId;
+  final String userRole;
+  final String code;
 
   @override
   createState() => new CommentsPageState();
@@ -47,6 +52,8 @@ class CommentsPageState extends State<CommentsPage> {
   Map<dynamic, dynamic> map;
   String postID;
   String confId;
+  String userRole;
+  String code;
 
   // initialize all the lists to be present in ListView.Builder
   List<String> commentIDs = new List();
@@ -59,6 +66,7 @@ class CommentsPageState extends State<CommentsPage> {
 
   String comment = "";
 
+
   @override
   void initState() {
     super.initState();
@@ -66,6 +74,8 @@ class CommentsPageState extends State<CommentsPage> {
     map = widget.map;
     postID = widget.postID;
     confId = widget.confId;
+    userRole = widget.userRole;
+    code = widget.code;
 
     if (map.values.toList()[1][confId][postID]["comments"] == null)
       numComments = 0;
@@ -115,35 +125,66 @@ class CommentsPageState extends State<CommentsPage> {
         itemBuilder: (context, index) {
           //define the parameters for each comment
           String commentID = commentIDs[index];
+          String userUID = commentsAuthor[index];
           String name =
               map.values.toList()[2][commentsAuthor[index]]["name"].toString();
           String userPhoto =
               map.values.toList()[2][commentsAuthor[index]]["photo"].toString();
 
           return _buildCommentItem(
-              commentsText[index], name, userPhoto, commentID);
+              commentsText[index], userUID, name, userPhoto, commentID);
         });
   }
 
   //create comment widget
   Widget _buildCommentItem(
-      String comment, String name, String userPhoto, String commentID) {
+      String comment, String userUID, String name, String userPhoto, String commentID) {
     return Card(
         child: ListTile(
-      leading: CircleAvatar(
-        radius: 20.0,
-        backgroundImage: NetworkImage(userPhoto),
-        //default image
-      ),
-      subtitle: Text(comment),
-      title: Row(
+            leading:InkWell(
+              onTap: () async {
+                FirebaseDatabase.instance
+                    .reference()
+                    .once()
+                    .then((DataSnapshot snapshot) {
+                  Map<dynamic, dynamic> map = snapshot.value;
+
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => ViewProfile1(
+                          auth: widget.auth,
+                          userToSee: userUID,
+                          map: map,
+                          code: widget.code)));
+                });
+              },
+              child: CircleAvatar(
+              radius: 20.0,
+              backgroundImage: NetworkImage(userPhoto),
+              //default image
+            )),
+          subtitle:
+                Text(comment),
+
+          title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Text(name),
+
             Text(checkSameDay(commentID), style: new TextStyle(
               fontSize: 10.0,
               color: Colors.grey,
             ),),
+            if (userRole == "Organizer")
+              Transform.scale(
+                  scale: 0.8,
+                  child: IconButton(
+                      icon: Icon(FontAwesomeIcons.times, color: Color(0xff8d0000)),
+                      onPressed: () {
+                        showDeleteDialog(context, commentID);
+                      }
+                  )
+              ),
+
           ]),
       isThreeLine: true,
     ));
@@ -182,6 +223,63 @@ class CommentsPageState extends State<CommentsPage> {
     else if (date.contains(yester))
       return "Yesterday (" + hour + ")";
     return day + " (" + hour + ")";
+  }
+
+  showDeleteDialog(BuildContext context, String commentID){
+    // configura o button cancel
+    Widget cancel = FlatButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    // configures button delete
+    Widget delete = FlatButton(
+      child: Text("Delete"),
+      onPressed: () {
+        FirebaseDatabase.instance // delete from Firebase
+            .reference()
+            .child("Posts")
+            .child(code)
+            .child(postID)
+            .child("comments")
+            .child(commentID)
+            .remove();
+
+        FirebaseDatabase.instance // update the map and rebuild
+            .reference()
+            .once()
+            .then((DataSnapshot snapshot) {
+          Map<dynamic, dynamic> map = snapshot.value;
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) => CommentsPage(
+                auth: widget.auth, //user that will comment
+                map: map,
+                postID: postID,
+                confId: confId,
+                userRole: userRole,
+                code: code,
+              )));
+        });
+
+      },
+    );
+    // configura o  AlertDialog
+    AlertDialog alerta = AlertDialog(
+      title: Text("Delete this comment?"),
+      content: Text("Are you sure you want to delete this comment?"),
+      actions: [
+        cancel,
+        delete
+      ],
+    );
+    // exibe o dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alerta;
+      },
+    );
   }
 
   showAlertDialog(BuildContext context)
@@ -233,6 +331,7 @@ class CommentsPageState extends State<CommentsPage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
         appBar: new AppBar(
           title: Text("Comments"),

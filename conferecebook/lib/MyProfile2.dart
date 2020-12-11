@@ -15,6 +15,10 @@ import 'package:flutter/widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 
+import 'package:page_transition/page_transition.dart';
+
+import 'EditProfile2.dart';
+
 class SizeConfig {
   static MediaQueryData _mediaQueryData;
   static double screenWidth;
@@ -173,7 +177,25 @@ class _MyProfile2 extends State<MyProfile2> {
                         color: const Color(0xff1A2677), // button color
                         child: InkWell(
                           splashColor: const Color(0xff1A2677), // splash color
-                          onTap: () async {}, // button pressed
+                          onTap: () async {
+                            Navigator.of(context, ).pushReplacement(MaterialPageRoute(
+                                builder: (context) => EditProfile2(
+                                    auth: widget.auth,
+                                    image: image,
+                                    name: name,
+                                    job: job,
+                                    interests: interests,
+                                    city: city,
+                                    bio: bio,
+                                    area: area,
+                                    linkedin: linkedin,
+                                    facebook: facebook,
+                                    instagram: instagram,
+                                    twitter: twitter,
+                                    github: github,
+                                    code: widget.code)),
+                            );
+                          }, // button pressed
                           child: Icon(
                             FontAwesomeIcons.pencilAlt,
                             color: Colors.white,

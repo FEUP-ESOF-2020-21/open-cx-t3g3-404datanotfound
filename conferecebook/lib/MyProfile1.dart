@@ -385,7 +385,7 @@ class _MyProfile1 extends State<MyProfile1> {
                           splashColor: const Color(0xff1A2677), // splash color
                           onTap: () async {
                             Navigator.of(context).pushReplacement(MaterialPageRoute(
-                                builder: (context) => EditProfile(
+                                builder: (context) => EditProfile1(
                                     auth: widget.auth,
                                     image: image,
                                     name: name,
