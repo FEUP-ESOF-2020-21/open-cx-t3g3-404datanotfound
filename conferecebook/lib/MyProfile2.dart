@@ -178,22 +178,25 @@ class _MyProfile2 extends State<MyProfile2> {
                         child: InkWell(
                           splashColor: const Color(0xff1A2677), // splash color
                           onTap: () async {
-                            Navigator.of(context, ).pushReplacement(MaterialPageRoute(
-                                builder: (context) => EditProfile2(
-                                    auth: widget.auth,
-                                    image: image,
-                                    name: name,
-                                    job: job,
-                                    interests: interests,
-                                    city: city,
-                                    bio: bio,
-                                    area: area,
-                                    linkedin: linkedin,
-                                    facebook: facebook,
-                                    instagram: instagram,
-                                    twitter: twitter,
-                                    github: github,
-                                    code: widget.code)),
+                            Navigator.of(
+                              context,
+                            ).pushReplacement(
+                              MaterialPageRoute(
+                                  builder: (context) => EditProfile2(
+                                      auth: widget.auth,
+                                      image: image,
+                                      name: name,
+                                      job: job,
+                                      interests: interests,
+                                      city: city,
+                                      bio: bio,
+                                      area: area,
+                                      linkedin: linkedin,
+                                      facebook: facebook,
+                                      instagram: instagram,
+                                      twitter: twitter,
+                                      github: github,
+                                      code: widget.code)),
                             );
                           }, // button pressed
                           child: Icon(
@@ -423,7 +426,7 @@ class _MyProfile2 extends State<MyProfile2> {
                     this.name,
                     style: TextStyle(
                       fontFamily: 'Roboto',
-                      fontSize: 30,
+                      fontSize: this.name.length > 10 ? 20 : 30,
                       color: const Color(0xff1A2677),
                       letterSpacing: 0.28125,
                       fontWeight: FontWeight.w500,
@@ -439,7 +442,7 @@ class _MyProfile2 extends State<MyProfile2> {
                     SizeConfig.screenHeight * 710.0),
                 child:
                     // Adobe XD layer: 'NoPath' (shape)
-                RaisedButton(
+                    RaisedButton(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(18.0),
                       side: BorderSide(color: Colors.red)),
@@ -447,8 +450,8 @@ class _MyProfile2 extends State<MyProfile2> {
                     widget.auth.signOut();
                     Navigator.of(context).pushReplacement(MaterialPageRoute(
                         builder: (context) => MyLogin(
-                          auth: widget.auth,
-                        )));
+                              auth: widget.auth,
+                            )));
                   },
                   color: Colors.red,
                   textColor: Colors.white,

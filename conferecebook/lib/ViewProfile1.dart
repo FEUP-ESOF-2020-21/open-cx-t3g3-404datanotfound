@@ -6,6 +6,7 @@ import 'package:ConfereceBook/Post.dart';
 import 'package:ConfereceBook/ViewConferenceHistory.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:adobe_xd/page_link.dart';
@@ -54,7 +55,6 @@ class ViewProfile1 extends StatefulWidget {
 }
 
 class _ViewProfile1 extends State<ViewProfile1> {
-
   FirebaseAuth auth;
   String userToSee;
   String code;
@@ -66,6 +66,22 @@ class _ViewProfile1 extends State<ViewProfile1> {
   String bio;
   String area;
 
+  showTextDialog(BuildContext context, String text, String title) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+              title: Text(title),
+              content: Text(text),
+              actions: <Widget>[
+                new FlatButton(
+                    child: new Text('Back'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    }),
+              ]);
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +91,6 @@ class _ViewProfile1 extends State<ViewProfile1> {
     auth = widget.auth;
     map = widget.map;
     code = widget.code;
-    print(code);
     image = map.values.toList()[2][userToSee]["photo"];
     name = map.values.toList()[2][userToSee]["name"];
     city = map.values.toList()[2][userToSee]["city"];
@@ -83,11 +98,9 @@ class _ViewProfile1 extends State<ViewProfile1> {
     job = map.values.toList()[2][userToSee]["job"];
     area = map.values.toList()[2][userToSee]["area"];
 
-
     return WillPopScope(
         onWillPop: () async => false,
         child: Scaffold(
-
           backgroundColor: const Color(0xffffffff),
           body: Stack(
             children: <Widget>[
@@ -111,7 +124,7 @@ class _ViewProfile1 extends State<ViewProfile1> {
                   height: SizeConfig.screenHeight * 194.0,
                   decoration: BoxDecoration(
                     borderRadius:
-                    BorderRadius.all(Radius.elliptical(9999.0, 9999.0)),
+                        BorderRadius.all(Radius.elliptical(9999.0, 9999.0)),
                     color: const Color(0xfff5f5f5),
                   ),
                 ),
@@ -139,18 +152,43 @@ class _ViewProfile1 extends State<ViewProfile1> {
                 offset: Offset(
                     SizeConfig.screenWidth * 70, SizeConfig.screenHeight * 430),
                 child: Container(
+                    width: 200,
+                    height: 20,
                     child: Text(
                       bio,
-                      textAlign: TextAlign.center,
+                      textAlign: TextAlign.left,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(fontWeight: FontWeight.bold),
                     )),
               ),
               Transform.translate(
+                  offset: Offset(SizeConfig.screenWidth * 300,
+                      SizeConfig.screenHeight * 430),
+                  child: Container(
+                      width: 190,
+                      height: 20,
+                      child: bio.length > 28
+                          ? RichText(
+                              text: TextSpan(
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                      text: 'See More',
+                                      style: TextStyle(color: Colors.blue),
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () {
+                                          showTextDialog(
+                                              context, bio, "Biography");
+                                        }),
+                                ],
+                              ),
+                            )
+                          : Container())),
+              Transform.translate(
                 offset: Offset(SizeConfig.screenWidth * 59.5,
                     SizeConfig.screenHeight * 376.5),
                 child: Text(
-                  'Bio',
+                  'Biography',
                   style: TextStyle(
                     fontFamily: 'Roboto',
                     fontSize: 20,
@@ -166,9 +204,11 @@ class _ViewProfile1 extends State<ViewProfile1> {
                 offset: Offset(
                     SizeConfig.screenWidth * 70, SizeConfig.screenHeight * 530),
                 child: Container(
+                    width: 200,
+                    height: 20,
                     child: Text(
                       job,
-                      textAlign: TextAlign.center,
+                      textAlign: TextAlign.left,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(fontWeight: FontWeight.bold),
                     )),
@@ -193,9 +233,11 @@ class _ViewProfile1 extends State<ViewProfile1> {
                 offset: Offset(
                     SizeConfig.screenWidth * 70, SizeConfig.screenHeight * 630),
                 child: Container(
+                    width: 200,
+                    height: 20,
                     child: Text(
                       area,
-                      textAlign: TextAlign.center,
+                      textAlign: TextAlign.left,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(fontWeight: FontWeight.bold),
                     )),
@@ -217,6 +259,50 @@ class _ViewProfile1 extends State<ViewProfile1> {
                 ),
               ),
               Transform.translate(
+                  offset: Offset(SizeConfig.screenWidth * 300,
+                      SizeConfig.screenHeight * 630),
+                  child: Container(
+                      width: 190,
+                      height: 20,
+                      child: area.length > 28
+                          ? RichText(
+                              text: TextSpan(
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                      text: 'See More',
+                                      style: TextStyle(color: Colors.blue),
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () {
+                                          showTextDialog(context, area, "Area");
+                                        }),
+                                ],
+                              ),
+                            )
+                          : Container())),
+              Transform.translate(
+                  offset: Offset(SizeConfig.screenWidth * 300,
+                      SizeConfig.screenHeight * 530),
+                  child: Container(
+                      width: 190,
+                      height: 20,
+                      child: job.length > 28
+                          ? RichText(
+                              text: TextSpan(
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                      text: 'See More',
+                                      style: TextStyle(color: Colors.blue),
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () {
+                                          showTextDialog(context, job, "Job");
+                                        }),
+                                ],
+                              ),
+                            )
+                          : Container())),
+              Transform.translate(
                 offset: Offset(SizeConfig.screenWidth * 80,
                     SizeConfig.screenHeight * 250.0),
                 child: SizedBox(
@@ -225,7 +311,7 @@ class _ViewProfile1 extends State<ViewProfile1> {
                     this.name,
                     style: TextStyle(
                       fontFamily: 'Roboto',
-                      fontSize: 30,
+                      fontSize: this.name.length > 10 ? 20 : 30,
                       color: const Color(0xff1A2677),
                       letterSpacing: 0.28125,
                       fontWeight: FontWeight.w500,
@@ -235,13 +321,12 @@ class _ViewProfile1 extends State<ViewProfile1> {
                   ),
                 ),
               ),
-
               Transform.translate(
                 offset: Offset(SizeConfig.screenWidth * 150,
                     SizeConfig.screenHeight * 100.0),
                 child:
-                // Adobe XD layer: 'NoPath' (shape)
-                Container(
+                    // Adobe XD layer: 'NoPath' (shape)
+                    Container(
                   child: CircleAvatar(
                     backgroundImage: NetworkImage(this.image),
                     radius: 50,
@@ -250,44 +335,41 @@ class _ViewProfile1 extends State<ViewProfile1> {
               ),
               Container(
                   child: Column(
-                    children: <Widget>[
-                      Container(
-                        child: Expanded(
-                          child: Align(
-                            alignment: FractionalOffset.bottomRight,
-                            child: Padding(
-                              padding: EdgeInsets.only(bottom: 75.0, right: 35.0),
-
-                              child: FloatingActionButton(
-                                heroTag: "btn1",
-                                onPressed: () async {
-                                  Navigator.of(context).pushReplacement(
-                                      MaterialPageRoute(
-                                          builder: (context) => ViewProfile2(
-                                              auth: auth,
-                                              userToSee: userToSee,
-                                              map: this.map,
-                                              code: this.code,
-                                              )));
-                                  print(code);
-                                },
-                                backgroundColor: const Color(0xffededed),
-                                elevation: 0,
-                                child: Icon(
-                                  FontAwesomeIcons.arrowRight,
-                                  color: const Color(0xff1A2677),
-                                ),
-                              ),
+                children: <Widget>[
+                  Container(
+                    child: Expanded(
+                      child: Align(
+                        alignment: FractionalOffset.bottomRight,
+                        child: Padding(
+                          padding: EdgeInsets.only(bottom: 75.0, right: 35.0),
+                          child: FloatingActionButton(
+                            heroTag: "btn1",
+                            onPressed: () async {
+                              Navigator.of(context)
+                                  .pushReplacement(MaterialPageRoute(
+                                      builder: (context) => ViewProfile2(
+                                            auth: auth,
+                                            userToSee: userToSee,
+                                            map: this.map,
+                                            code: this.code,
+                                          )));
+                            },
+                            backgroundColor: const Color(0xffededed),
+                            elevation: 0,
+                            child: Icon(
+                              FontAwesomeIcons.arrowRight,
+                              color: const Color(0xff1A2677),
                             ),
                           ),
                         ),
                       ),
-
-                    ],
-                  )),
+                    ),
+                  ),
+                ],
+              )),
               Transform.translate(
-                  offset: Offset(
-                      SizeConfig.screenWidth * 10, SizeConfig.screenHeight * 20 + 20),
+                  offset: Offset(SizeConfig.screenWidth * 10,
+                      SizeConfig.screenHeight * 20 + 20),
                   child: SizedBox.fromSize(
                     size: Size(56, 56), // button width and height
                     child: ClipOval(
@@ -301,29 +383,30 @@ class _ViewProfile1 extends State<ViewProfile1> {
                                 .once()
                                 .then((DataSnapshot snapshot) {
                               Map<dynamic, dynamic> map = snapshot.value;
-                              print(code);
-                              Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
+                              Navigator.of(context)
+                                  .pushReplacement(MaterialPageRoute(
                                       builder: (context) => ParticipantsList(
-                                          auth: widget.auth,
-                                          code: widget.code,
-                                          map: map,
-                                        attendeeFilter: true,
-                                        speakerFilter: true,
-                                        sponsorFilter: true,
-                                        organizerFilter: true,
-                                      )));
-                                });
+                                            auth: widget.auth,
+                                            code: widget.code,
+                                            map: map,
+                                            attendeeFilter: true,
+                                            speakerFilter: true,
+                                            sponsorFilter: true,
+                                            organizerFilter: true,
+                                          )));
+                            });
                           }, // button pressed
-                          child: Icon(FontAwesomeIcons.users, color: Colors.white,), // icon
-
+                          child: Icon(
+                            FontAwesomeIcons.users,
+                            color: Colors.white,
+                          ), // icon
                         ),
                       ),
                     ),
                   )),
               Transform.translate(
-                  offset: Offset(
-                      SizeConfig.screenWidth * 340 , SizeConfig.screenHeight * 20 + 20),
+                  offset: Offset(SizeConfig.screenWidth * 340,
+                      SizeConfig.screenHeight * 20 + 20),
                   child: SizedBox.fromSize(
                     size: Size(56, 56), // button width and height
                     child: ClipOval(
@@ -337,25 +420,25 @@ class _ViewProfile1 extends State<ViewProfile1> {
                                 .once()
                                 .then((DataSnapshot snapshot) {
                               Map<dynamic, dynamic> map = snapshot.value;
-                              print(code);
                               Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
                                       builder: (context) => HomeFeed(
                                           auth: widget.auth,
                                           code: widget.code,
-                                          map: map
-                                      )));
+                                          map: map)));
                             });
                           }, // button pressed
-                          child: Icon(FontAwesomeIcons.home, color: Colors.white,), // icon
-
+                          child: Icon(
+                            FontAwesomeIcons.home,
+                            color: Colors.white,
+                          ), // icon
                         ),
                       ),
                     ),
                   )),
               Transform.translate(
-                  offset: Offset(
-                      SizeConfig.screenWidth * 43, SizeConfig.screenHeight * 705),
+                  offset: Offset(SizeConfig.screenWidth * 43,
+                      SizeConfig.screenHeight * 705),
                   child: SizedBox.fromSize(
                     size: Size(56, 56), // button width and height
                     child: ClipOval(
@@ -364,16 +447,19 @@ class _ViewProfile1 extends State<ViewProfile1> {
                         child: InkWell(
                           splashColor: const Color(0xffededed), // splash color
                           onTap: () async {
-                              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                                          builder: (context) => ViewConferenceHistory(
-                                            auth: auth,
-                                            userToSee:userToSee,
-                                            code: code,
-                                            map: map,)));
-
+                            Navigator.of(context)
+                                .pushReplacement(MaterialPageRoute(
+                                    builder: (context) => ViewConferenceHistory(
+                                          auth: auth,
+                                          userToSee: userToSee,
+                                          code: code,
+                                          map: map,
+                                        )));
                           }, // button pressed
-                          child: Icon(FontAwesomeIcons.history, color: const Color(0xff1A2677),), // icon
-
+                          child: Icon(
+                            FontAwesomeIcons.history,
+                            color: const Color(0xff1A2677),
+                          ), // icon
                         ),
                       ),
                     ),
@@ -382,6 +468,4 @@ class _ViewProfile1 extends State<ViewProfile1> {
           ),
         ));
   }
-
-  }
-
+}

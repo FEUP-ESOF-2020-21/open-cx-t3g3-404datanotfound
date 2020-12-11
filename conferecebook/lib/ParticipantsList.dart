@@ -24,7 +24,16 @@ import 'SearchParticipants.dart';
 TextEditingController _textFieldController = TextEditingController();
 
 class ParticipantsList extends StatefulWidget {
-  ParticipantsList({Key key, this.auth, this.map, this.code, this.attendeeFilter, this.speakerFilter, this.sponsorFilter, this.organizerFilter}) : super(key: key);
+  ParticipantsList(
+      {Key key,
+      this.auth,
+      this.map,
+      this.code,
+      this.attendeeFilter,
+      this.speakerFilter,
+      this.sponsorFilter,
+      this.organizerFilter})
+      : super(key: key);
 
   final FirebaseAuth auth;
   final Map<dynamic, dynamic> map;
@@ -70,7 +79,6 @@ class _ParticipantsList extends State<ParticipantsList> {
   bool sponsorFilter;
   bool organizerFilter;
 
-
   showTextAlertDialog(BuildContext context) async {
     return showDialog(
         context: context,
@@ -89,7 +97,6 @@ class _ParticipantsList extends State<ParticipantsList> {
                     onPressed: () async {
                       this.searchToDo = _textFieldController.text;
                       Navigator.of(context).pop();
-                      print("Searching $this.searchToDo");
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
                           builder: (context) => SearchParticipants(
                               auth: auth,
@@ -134,26 +141,30 @@ class _ParticipantsList extends State<ParticipantsList> {
     Map<String, String> mymap = new HashMap<String, String>();
     for (int i = 0; i < numUsersInConference; i++) {
       String user = users.elementAt(i);
-      mymap[map.values.toList()[2][user]["name"]] = user;
+      String aux_name = map.values.toList()[2][user]["name"];
+      mymap[aux_name.toLowerCase()] = user;
     }
 
     Map<String, String> treeMap = new SplayTreeMap<String, String>.from(mymap);
 
     for (int i = 0; i < numUsersInConference; i++) {
-
       String user = treeMap.values.elementAt(i); // get user no. i
 
       // knowing the name of each user, save its properties in profile
 
       bool show = false;
 
-      if (map.values.toList()[0][confId]["users"][user].toString() == "Attendee") {
+      if (map.values.toList()[0][confId]["users"][user].toString() ==
+          "Attendee") {
         show = this.attendeeFilter;
-      } else if (map.values.toList()[0][confId]["users"][user].toString() == "Sponsor") {
+      } else if (map.values.toList()[0][confId]["users"][user].toString() ==
+          "Sponsor") {
         show = this.sponsorFilter;
-      } else if (map.values.toList()[0][confId]["users"][user].toString() == "Speaker") {
+      } else if (map.values.toList()[0][confId]["users"][user].toString() ==
+          "Speaker") {
         show = this.speakerFilter;
-      } else if (map.values.toList()[0][confId]["users"][user].toString() == "Organizer") {
+      } else if (map.values.toList()[0][confId]["users"][user].toString() ==
+          "Organizer") {
         show = this.organizerFilter;
       }
 
@@ -176,11 +187,25 @@ class _ParticipantsList extends State<ParticipantsList> {
     }
   }
 
+  String trimName(String name) {
+    String aux = name.trimRight();
+    List<String> names = aux.split(" ");
+    String newName;
+    if (names.length >= 2) {
+      newName = names[0] + " " + names[names.length - 1];
+    } else {
+      newName = names[0];
+    }
+    return newName;
+  }
+
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(
+        onWillPop: () async => false,
+    child: Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
             leading: IconButton(
@@ -214,11 +239,13 @@ class _ParticipantsList extends State<ParticipantsList> {
             padding: EdgeInsets.zero,
             children: [
               ListTile(),
-              Text("Participants Filter", style: new TextStyle(
-                fontSize: 30.0,
-                fontWeight: FontWeight.bold,
-                color: const Color(0xff1A2677),
-              ),
+              Text(
+                "Participants Filter",
+                style: new TextStyle(
+                  fontSize: 30.0,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xff1A2677),
+                ),
                 textAlign: TextAlign.center,
               ),
               ListTile(),
@@ -231,7 +258,12 @@ class _ParticipantsList extends State<ParticipantsList> {
                 onTap: () async {},
               ),*/
               CheckboxListTile(
-                title: const Text('Show Attendees', style: TextStyle(color: const Color(0xff1A2677),),),
+                title: const Text(
+                  'Show Attendees',
+                  style: TextStyle(
+                    color: const Color(0xff1A2677),
+                  ),
+                ),
                 activeColor: const Color(0xff1A2677),
                 value: attendeeFilter,
                 onChanged: (bool value) {
@@ -239,10 +271,18 @@ class _ParticipantsList extends State<ParticipantsList> {
                     attendeeFilter = value;
                   });
                 },
-                secondary: const Icon(FontAwesomeIcons.users, color: const Color(0xff1A2677),),
+                secondary: const Icon(
+                  FontAwesomeIcons.users,
+                  color: const Color(0xff1A2677),
+                ),
               ),
               CheckboxListTile(
-                title: const Text('Show Sponsors', style: TextStyle(color: const Color(0xff1A2677),),),
+                title: const Text(
+                  'Show Sponsors',
+                  style: TextStyle(
+                    color: const Color(0xff1A2677),
+                  ),
+                ),
                 activeColor: const Color(0xff1A2677),
                 value: sponsorFilter,
                 onChanged: (bool value) {
@@ -250,10 +290,18 @@ class _ParticipantsList extends State<ParticipantsList> {
                     sponsorFilter = value;
                   });
                 },
-                secondary: const Icon(FontAwesomeIcons.building, color: const Color(0xff1A2677),),
+                secondary: const Icon(
+                  FontAwesomeIcons.building,
+                  color: const Color(0xff1A2677),
+                ),
               ),
               CheckboxListTile(
-                title: const Text('Show Organizers', style: TextStyle(color: const Color(0xff1A2677),),),
+                title: const Text(
+                  'Show Organizers',
+                  style: TextStyle(
+                    color: const Color(0xff1A2677),
+                  ),
+                ),
                 activeColor: const Color(0xff1A2677),
                 value: organizerFilter,
                 onChanged: (bool value) {
@@ -261,10 +309,18 @@ class _ParticipantsList extends State<ParticipantsList> {
                     organizerFilter = value;
                   });
                 },
-                secondary: const Icon(FontAwesomeIcons.usersCog, color: const Color(0xff1A2677),),
+                secondary: const Icon(
+                  FontAwesomeIcons.usersCog,
+                  color: const Color(0xff1A2677),
+                ),
               ),
               CheckboxListTile(
-                title: const Text('Show Speakers', style: TextStyle(color: const Color(0xff1A2677),),),
+                title: const Text(
+                  'Show Speakers',
+                  style: TextStyle(
+                    color: const Color(0xff1A2677),
+                  ),
+                ),
                 activeColor: const Color(0xff1A2677),
                 value: speakerFilter,
                 onChanged: (bool value) {
@@ -272,7 +328,10 @@ class _ParticipantsList extends State<ParticipantsList> {
                     speakerFilter = value;
                   });
                 },
-                secondary: const Icon(FontAwesomeIcons.microphoneAlt, color: const Color(0xff1A2677),),
+                secondary: const Icon(
+                  FontAwesomeIcons.microphoneAlt,
+                  color: const Color(0xff1A2677),
+                ),
               ),
               ListTile(),
               Column(
@@ -289,14 +348,14 @@ class _ParticipantsList extends State<ParticipantsList> {
                         Map<dynamic, dynamic> map = snapshot.value;
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
                             builder: (context) => ParticipantsList(
-                              auth: auth,
-                              map: map,
-                              code: code,
-                              attendeeFilter: this.attendeeFilter,
-                              sponsorFilter: this.sponsorFilter,
-                              speakerFilter: this.speakerFilter,
-                              organizerFilter: this.organizerFilter,
-                            )));
+                                  auth: auth,
+                                  map: map,
+                                  code: code,
+                                  attendeeFilter: this.attendeeFilter,
+                                  sponsorFilter: this.sponsorFilter,
+                                  speakerFilter: this.speakerFilter,
+                                  organizerFilter: this.organizerFilter,
+                                )));
                       });
                     },
                     color: const Color(0xff1A2677),
@@ -306,7 +365,6 @@ class _ParticipantsList extends State<ParticipantsList> {
                   ),
                 ],
               ),
-
             ],
           ),
         ),
@@ -335,7 +393,7 @@ class _ParticipantsList extends State<ParticipantsList> {
                       child: new ListTile(
                           leading: CircleAvatar(
                               backgroundImage: NetworkImage(image), radius: 22),
-                          title: Text(name,
+                          title: Text(trimName(name),
                               style: TextStyle(
                                   fontSize: 17.0,
                                   color: const Color(0xff333333),
@@ -350,13 +408,13 @@ class _ParticipantsList extends State<ParticipantsList> {
                               onPressed: () async {
                                 Navigator.of(context)
                                     .pushReplacement(MaterialPageRoute(
-                                    builder: (context) => ViewProfile1(
-                                      auth: auth,
-                                      userToSee: userToSee,
-                                      // id of user pressed
-                                      map: map,
-                                      code: widget.code,
-                                    )));
+                                        builder: (context) => ViewProfile1(
+                                              auth: auth,
+                                              userToSee: userToSee,
+                                              // id of user pressed
+                                              map: map,
+                                              code: widget.code,
+                                            )));
                               })),
                       semanticContainer: true,
                       clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -368,6 +426,6 @@ class _ParticipantsList extends State<ParticipantsList> {
                       color: const Color(0xfff5f5f5),
                     ));
               })
-        ]));
+        ])));
   }
 }

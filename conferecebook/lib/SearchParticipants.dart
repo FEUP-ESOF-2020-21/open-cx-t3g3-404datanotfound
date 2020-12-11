@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:ConfereceBook/JoinAnEvent.dart';
 import 'package:ConfereceBook/ParticipantsList.dart';
 import 'package:ConfereceBook/ViewProfile1.dart';
@@ -9,6 +11,7 @@ import './CreateProfile1.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:flutter/widgets.dart';
 import './HomeFeed.dart';
+
 // Import the firebase_core plugin
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,17 +19,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:async';
 import 'package:flutter_search_bar/flutter_search_bar.dart';
 
-
 import 'MyProfile1.dart';
 
 class SearchParticipants extends StatefulWidget {
-
-  SearchParticipants({
-    Key key,
-    this.auth,
-    this.map,
-    this.searchToDo,
-    this.code}): super(key: key);
+  SearchParticipants({Key key, this.auth, this.map, this.searchToDo, this.code})
+      : super(key: key);
 
   final FirebaseAuth auth;
   final String searchToDo;
@@ -38,7 +35,6 @@ class SearchParticipants extends StatefulWidget {
 }
 
 class _SearchParticipants extends State<SearchParticipants> {
-
   String searchToDo;
   FirebaseAuth auth;
   Map<dynamic, dynamic> map;
@@ -71,7 +67,7 @@ class _SearchParticipants extends State<SearchParticipants> {
     map = widget.map;
     code = widget.code;
     searchToDo = widget.searchToDo;
-    String searchingName = searchToDo.toUpperCase();
+    String searchingName = searchToDo.toLowerCase();
 
     int numConferences = map.values.toList()[0].length;
 
@@ -79,10 +75,10 @@ class _SearchParticipants extends State<SearchParticipants> {
     String confId; // to save the value 'id1', 'id2',...
 
     // get the conference we're in
-    for(int i = 1; i <= numConferences; i++) {
+    for (int i = 1; i <= numConferences; i++) {
       String aux = "id" + i.toString(); // id1, id2, ...
       confName = map.values.toList()[0][aux]["code"];
-      if(confName == code) {
+      if (confName == code) {
         confName = code;
         confId = aux;
       }
@@ -91,11 +87,18 @@ class _SearchParticipants extends State<SearchParticipants> {
     int numUsersInConference = map.values.toList()[0][confId]["users"].length;
     // get users of the conference we're in (iterable class)
     this.users = map.values.toList()[0][confId]["users"].keys;
-    for(int i = 0; i < numUsersInConference; i++) {
-      String user = users.elementAt(i); // get user no. i
-      String userName = map.values.toList()[2][user]["name"]
-          .toString()
-          .toUpperCase();
+    Map<String, String> mymap = new HashMap<String, String>();
+    for (int i = 0; i < numUsersInConference; i++) {
+      String user = users.elementAt(i);
+      String userName = map.values.toList()[2][user]["name"].toString().toLowerCase();
+      mymap[userName] = user;
+    }
+
+    Map<String, String> treeMap = new SplayTreeMap<String, String>.from(mymap);
+
+    for (int i = 0; i < numUsersInConference; i++) {
+      String userName = treeMap.keys.elementAt(i); // get user no. i
+      String user = treeMap.values.elementAt(i);
 
       if (userName.contains(searchingName)) {
         usersIDs.add(user);
@@ -113,8 +116,8 @@ class _SearchParticipants extends State<SearchParticipants> {
         usersGitHubs.add(map.values.toList()[2][user]["github"]);
         usersRoles.add(map.values.toList()[0][confId]["users"][user]);
       }
-    }}
-
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -123,114 +126,101 @@ class _SearchParticipants extends State<SearchParticipants> {
     map = widget.map;
     searchToDo = widget.searchToDo;
 
-    return Scaffold(
-        appBar: AppBar(
-
-          leading: IconButton(
-              icon: Icon(FontAwesomeIcons.arrowLeft, color: Colors.white),
-              onPressed: () async {
-                FirebaseDatabase.instance
-                    .reference()
-                    .once()
-                    .then((DataSnapshot snapshot) {
-                  Map<dynamic, dynamic> map = snapshot.value;
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              ParticipantsList(
-                                  auth: auth,
-                                  code: code,
-                                  map: map,
-                                attendeeFilter: true,
-                                speakerFilter: true,
-                                sponsorFilter: true,
-                                organizerFilter: true,)));
-                });
-              }
+    return WillPopScope(
+        onWillPop: () async => false,
+    child: Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+            icon: Icon(FontAwesomeIcons.arrowLeft, color: Colors.white),
+            onPressed: () async {
+              FirebaseDatabase.instance
+                  .reference()
+                  .once()
+                  .then((DataSnapshot snapshot) {
+                Map<dynamic, dynamic> map = snapshot.value;
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => ParticipantsList(
+                          auth: auth,
+                          code: code,
+                          map: map,
+                          attendeeFilter: true,
+                          speakerFilter: true,
+                          sponsorFilter: true,
+                          organizerFilter: true,
+                        )));
+              });
+            }),
+        title: RichText(
+          text: TextSpan(
+            text: 'Search Result for \n',
+            style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+            children: <TextSpan>[
+              TextSpan(
+                  text: searchToDo, style: TextStyle(color: Colors.white60)),
+            ],
           ),
-          title: RichText(
-            text: TextSpan(
-              text: 'Search Result for \n',
-              style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
-              children: <TextSpan>[
-                TextSpan(text: searchToDo,
-                    style: TextStyle(color: Colors.white60)),
-              ],
-            ),
-          ),
-          backgroundColor: Color(0xff1A2677),
         ),
-        body: Stack(
-          children: <Widget>[
+        backgroundColor: Color(0xff1A2677),
+      ),
+      body: Stack(children: <Widget>[
+        new ListView.builder(
+            itemCount: usersIDs.length,
+            itemBuilder: (BuildContext context, int index) {
+              String userToSee = usersIDs[index];
+              String image = usersImages[index];
+              String name = usersNames[index];
+              String job = usersJobs[index];
+              String interests = usersInterests[index];
+              String city = usersCities[index];
+              String bio = usersBios[index];
+              String area = usersAreas[index];
+              String facebook = usersFacebooks[index];
+              String instagram = usersInstagrams[index];
+              String linkedin = usersLinkedins[index];
+              String twitter = usersTwitters[index];
+              String github = usersGitHubs[index];
+              String role = usersRoles[index];
 
-          new ListView.builder(
-              itemCount: usersIDs.length,
-              itemBuilder: (BuildContext context, int index) {
-                String userToSee = usersIDs[index];
-                String image = usersImages[index];
-                String name = usersNames[index];
-                String job = usersJobs[index];
-                String interests = usersInterests[index];
-                String city = usersCities[index];
-                String bio = usersBios[index];
-                String area = usersAreas[index];
-                String facebook = usersFacebooks[index];
-                String instagram = usersInstagrams[index];
-                String linkedin = usersLinkedins[index];
-                String twitter = usersTwitters[index];
-                String github = usersGitHubs[index];
-                String role = usersRoles[index];
-
-                return Container(
-                    padding: EdgeInsets.all(10),
-                    child: Card(
-                      child: new ListTile(
-                          leading:CircleAvatar(
-                              backgroundImage: NetworkImage(image),
-                              radius: 22
-                          ),
-                          title: Text(name, style: TextStyle(
-                              fontSize: 17.0,
-                              color: const Color(0xff333333),
-                              fontWeight: FontWeight.bold
-                          )
-                          ),
-                          subtitle: Text(role, style: TextStyle(
-                              fontSize: 14.0,
-                              color: const Color(0xff111111)
-                          )
-                          ),
-                          trailing: IconButton(
-                              icon: Icon(FontAwesomeIcons.arrowRight, color: Color(0xff1A2677) ),
-                              onPressed: () async {
-                                Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                        builder: (context) => ViewProfile1(
-                                          auth: auth,
-                                          userToSee: userToSee, // id of user pressed
-                                          map: map,
-                                          code: widget.code,
-                                        )));
-                              })
-
-                      ),
-                      semanticContainer: true,
-                      clipBehavior: Clip.antiAliasWithSaveLayer,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(100.0),
-                      ),
-                      //elevation: 5,
-                      margin: EdgeInsets.all(0),
-                      color: const Color(0xfff5f5f5),
-                    ));
-              }
-          )
-          ]
-
-
-    ),
-    );
-
-
-    }
+              return Container(
+                  padding: EdgeInsets.all(10),
+                  child: Card(
+                    child: new ListTile(
+                        leading: CircleAvatar(
+                            backgroundImage: NetworkImage(image), radius: 22),
+                        title: Text(name,
+                            style: TextStyle(
+                                fontSize: 17.0,
+                                color: const Color(0xff333333),
+                                fontWeight: FontWeight.bold)),
+                        subtitle: Text(role,
+                            style: TextStyle(
+                                fontSize: 14.0,
+                                color: const Color(0xff111111))),
+                        trailing: IconButton(
+                            icon: Icon(FontAwesomeIcons.arrowRight,
+                                color: Color(0xff1A2677)),
+                            onPressed: () async {
+                              Navigator.of(context)
+                                  .pushReplacement(MaterialPageRoute(
+                                      builder: (context) => ViewProfile1(
+                                            auth: auth,
+                                            userToSee: userToSee,
+                                            // id of user pressed
+                                            map: map,
+                                            code: widget.code,
+                                          )));
+                            })),
+                    semanticContainer: true,
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(100.0),
+                    ),
+                    //elevation: 5,
+                    margin: EdgeInsets.all(0),
+                    color: const Color(0xfff5f5f5),
+                  ));
+            })
+      ]),
+    ));
+  }
 }
