@@ -9,12 +9,13 @@ import 'package:flutter/material.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:material_tag_editor/tag_editor.dart';
 import './HomeFeed.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_tags/flutter_tags.dart';
-
+import 'package:page_transition/page_transition.dart';
 import 'MyProfile2.dart';
 
 class SizeConfig {
@@ -83,8 +84,10 @@ class _EditProfile2 extends State<EditProfile2> {
   String linkedin;
   String twitter;
   String github;
-  List<String> myInterests;
+  List<String> values = []; // for tags
+  String _interests = ""; // for new interests
   String code;
+
 
   TextEditingController _textFieldController = TextEditingController();
 
@@ -226,6 +229,30 @@ class _EditProfile2 extends State<EditProfile2> {
         });
   }
 
+
+  onDelete(index) {
+    setState(() {
+      values.removeAt(index);
+    });
+  }
+
+  dbToString() {
+    if (values.isNotEmpty) {
+      this._interests = values[0];
+      for (int i = 1; i < values.length; i++) {
+        this._interests += "," + values[i];
+      }
+    }
+
+  }
+
+  @override
+  void initState(){
+    super.initState();
+    interests = widget.interests;
+    values = interests.split(',').toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -233,7 +260,6 @@ class _EditProfile2 extends State<EditProfile2> {
     image = widget.image;
     name = widget.name;
     job = widget.job;
-    interests = widget.interests;
     city = widget.city;
     bio = widget.bio;
     area = widget.area;
@@ -242,8 +268,8 @@ class _EditProfile2 extends State<EditProfile2> {
     linkedin = widget.linkedin;
     twitter = widget.twitter;
     github = widget.github;
-    myInterests = interests.split(',').toList();
     code = widget.code;
+
 
     return WillPopScope(
         onWillPop: () async => false,
@@ -259,22 +285,33 @@ class _EditProfile2 extends State<EditProfile2> {
                       )),
                   backgroundColor: const Color(0xff1A2677),
                   onPressed: () {
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) => MyProfile2(
-                        auth: auth,
-                        image: image,
-                        name: name,
-                        job: job,
-                        interests: interests,
-                        city: city,
-                        bio: bio,
-                        area: area,
-                        linkedin: linkedin,
-                        facebook: facebook,
-                        instagram: instagram,
-                        twitter: twitter,
-                        github: github,
-                        code: code)));
+                    dbToString();
+                    print(_interests);
+                    DatabaseReference firebaseDatabaseRef =
+                    FirebaseDatabase.instance.reference().child('Users');
+
+                    firebaseDatabaseRef.child(widget.auth.currentUser.uid)
+                        .child("interests")
+                        .set(_interests)
+                        .then((value) {
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (context) =>
+                              MyProfile2(
+                                  auth: auth,
+                                  image: image,
+                                  name: name,
+                                  job: job,
+                                  interests: _interests,
+                                  city: city,
+                                  bio: bio,
+                                  area: area,
+                                  linkedin: linkedin,
+                                  facebook: facebook,
+                                  instagram: instagram,
+                                  twitter: twitter,
+                                  github: github,
+                                  code: code)));
+                    });
                   },
           )),
           backgroundColor: const Color(0xffffffff),
@@ -307,33 +344,13 @@ class _EditProfile2 extends State<EditProfile2> {
                 ),
               ),
 
-              Transform.translate(
-                offset: Offset(SizeConfig.screenWidth * 158.5,
-                    SizeConfig.screenHeight * 290.0),
-                child: SizedBox(
-                  width: SizeConfig.screenWidth * 100.0,
-                  child: Text(
-                    this.city,
-                    style: TextStyle(
-                      fontFamily: 'Roboto',
-                      fontSize: 12,
-                      color: const Color(0xff1A2677),
-                      letterSpacing: 0.1875,
-                      fontWeight: FontWeight.w500,
-                      height: 1.2,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
-              Transform.translate(
-                offset: Offset(SizeConfig.screenWidth * 130,
-                    SizeConfig.screenHeight * 350),
+              Container(
+                padding: EdgeInsets.only(top: 570, right: 90, left: 90),
                 child: Text(
-                  'Social Media',
+                  'Tap the Icons to edit',
                   style: TextStyle(
                     fontFamily: 'Roboto',
-                    fontSize: 20,
+                    fontSize: 18,
                     color: const Color(0xff1A2677),
                     letterSpacing: 0.36,
                     fontWeight: FontWeight.w500,
@@ -342,214 +359,144 @@ class _EditProfile2 extends State<EditProfile2> {
                   textAlign: TextAlign.center,
                 ),
               ),
-              Transform.translate(
-                offset: Offset(SizeConfig.screenWidth * 150,
-                    SizeConfig.screenHeight * 550),
-                child: Text(
-                  'Interests',
-                  style: TextStyle(
-                    fontFamily: 'Roboto',
-                    fontSize: 20,
-                    color: const Color(0xff1A2677),
-                    letterSpacing: 0.36,
-                    fontWeight: FontWeight.w500,
-                    height: 1,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              Transform.translate(
-                  offset: Offset(SizeConfig.screenWidth * 80,
-                      SizeConfig.screenHeight * 600),
-                  child: Container(
-                    width: SizeConfig.screenWidth * 250,
-                    child: Tags(
-                      key: _tagStateKey,
-                      itemCount: myInterests.length, // required
-                      itemBuilder: (int index) {
-                        final item = myInterests[index];
-                        return ItemTags(
-                          // Each ItemTags must contain a Key. Keys allow Flutter to
-                          // uniquely identify widgets.
-                          key: Key(index.toString()),
-                          index: index,
-                          // required
-                          title: item,
-                          textStyle: TextStyle(
-                            fontSize: 10,
+
+              Container(
+                  padding: EdgeInsets.only(top: 600, right: 50, left: 50),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          icon: Icon(FontAwesomeIcons.linkedin,
+                              color: this.linkedin != null
+                                  ? const Color(0xff1A2677)
+                                  : const Color(0xffdddddd)),
+                          onPressed: () async {
+                            showTextEditDialog(context, "LinkedIn");
+                            }
                           ),
-                          combine: ItemTagsCombine.withTextBefore,
-                          image: null,
-                          // OR null,
-                          icon: null,
-                          // OR null,
-                          removeButton: null,
-                          // OR null,
-                          onPressed: (item) => print(item),
-                          onLongPressed: (item) => print(item),
-                        );
-                      },
-                    ),
-                  )),
-              Transform.translate(
-                offset: Offset(SizeConfig.screenWidth * 200,
-                    SizeConfig.screenHeight * 440.0),
-                child: Container(
-                    child: IconButton(
-                        icon: Icon(FontAwesomeIcons.linkedin,
-                            color: this.linkedin != null
-                                ? const Color(0xff1A2677)
-                                : const Color(0xffdddddd)),
-                        onPressed: () async {
-                          showTextEditDialog(context, "LinkedIn");
-                          }
-                        )),
+
+                         IconButton(
+                                  icon: Icon(FontAwesomeIcons.twitter,
+                                      color: this.twitter != null
+                                          ? const Color(0xff1A2677)
+                                          : const Color(0xffdddddd)),
+                                  onPressed: () async {
+                                    showTextEditDialog(context, "Twitter");
+                                  }),
+
+                          IconButton(
+                                    icon: Icon(FontAwesomeIcons.github,
+                                        color: this.github != null
+                                            ? const Color(0xff1A2677)
+                                            : const Color(0xffdddddd)),
+                                    onPressed: () async {
+                                      showTextEditDialog(context, "GitHub");
+                                    }),
+
+                          IconButton(
+                                  icon: Icon(FontAwesomeIcons.instagram,
+                                      color: this.instagram != null
+                                          ? const Color(0xff1A2677)
+                                          : const Color(0xffdddddd)),
+                                  onPressed: () async {
+                                    showTextEditDialog(context, "Instagram");
+                                  }),
+
+                          IconButton(
+                          icon: Icon(FontAwesomeIcons.facebook,
+                              color: this.facebook != null
+                                  ? const Color(0xff1A2677)
+                                  : const Color(0xffdddddd)),
+                          onPressed: () async {
+                            showTextEditDialog(context, "Facebook");
+                          }),
+
+                      ])),
+
+              Container(
+                padding: EdgeInsets.only(top: 220, right: 100, left: 100),
+                child: Text(
+                  'Edit your interests',
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontSize: 18,
+                    color: const Color(0xff1A2677),
+                    letterSpacing: 0.36,
+                    fontWeight: FontWeight.w500,
+                    height: 1,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
               ),
-              Transform.translate(
-                offset: Offset(SizeConfig.screenWidth * 220,
-                    SizeConfig.screenHeight * 380.0),
-                child: Container(
-                    child: IconButton(
-                        icon: Icon(FontAwesomeIcons.twitter,
-                            color: this.twitter != null
-                                ? const Color(0xff1A2677)
-                                : const Color(0xffdddddd)),
-                        onPressed: () async {
-                          showTextEditDialog(context, "Twitter");
-                        })),
-              ),
-              Transform.translate(
-                offset: Offset(SizeConfig.screenWidth * 150,
-                    SizeConfig.screenHeight * 440.0),
-                child: Container(
-                    child: IconButton(
-                        icon: Icon(FontAwesomeIcons.github,
-                            color: this.github != null
-                                ? const Color(0xff1A2677)
-                                : const Color(0xffdddddd)),
-                        onPressed: () async {
-                          showTextEditDialog(context, "GitHub");
-                        })),
-              ),
-              Transform.translate(
-                offset: Offset(SizeConfig.screenWidth * 170,
-                    SizeConfig.screenHeight * 380.0),
-                child: Container(
-                    child: IconButton(
-                        icon: Icon(FontAwesomeIcons.instagram,
-                            color: this.instagram != null
-                                ? const Color(0xff1A2677)
-                                : const Color(0xffdddddd)),
-                        onPressed: () async {
-                          showTextEditDialog(context, "Instagram");
-                        })),
-              ),
-              Transform.translate(
-                offset: Offset(SizeConfig.screenWidth * 120,
-                    SizeConfig.screenHeight * 380.0),
-                child: Container(
-                    child: IconButton(
-                        icon: Icon(FontAwesomeIcons.facebook,
-                            color: this.facebook != null
-                                ? const Color(0xff1A2677)
-                                : const Color(0xffdddddd)),
-                        onPressed: () async {
-                          showTextEditDialog(context, "Facebook");
-                        })),
-              ),
-              Transform.translate(
-                offset: Offset(SizeConfig.screenWidth * 80,
-                    SizeConfig.screenHeight * 250.0),
-                child: SizedBox(
-                  width: 226.0,
-                  child: Text(
-                    this.name,
-                    style: TextStyle(
-                      fontFamily: 'Roboto',
-                      fontSize: 30,
-                      color: const Color(0xff1A2677),
-                      letterSpacing: 0.28125,
-                      fontWeight: FontWeight.w500,
-                      height: 0.8,
-                    ),
-                    textAlign: TextAlign.center,
+              Container(
+                padding: EdgeInsets.only(top: 280, left: 70, right:70),
+                child: TagEditor(
+                  length: values.length,
+                  delimiters: [',', ' '],
+                  hasAddButton: false,
+                  inputDecoration: const InputDecoration(
+                    //helperText: 'Add your Interests',
+                    hintText: 'Add your Interests',
+                    border: InputBorder.none,
+                  ),
+                  onTagChanged: (newValue) {
+                    setState(() {
+                      values.add(newValue);
+                    });
+                  },
+                  tagBuilder: (context, index) => _Chip(
+                    index: index ,
+                    label: values[index],
+                    onDeleted: onDelete,
                   ),
                 ),
+
               ),
-              Container(),
-              Transform.translate(
-                offset: Offset(SizeConfig.screenWidth * 270,
-                    SizeConfig.screenHeight * 710.0),
-                child:
-                // Adobe XD layer: 'NoPath' (shape)
-                RaisedButton(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18.0),
-                      side: BorderSide(color: Colors.red)),
-                  onPressed: () {
-                    widget.auth.signOut();
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => MyLogin(
-                          auth: widget.auth,
-                        )));
-                  },
-                  color: Colors.red,
-                  textColor: Colors.white,
-                  child: Text("Logout".toUpperCase(),
-                      style: TextStyle(fontSize: 14)),
-                ),
-              ),
+
               Transform.translate(
                 offset: Offset(SizeConfig.screenWidth * 150,
                     SizeConfig.screenHeight * 100.0),
-                child:
-                // Adobe XD layer: 'NoPath' (shape)
-                Container(
+                child: // Adobe XD layer: 'NoPath' (shape)
+                  Container(
                   child: CircleAvatar(
                     backgroundImage: NetworkImage(this.image),
                     radius: 50,
                   ),
                 ),
               ),
-              Transform.translate(
-                  offset: Offset(SizeConfig.screenWidth * 10,
-                      SizeConfig.screenHeight * 20 + 20),
-                  child: SizedBox.fromSize(
-                    size: Size(56, 56), // button width and height
-                    child: ClipOval(
-                      child: Material(
-                        color: const Color(0xff1A2677), // button color
-                        child: InkWell(
-                          splashColor: const Color(0xff1A2677), // splash color
-                          onTap: () async {
-                              FirebaseDatabase.instance
-                                  .reference()
-                                  .once()
-                                  .then((DataSnapshot snapshot) {
-                                Map<dynamic, dynamic> map = snapshot.value;
-                                Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                        builder: (context) => HomeFeed(
-                                            auth: auth,
-                                            code: widget.code,
-                                            map: map)));
-                              });
-                            },
-                           // button pressed
-                          child: Icon(
-                            FontAwesomeIcons.home,
-                            color: Colors.white,
-                          ), // icon
-                        ),
-                      ),
-                    ),
-                  )),
-            ],
-          ),
+
+
+          ]),
         ));
   }
 }
 
+class _Chip extends StatelessWidget {
+  const _Chip({
+    @required this.label,
+    @required this.onDeleted,
+    @required this.index,
+  });
+
+  final String label;
+  final ValueChanged<int> onDeleted;
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    return Chip(
+      labelPadding: const EdgeInsets.only(left: 8.0),
+      label: Text(label),
+      deleteIcon: Icon(
+        Icons.close,
+        size: 18,
+      ),
+      onDeleted: () {
+        onDeleted(index);
+      },
+    );
+  }
+}
 const String _svg_2rnm7d =
     '<svg viewBox="0.0 0.0 45.0 45.0" ><path  d="M 0 0 L 45 0 L 45 45 L 0 45 L 0 0 Z" fill="none" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
 const String _svg_35bab1 =

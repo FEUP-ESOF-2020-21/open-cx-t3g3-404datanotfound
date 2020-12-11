@@ -293,7 +293,6 @@ class _JoinAnEvent extends State<JoinAnEvent> {
                               .once()
                               .then((DataSnapshot snapshot) {
                             Map<dynamic, dynamic> map = snapshot.value;
-                            String image = map.values.toList()[2][auth.currentUser.uid]["photo"];
                             Navigator.of(context).pushReplacement(MaterialPageRoute(
                                 builder: (context) =>
                                     HomeFeed(
