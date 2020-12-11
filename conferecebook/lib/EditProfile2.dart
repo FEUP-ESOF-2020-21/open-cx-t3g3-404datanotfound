@@ -35,20 +35,20 @@ class SizeConfig {
 class EditProfile2 extends StatefulWidget {
   EditProfile2(
       {Key key,
-        this.auth,
-        this.image,
-        this.name,
-        this.job,
-        this.interests,
-        this.city,
-        this.bio,
-        this.area,
-        this.facebook,
-        this.instagram,
-        this.linkedin,
-        this.twitter,
-        this.github,
-        this.code})
+      this.auth,
+      this.image,
+      this.name,
+      this.job,
+      this.interests,
+      this.city,
+      this.bio,
+      this.area,
+      this.facebook,
+      this.instagram,
+      this.linkedin,
+      this.twitter,
+      this.github,
+      this.code})
       : super(key: key);
 
   final FirebaseAuth auth;
@@ -79,17 +79,15 @@ class _EditProfile2 extends State<EditProfile2> {
   String city;
   String bio;
   String area;
-  String facebook;
-  String instagram;
-  String linkedin;
-  String twitter;
-  String github;
   List<String> values = []; // for tags
   String _interests = ""; // for new interests
   String code;
 
-
-  TextEditingController _textFieldController = TextEditingController();
+  TextEditingController _facebookController = TextEditingController();
+  TextEditingController _instagramController = TextEditingController();
+  TextEditingController _twitterController = TextEditingController();
+  TextEditingController _githubController = TextEditingController();
+  TextEditingController _linkedinController = TextEditingController();
 
   final GlobalKey<TagsState> _tagStateKey = GlobalKey<TagsState>();
 
@@ -100,135 +98,55 @@ class _EditProfile2 extends State<EditProfile2> {
       lst.where((a) => a.active == true).forEach((a) => print(a.title));
   }
 
-  showAlertDialog(BuildContext context, String text) {
-    Widget okButton = FlatButton(
-      child: Text("OK"),
-      onPressed: () {
-        Navigator.of(context).pop();
-      },
-    );
-    AlertDialog alerta;
-
-    alerta = AlertDialog(
-      title: Text("Oops..."),
-      content: Text(name.trimRight() + " doesn't have a " + text + " account."),
-      actions: [
-        okButton,
-      ],
-    );
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alerta;
-      },
-    );
-  }
-
-  updateDataBase(BuildContext context, String socialNetwork, String newNickname) async {
-
-      socialNetwork = socialNetwork.toLowerCase();
-
-      switch (socialNetwork) {
-        case "facebook":
-          facebook = newNickname;
-          break;
-
-        case "instagram":
-          instagram = newNickname;
-          break;
-
-        case "twitter":
-          twitter = newNickname;
-          break;
-
-        case "github":
-          github = newNickname;
-          break;
-
-        case "linkedin":
-          linkedin = newNickname;
-          break;
-      }
-
-        DatabaseReference firebaseDatabaseRef =
+  updateDataBase(BuildContext context) async {
+    DatabaseReference firebaseDatabaseRef =
         FirebaseDatabase.instance.reference().child('Users');
-
-        firebaseDatabaseRef.child(widget.auth.currentUser.uid)
-            .child(socialNetwork)
-            .set(newNickname)
-            .then((value) {
-
-          Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (context) => EditProfile2(
-                  auth: auth,
-                  image: image,
-                  name: name,
-                  job: job,
-                  interests: interests,
-                  city: city,
-                  bio: bio,
-                  area: area,
-                  linkedin: linkedin,
-                  facebook: facebook,
-                  instagram: instagram,
-                  twitter: twitter,
-                  github: github,
-                  code: code)));
-        });
+    await firebaseDatabaseRef.child(widget.auth.currentUser.uid).update({
+      'facebook': _facebookController.value.text.toString().toLowerCase(),
+      'linkedin': _linkedinController.value.text.toString().toLowerCase(),
+      'twitter': _twitterController.value.text.toString().toLowerCase(),
+      'github': _githubController.value.text.toString().toLowerCase(),
+      'instagram': _instagramController.value.text.toString().toLowerCase(),
+    });
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (context) => MyProfile1(
+            auth: auth,
+            image: image,
+            name: name,
+            job: job,
+            interests: interests,
+            city: city,
+            bio: bio,
+            area: area,
+            linkedin: _linkedinController.value.text.toString().toLowerCase(),
+            facebook: _facebookController.value.text.toString().toLowerCase(),
+            instagram: _instagramController.value.text.toString().toLowerCase(),
+            twitter: _twitterController.value.text.toString().toLowerCase(),
+            github: _githubController.value.text.toString().toLowerCase(),
+            code: code)));
   }
 
-  showTextEditDialog(BuildContext context, String socialNetwork) async {
-    String attribute = socialNetwork.toLowerCase();
-    String textHint;
-
-    switch (attribute) {
-      case "facebook":
-        textHint = facebook;
-        break;
-
-      case "instagram":
-        textHint = instagram;
-        break;
-
-      case "twitter":
-        textHint = twitter;
-        break;
-
-      case "github":
-        textHint = github;
-        break;
-
-      case "linkedin":
-        textHint = linkedin;
-        break;
-    }
+  showTextEditDialog(BuildContext context, String socialNetwork,
+      TextEditingController controller) async {
     return showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-              title: Text("Edit here your nickname for $socialNetwork"),
+              title: Text("$socialNetwork nickname"),
               content: TextField(
-                controller: _textFieldController,
+                controller: controller,
                 textInputAction: TextInputAction.go,
                 keyboardType: TextInputType.text,
-                decoration: InputDecoration(hintText: textHint),
               ),
               actions: <Widget>[
                 new FlatButton(
-                    child : new Text('Back'),
+                    child: new Text('Confirm'),
                     onPressed: () {
                       Navigator.of(context).pop();
                     }),
-                new FlatButton(
-                    child: new Text('Confirm'),
-                    onPressed: () async {
-                      updateDataBase(context, socialNetwork, _textFieldController.text);
-                    }),
-
               ]);
         });
   }
-
 
   onDelete(index) {
     setState(() {
@@ -243,14 +161,78 @@ class _EditProfile2 extends State<EditProfile2> {
         this._interests += "," + values[i];
       }
     }
+  }
 
+  check(BuildContext context) {
+    // configura o button
+    Widget stay = FlatButton(
+      child: Text("Stay"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    Widget leave = FlatButton(
+      child: Text("Discard"),
+      onPressed: () {
+        FirebaseDatabase.instance
+            .reference()
+            .once()
+            .then((DataSnapshot snapshot) {
+          Map<dynamic, dynamic> map = snapshot.value;
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) => MyProfile2(
+                  auth: auth,
+                  image: image,
+                  name: name,
+                  job: job,
+                  interests: interests,
+                  city: city,
+                  bio: bio,
+                  area: area,
+                  linkedin: widget.linkedin,
+                  facebook: widget.facebook,
+                  instagram: widget.instagram,
+                  twitter: widget.twitter,
+                  github: widget.github,
+                  code: widget.code)));
+        });
+      },
+    );
+    // configura o  AlertDialog
+    AlertDialog alerta = AlertDialog(
+      title: Text("Discard changes?"),
+      content: Text("You've changed some of your profile information."),
+      actions: [stay, leave],
+    );
+    // exibe o dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alerta;
+      },
+    );
   }
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     interests = widget.interests;
     values = interests.split(',').toList();
+    _facebookController = TextEditingController(text: widget.facebook);
+    _instagramController = TextEditingController(text: widget.instagram);
+    _twitterController = TextEditingController(text: widget.twitter);
+    _githubController = TextEditingController(text: widget.github);
+    _linkedinController = TextEditingController(text: widget.linkedin);
+  }
+
+  @override
+  void dispose() {
+    _facebookController.dispose();
+    _twitterController.dispose();
+    _instagramController.dispose();
+    _linkedinController.dispose();
+    _githubController.dispose();
+    super.dispose();
   }
 
   @override
@@ -263,209 +245,224 @@ class _EditProfile2 extends State<EditProfile2> {
     city = widget.city;
     bio = widget.bio;
     area = widget.area;
-    facebook = widget.facebook;
-    instagram = widget.instagram;
-    linkedin = widget.linkedin;
-    twitter = widget.twitter;
-    github = widget.github;
     code = widget.code;
-
 
     return WillPopScope(
         onWillPop: () async => false,
         child: Scaffold(
           floatingActionButton: Align(
-          alignment: Alignment(1.04,-0.84),
-          child: FloatingActionButton(
-                  child: Padding(
+              alignment: Alignment(1.04, -0.84),
+              child: FloatingActionButton(
+                child: Padding(
                     padding: EdgeInsets.only(top: 0, right: 0.0),
-                      child: Icon(
-                        FontAwesomeIcons.check,
-                        color: const Color(0xffffffff),
-                      )),
-                  backgroundColor: const Color(0xff1A2677),
-                  onPressed: () {
-                    dbToString();
-                    print(_interests);
-                    DatabaseReference firebaseDatabaseRef =
-                    FirebaseDatabase.instance.reference().child('Users');
-
-                    firebaseDatabaseRef.child(widget.auth.currentUser.uid)
-                        .child("interests")
-                        .set(_interests)
-                        .then((value) {
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) =>
-                              MyProfile2(
-                                  auth: auth,
-                                  image: image,
-                                  name: name,
-                                  job: job,
-                                  interests: _interests,
-                                  city: city,
-                                  bio: bio,
-                                  area: area,
-                                  linkedin: linkedin,
-                                  facebook: facebook,
-                                  instagram: instagram,
-                                  twitter: twitter,
-                                  github: github,
-                                  code: code)));
-                    });
-                  },
-          )),
+                    child: Icon(
+                      FontAwesomeIcons.check,
+                      color: const Color(0xffffffff),
+                    )),
+                backgroundColor: const Color(0xff1A2677),
+                onPressed: () {
+                  dbToString();
+                  DatabaseReference firebaseDatabaseRef =
+                      FirebaseDatabase.instance.reference().child('Users');
+                  firebaseDatabaseRef
+                      .child(widget.auth.currentUser.uid)
+                      .child("interests")
+                      .set(_interests)
+                      .then((value) {
+                    updateDataBase(context);
+                  });
+                },
+              )),
           backgroundColor: const Color(0xffffffff),
-          body: Stack(
-            children: <Widget>[
-
-              Transform.translate(
-                offset: Offset(SizeConfig.screenWidth * 34.0,
-                    SizeConfig.screenHeight * 150.0),
-                child: Container(
-                  width: SizeConfig.screenWidth * 345.0,
-                  height: SizeConfig.screenHeight * 636.0,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30.0),
-                    color: const Color(0x80ececec),
+          body: Stack(children: <Widget>[
+            Transform.translate(
+                offset: Offset(SizeConfig.screenWidth * 10,
+                    SizeConfig.screenHeight * 20 + 20),
+                child: SizedBox.fromSize(
+                  size: Size(56, 56), // button width and height
+                  child: ClipOval(
+                    child: Material(
+                      color: const Color(0xff1A2677), // button color
+                      child: InkWell(
+                        splashColor: const Color(0xff1A2677),
+                        // splash color
+                        onTap: () async {
+                          dbToString();
+                          if ((widget.facebook !=
+                                  _facebookController.value.text) ||
+                              (widget.instagram !=
+                                  _instagramController.value.text) ||
+                              (widget.github != _githubController.value.text) ||
+                              (widget.twitter !=
+                                  _twitterController.value.text) ||
+                              (widget.linkedin !=
+                                  _linkedinController.value.text) ||
+                              (_interests != widget.interests)) {
+                            check(context);
+                          } else {
+                            FirebaseDatabase.instance
+                                .reference()
+                                .once()
+                                .then((DataSnapshot snapshot) {
+                              Map<dynamic, dynamic> map = snapshot.value;
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: (context) => MyProfile2(
+                                          auth: auth,
+                                          image: image,
+                                          name: name,
+                                          job: job,
+                                          interests: interests,
+                                          city: city,
+                                          bio: bio,
+                                          area: area,
+                                          linkedin: widget.linkedin,
+                                          facebook: widget.facebook,
+                                          instagram: widget.instagram,
+                                          twitter: widget.twitter,
+                                          github: widget.github,
+                                          code: widget.code)));
+                            });
+                          }
+                        },
+                        // button pressed
+                        child: Icon(
+                          FontAwesomeIcons.times,
+                          color: Colors.white,
+                        ), // icon
+                      ),
+                    ),
                   ),
+                )),
+            Transform.translate(
+              offset: Offset(SizeConfig.screenWidth * 34.0,
+                  SizeConfig.screenHeight * 150.0),
+              child: Container(
+                width: SizeConfig.screenWidth * 345.0,
+                height: SizeConfig.screenHeight * 636.0,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30.0),
+                  color: const Color(0x80ececec),
                 ),
               ),
-              Transform.translate(
-                offset: Offset(SizeConfig.screenWidth * 110.0,
-                    SizeConfig.screenHeight * 64.0),
-                child: Container(
-                  width: SizeConfig.screenWidth * 194.0,
-                  height: SizeConfig.screenHeight * 194.0,
-                  decoration: BoxDecoration(
-                    borderRadius:
-                    BorderRadius.all(Radius.elliptical(9999.0, 9999.0)),
-                    color: const Color(0xfff5f5f5),
-                  ),
+            ),
+            Transform.translate(
+              offset: Offset(SizeConfig.screenWidth * 110.0,
+                  SizeConfig.screenHeight * 64.0),
+              child: Container(
+                width: SizeConfig.screenWidth * 194.0,
+                height: SizeConfig.screenHeight * 194.0,
+                decoration: BoxDecoration(
+                  borderRadius:
+                      BorderRadius.all(Radius.elliptical(9999.0, 9999.0)),
+                  color: const Color(0xfff5f5f5),
                 ),
               ),
-
-              Container(
-                padding: EdgeInsets.only(top: 570, right: 90, left: 90),
-                child: Text(
-                  'Tap the Icons to edit',
-                  style: TextStyle(
-                    fontFamily: 'Roboto',
-                    fontSize: 18,
-                    color: const Color(0xff1A2677),
-                    letterSpacing: 0.36,
-                    fontWeight: FontWeight.w500,
-                    height: 1,
-                  ),
-                  textAlign: TextAlign.center,
+            ),
+            Container(
+              padding: EdgeInsets.only(top: 570, right: 90, left: 90),
+              child: Text(
+                'Tap the Icons to edit',
+                style: TextStyle(
+                  fontFamily: 'Roboto',
+                  fontSize: 18,
+                  color: const Color(0xff1A2677),
+                  letterSpacing: 0.36,
+                  fontWeight: FontWeight.w500,
+                  height: 1,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            Container(
+                padding: EdgeInsets.only(top: 600, right: 50, left: 50),
+                child:
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  IconButton(
+                      icon: Icon(FontAwesomeIcons.linkedin,
+                          color: const Color(0xff1A2677)),
+                      onPressed: () async {
+                        showTextEditDialog(
+                            context, "LinkedIn", _linkedinController);
+                      }),
+                  IconButton(
+                      icon: Icon(FontAwesomeIcons.twitter,
+                          color: const Color(0xff1A2677)),
+                      onPressed: () async {
+                        showTextEditDialog(
+                            context, "Twitter", _twitterController);
+                      }),
+                  IconButton(
+                      icon: Icon(FontAwesomeIcons.github,
+                          color: const Color(0xff1A2677)),
+                      onPressed: () async {
+                        showTextEditDialog(
+                            context, "GitHub", _githubController);
+                      }),
+                  IconButton(
+                      icon: Icon(FontAwesomeIcons.instagram,
+                          color: const Color(0xff1A2677)),
+                      onPressed: () async {
+                        showTextEditDialog(
+                            context, "Instagram", _instagramController);
+                      }),
+                  IconButton(
+                      icon: Icon(FontAwesomeIcons.facebook,
+                          color: const Color(0xff1A2677)),
+                      onPressed: () async {
+                        showTextEditDialog(
+                            context, "Facebook", _facebookController);
+                      }),
+                ])),
+            Container(
+              padding: EdgeInsets.only(top: 220, right: 100, left: 100),
+              child: Text(
+                'Edit your interests',
+                style: TextStyle(
+                  fontFamily: 'Roboto',
+                  fontSize: 18,
+                  color: const Color(0xff1A2677),
+                  letterSpacing: 0.36,
+                  fontWeight: FontWeight.w500,
+                  height: 1,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.only(top: 280, left: 70, right: 70),
+              child: TagEditor(
+                length: values.length,
+                delimiters: [',', ' '],
+                hasAddButton: false,
+                inputDecoration: const InputDecoration(
+                  //helperText: 'Add your Interests',
+                  hintText: 'Add your Interests',
+                  border: InputBorder.none,
+                ),
+                onTagChanged: (newValue) {
+                  setState(() {
+                    values.add(newValue);
+                  });
+                },
+                tagBuilder: (context, index) => _Chip(
+                  index: index,
+                  label: values[index],
+                  onDeleted: onDelete,
                 ),
               ),
-
-              Container(
-                  padding: EdgeInsets.only(top: 600, right: 50, left: 50),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        IconButton(
-                          icon: Icon(FontAwesomeIcons.linkedin,
-                              color: this.linkedin != null
-                                  ? const Color(0xff1A2677)
-                                  : const Color(0xffdddddd)),
-                          onPressed: () async {
-                            showTextEditDialog(context, "LinkedIn");
-                            }
-                          ),
-
-                         IconButton(
-                                  icon: Icon(FontAwesomeIcons.twitter,
-                                      color: this.twitter != null
-                                          ? const Color(0xff1A2677)
-                                          : const Color(0xffdddddd)),
-                                  onPressed: () async {
-                                    showTextEditDialog(context, "Twitter");
-                                  }),
-
-                          IconButton(
-                                    icon: Icon(FontAwesomeIcons.github,
-                                        color: this.github != null
-                                            ? const Color(0xff1A2677)
-                                            : const Color(0xffdddddd)),
-                                    onPressed: () async {
-                                      showTextEditDialog(context, "GitHub");
-                                    }),
-
-                          IconButton(
-                                  icon: Icon(FontAwesomeIcons.instagram,
-                                      color: this.instagram != null
-                                          ? const Color(0xff1A2677)
-                                          : const Color(0xffdddddd)),
-                                  onPressed: () async {
-                                    showTextEditDialog(context, "Instagram");
-                                  }),
-
-                          IconButton(
-                          icon: Icon(FontAwesomeIcons.facebook,
-                              color: this.facebook != null
-                                  ? const Color(0xff1A2677)
-                                  : const Color(0xffdddddd)),
-                          onPressed: () async {
-                            showTextEditDialog(context, "Facebook");
-                          }),
-
-                      ])),
-
-              Container(
-                padding: EdgeInsets.only(top: 220, right: 100, left: 100),
-                child: Text(
-                  'Edit your interests',
-                  style: TextStyle(
-                    fontFamily: 'Roboto',
-                    fontSize: 18,
-                    color: const Color(0xff1A2677),
-                    letterSpacing: 0.36,
-                    fontWeight: FontWeight.w500,
-                    height: 1,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 280, left: 70, right:70),
-                child: TagEditor(
-                  length: values.length,
-                  delimiters: [',', ' '],
-                  hasAddButton: false,
-                  inputDecoration: const InputDecoration(
-                    //helperText: 'Add your Interests',
-                    hintText: 'Add your Interests',
-                    border: InputBorder.none,
-                  ),
-                  onTagChanged: (newValue) {
-                    setState(() {
-                      values.add(newValue);
-                    });
-                  },
-                  tagBuilder: (context, index) => _Chip(
-                    index: index ,
-                    label: values[index],
-                    onDeleted: onDelete,
-                  ),
-                ),
-
-              ),
-
-              Transform.translate(
-                offset: Offset(SizeConfig.screenWidth * 150,
-                    SizeConfig.screenHeight * 100.0),
-                child: // Adobe XD layer: 'NoPath' (shape)
+            ),
+            Transform.translate(
+              offset: Offset(SizeConfig.screenWidth * 150,
+                  SizeConfig.screenHeight * 100.0),
+              child: // Adobe XD layer: 'NoPath' (shape)
                   Container(
-                  child: CircleAvatar(
-                    backgroundImage: NetworkImage(this.image),
-                    radius: 50,
-                  ),
+                child: CircleAvatar(
+                  backgroundImage: NetworkImage(this.image),
+                  radius: 50,
                 ),
               ),
-
-
+            ),
           ]),
         ));
   }
@@ -497,6 +494,7 @@ class _Chip extends StatelessWidget {
     );
   }
 }
+
 const String _svg_2rnm7d =
     '<svg viewBox="0.0 0.0 45.0 45.0" ><path  d="M 0 0 L 45 0 L 45 45 L 0 45 L 0 0 Z" fill="none" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
 const String _svg_35bab1 =

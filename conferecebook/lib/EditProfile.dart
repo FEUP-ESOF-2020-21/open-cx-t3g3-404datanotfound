@@ -182,8 +182,21 @@ class _EditProfile1 extends State<EditProfile1> {
             .then((DataSnapshot snapshot) {
           Map<dynamic, dynamic> map = snapshot.value;
           Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (context) =>
-                  HomeFeed(auth: auth, code: widget.code, map: map)));
+              builder: (context) => MyProfile1(
+                  auth: auth,
+                  image: image,
+                  name: name,
+                  job: job,
+                  interests: interests,
+                  city: city,
+                  bio: bio,
+                  area: area,
+                  linkedin: linkedin,
+                  facebook: facebook,
+                  instagram: instagram,
+                  twitter: twitter,
+                  github: github,
+                  code: widget.code)));
         });
       },
     );
@@ -582,15 +595,26 @@ class _EditProfile1 extends State<EditProfile1> {
                                 Map<dynamic, dynamic> map = snapshot.value;
                                 Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
-                                        builder: (context) => HomeFeed(
+                                        builder: (context) => MyProfile1(
                                             auth: auth,
-                                            code: widget.code,
-                                            map: map)));
+                                            image: image,
+                                            name: name,
+                                            job: job,
+                                            interests: interests,
+                                            city: city,
+                                            bio: bio,
+                                            area: area,
+                                            linkedin: linkedin,
+                                            facebook: facebook,
+                                            instagram: instagram,
+                                            twitter: twitter,
+                                            github: github,
+                                            code: widget.code)));
                               });
                             }
                           }, // button pressed
                           child: Icon(
-                            FontAwesomeIcons.home,
+                            FontAwesomeIcons.times,
                             color: Colors.white,
                           ), // icon
                         ),

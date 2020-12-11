@@ -9,6 +9,7 @@ import './CreateProfile1.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:flutter/widgets.dart';
 import './HomeFeed.dart';
+
 // Import the firebase_core plugin
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -20,11 +21,25 @@ import 'package:flutter_spinbox/flutter_spinbox.dart';
 import 'MyProfile1.dart';
 import 'SearchParticipants.dart';
 
-class ConferenceHistory extends StatefulWidget{
-
-  ConferenceHistory({Key key, this.auth, this.image, this.name, this.job,
-  this.interests, this.city, this.bio, this.area, this.facebook, this.instagram,
-    this.linkedin, this.twitter, this.github, this.code, this.map}): super(key: key);
+class ConferenceHistory extends StatefulWidget {
+  ConferenceHistory(
+      {Key key,
+      this.auth,
+      this.image,
+      this.name,
+      this.job,
+      this.interests,
+      this.city,
+      this.bio,
+      this.area,
+      this.facebook,
+      this.instagram,
+      this.linkedin,
+      this.twitter,
+      this.github,
+      this.code,
+      this.map})
+      : super(key: key);
 
   final FirebaseAuth auth;
   final String image;
@@ -41,14 +56,14 @@ class ConferenceHistory extends StatefulWidget{
   final String github;
   final String code;
   final Map<dynamic, dynamic> map;
+
   //final Map<dynamic, dynamic> map;
 
   @override
   _ConferenceHistoryState createState() => _ConferenceHistoryState();
 }
 
-class _ConferenceHistoryState extends State<ConferenceHistory>{
-
+class _ConferenceHistoryState extends State<ConferenceHistory> {
   String image;
   String name;
   String job;
@@ -65,13 +80,12 @@ class _ConferenceHistoryState extends State<ConferenceHistory>{
   FirebaseAuth auth;
   Map<dynamic, dynamic> map;
 
-  List<String> conferenceHistory=[];
-  List<String> conferenceHistoryRole=[];
+  List<String> conferenceHistory = [];
+  List<String> conferenceHistoryRole = [];
   bool showConferenceHistory;
 
-
   @override
-    void initState() {
+  void initState() {
     super.initState();
 
     auth = widget.auth;
@@ -89,91 +103,84 @@ class _ConferenceHistoryState extends State<ConferenceHistory>{
     linkedin = widget.linkedin;
     twitter = widget.twitter;
     github = widget.github;
-    showConferenceHistory=this.showConferenceHistory;
+    showConferenceHistory = this.showConferenceHistory;
 
-    showConferenceHistory=map.values.toList()[2][auth.currentUser.uid]["showConferenceHistory"];
+    showConferenceHistory =
+        map.values.toList()[2][auth.currentUser.uid]["showConferenceHistory"];
 
-      int numConferences = map.values.toList()[0].length;
-      for(int i = 1; i <= numConferences; i++) {
-        String aux = "id" + i.toString();
-        int numUsersinConference=map.values.toList()[0][aux]["users"].length;
-        dynamic users= map.values.toList()[0][aux]["users"].keys;
-        for(int i = 0; i < numUsersinConference; i++) {
-          if (users.elementAt(i) == widget.auth.currentUser.uid){
-            conferenceHistory.add(map.values.toList()[0][aux]["name"]);
-            print("Conference:");
-            print(map.values.toList()[0][aux]["name"]);
-            conferenceHistoryRole.add(map.values.toList()[0][aux]["users"][widget.auth.currentUser.uid]);
-            print("Role:");
-            print(map.values.toList()[0][aux]["users"][widget.auth.currentUser.uid]);
-          }
+    int numConferences = map.values.toList()[0].length;
+    for (int i = 1; i <= numConferences; i++) {
+      String aux = "id" + i.toString();
+      int numUsersinConference = map.values.toList()[0][aux]["users"].length;
+      dynamic users = map.values.toList()[0][aux]["users"].keys;
+      for (int i = 0; i < numUsersinConference; i++) {
+        if (users.elementAt(i) == widget.auth.currentUser.uid) {
+          conferenceHistory.add(map.values.toList()[0][aux]["name"]);
+          conferenceHistoryRole.add(map.values.toList()[0][aux]["users"]
+              [widget.auth.currentUser.uid]);
         }
-
       }
-
+    }
   }
 
-
-
   @override
-  Widget build(BuildContext context){
-
-    DatabaseReference firebaseDatabaseRef =
-    FirebaseDatabase.instance.reference().child('Users').child(widget.auth.currentUser.uid);
+  Widget build(BuildContext context) {
+    DatabaseReference firebaseDatabaseRef = FirebaseDatabase.instance
+        .reference()
+        .child('Users')
+        .child(widget.auth.currentUser.uid);
     return WillPopScope(
-        onWillPop: () async => false, child: Scaffold(
-      appBar: AppBar(
-          leading: IconButton(
-              icon: Icon(FontAwesomeIcons.arrowLeft, color: Colors.white),
-              onPressed: () async {
-                FirebaseDatabase.instance
-                    .reference()
-                    .once()
-                    .then((DataSnapshot snapshot) {
-                  Map<dynamic, dynamic> map = snapshot.value;
-                  String user = auth.currentUser.uid;
-                  this.image = map.values.toList()[2][user]["photo"];
-                  this.name = map.values.toList()[2][user]["name"];
-                  this.job = map.values.toList()[2][user]["job"];
-                  this.interests = map.values.toList()[2][user]["interests"];
-                  this.city = map.values.toList()[2][user]["city"];
-                  this.bio = map.values.toList()[2][user]["bio"];
-                  this.area = map.values.toList()[2][user]["area"];
-                  this.linkedin = map.values.toList()[2][user]["linkedin"];
-                  this.facebook = map.values.toList()[2][user]["facebook"];
-                  this.instagram = map.values.toList()[2][user]["instagram"];
-                  this.twitter = map.values.toList()[2][user]["twitter"];
-                  this.github = map.values.toList()[2][user]["github"];
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                          builder: (context) => MyProfile1(
-                              auth: widget.auth,
-                              image: image,
-                              name: name,
-                              job: job,
-                              interests: interests,
-                              city: city,
-                              bio: bio,
-                              area: area,
-                              linkedin: linkedin,
-                              facebook: facebook,
-                              instagram: instagram,
-                              twitter: twitter,
-                              github: github,
-                              code: widget.code)));
-                });
-              }
+        onWillPop: () async => false,
+        child: Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+                icon: Icon(FontAwesomeIcons.arrowLeft, color: Colors.white),
+                onPressed: () async {
+                  FirebaseDatabase.instance
+                      .reference()
+                      .once()
+                      .then((DataSnapshot snapshot) {
+                    Map<dynamic, dynamic> map = snapshot.value;
+                    String user = auth.currentUser.uid;
+                    this.image = map.values.toList()[2][user]["photo"];
+                    this.name = map.values.toList()[2][user]["name"];
+                    this.job = map.values.toList()[2][user]["job"];
+                    this.interests = map.values.toList()[2][user]["interests"];
+                    this.city = map.values.toList()[2][user]["city"];
+                    this.bio = map.values.toList()[2][user]["bio"];
+                    this.area = map.values.toList()[2][user]["area"];
+                    this.linkedin = map.values.toList()[2][user]["linkedin"];
+                    this.facebook = map.values.toList()[2][user]["facebook"];
+                    this.instagram = map.values.toList()[2][user]["instagram"];
+                    this.twitter = map.values.toList()[2][user]["twitter"];
+                    this.github = map.values.toList()[2][user]["github"];
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) => MyProfile1(
+                            auth: widget.auth,
+                            image: image,
+                            name: name,
+                            job: job,
+                            interests: interests,
+                            city: city,
+                            bio: bio,
+                            area: area,
+                            linkedin: linkedin,
+                            facebook: facebook,
+                            instagram: instagram,
+                            twitter: twitter,
+                            github: github,
+                            code: widget.code)));
+                  });
+                }),
+            title: Text("Conference History"),
+            backgroundColor: Color(0xff1A2677),
           ),
-          title: Text("Conference History"),
-          backgroundColor: Color(0xff1A2677),
-      ),
-      body:
-      ListView(
-          padding: EdgeInsets.only(top:10),
-          children: [
-            ListTile( // setting of ON or OFF for Sponsors
+          body: ListView(padding: EdgeInsets.only(top: 10), children: [
+            ListTile(
+              // setting of ON or OFF for Sponsors
               title: Text("Show Conference History"),
-              trailing: Transform.scale(  // reduce default size of switch
+              trailing: Transform.scale(
+                  // reduce default size of switch
                   scale: 0.9,
                   child: LiteRollingSwitch(
                     //initial value
@@ -191,35 +198,29 @@ class _ConferenceHistoryState extends State<ConferenceHistory>{
                           .child("showConferenceHistory")
                           .set(this.showConferenceHistory);
                     },
-                  )
-              ),
+                  )),
             ),
             ListView.builder(
-                padding: EdgeInsets.only(top:15.0),
+                padding: EdgeInsets.only(top: 15.0),
                 shrinkWrap: true,
                 itemCount: conferenceHistory.length,
                 itemBuilder: (BuildContext context, int index) {
-                  String conference=conferenceHistory[index];
-                  String role=conferenceHistoryRole[index];
+                  String conference = conferenceHistory[index];
+                  String role = conferenceHistoryRole[index];
 
                   return Container(
                       padding: EdgeInsets.all(10),
-
                       child: Card(
-
-                        child:new ListTile(
-                          title: Text(conference, style: TextStyle(
-                              fontSize: 17.0,
-                              color: const Color(0xff333333),
-                              fontWeight: FontWeight.bold
-                          )
-                          ),
-                          subtitle: Text(role, style: TextStyle(
-                              fontSize: 14.0,
-                              color: const Color(0xff111111)
-                          )
-                          ),
-
+                        child: new ListTile(
+                          title: Text(conference,
+                              style: TextStyle(
+                                  fontSize: 17.0,
+                                  color: const Color(0xff333333),
+                                  fontWeight: FontWeight.bold)),
+                          subtitle: Text(role,
+                              style: TextStyle(
+                                  fontSize: 14.0,
+                                  color: const Color(0xff111111))),
                         ),
                         semanticContainer: true,
                         clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -230,11 +231,8 @@ class _ConferenceHistoryState extends State<ConferenceHistory>{
                         margin: EdgeInsets.all(0),
                         color: const Color(0xfff5f5f5),
                       ));
-                }
-            ),
+                }),
           ]),
-    ));
+        ));
   }
-
 }
-

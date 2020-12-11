@@ -5,6 +5,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart';
 import "dart:async";
+import 'MyProfile1.dart';
 import 'ViewProfile1.dart';
 import "main.dart"; //for current user
 import "HomeFeed.dart";
@@ -26,15 +27,15 @@ class SizeConfig {
 }
 
 class CommentsPage extends StatefulWidget {
-  CommentsPage({
-    Key key,
-    this.auth,
-    this.map,
-    this.postID,
-    this.confId,
-    this.userRole,
-    this.code
-  }) : super(key: key);
+  CommentsPage(
+      {Key key,
+      this.auth,
+      this.map,
+      this.postID,
+      this.confId,
+      this.userRole,
+      this.code})
+      : super(key: key);
 
   final FirebaseAuth auth;
   final Map<dynamic, dynamic> map;
@@ -66,7 +67,6 @@ class CommentsPageState extends State<CommentsPage> {
 
   String comment = "";
 
-
   @override
   void initState() {
     super.initState();
@@ -83,21 +83,23 @@ class CommentsPageState extends State<CommentsPage> {
       numComments = map.values.toList()[1][confId][postID]["comments"].length;
 
       // get comments of the post we choose (iterable class)
-      this.postComments = map.values.toList()[1][confId][postID]["comments"].keys;
+      this.postComments =
+          map.values.toList()[1][confId][postID]["comments"].keys;
 
       //get comments IDs
-      for(int i = 0; i < numComments; i++) {
+      for (int i = 0; i < numComments; i++) {
         String commentID = postComments.elementAt(i); // get comment no. i
         commentIDs.add(commentID);
       }
-      commentIDs.sort((b,a) => a.compareTo(b)); //sort comments
+      commentIDs.sort((b, a) => a.compareTo(b)); //sort comments
 
-      for(int i = 0; i < numComments; i++) {
-      String commentID = commentIDs[i]; // get comment no. i
-      // knowing the id of each comment, save its text and author
-      commentsText.add(map.values.toList()[1][confId][postID]["comments"][commentID]["text"]);
-      commentsAuthor.add(map.values.toList()[1][confId][postID]["comments"][commentID]["author"]);
-
+      for (int i = 0; i < numComments; i++) {
+        String commentID = commentIDs[i]; // get comment no. i
+        // knowing the id of each comment, save its text and author
+        commentsText.add(map.values.toList()[1][confId][postID]["comments"]
+            [commentID]["text"]);
+        commentsAuthor.add(map.values.toList()[1][confId][postID]["comments"]
+            [commentID]["author"]);
       }
     }
   }
@@ -118,6 +120,18 @@ class CommentsPageState extends State<CommentsPage> {
     });
   }
 
+  String trimName(String name) {
+    String aux = name.trimRight();
+    List<String> names = aux.split(" ");
+    String newName;
+    if (names.length >= 2) {
+      newName = names[0] + " " + names[names.length - 1];
+    } else {
+      newName = names[0];
+    }
+    return newName;
+  }
+
   //build list of comments
   Widget _buildCommentList() {
     return ListView.builder(
@@ -128,6 +142,7 @@ class CommentsPageState extends State<CommentsPage> {
           String userUID = commentsAuthor[index];
           String name =
               map.values.toList()[2][commentsAuthor[index]]["name"].toString();
+          name = trimName(name);
           String userPhoto =
               map.values.toList()[2][commentsAuthor[index]]["photo"].toString();
 
@@ -137,55 +152,50 @@ class CommentsPageState extends State<CommentsPage> {
   }
 
   //create comment widget
-  Widget _buildCommentItem(
-      String comment, String userUID, String name, String userPhoto, String commentID) {
+  Widget _buildCommentItem(String comment, String userUID, String name,
+      String userPhoto, String commentID) {
     return Card(
         child: ListTile(
-            leading:InkWell(
-              onTap: () async {
-                FirebaseDatabase.instance
-                    .reference()
-                    .once()
-                    .then((DataSnapshot snapshot) {
-                  Map<dynamic, dynamic> map = snapshot.value;
-
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => ViewProfile1(
-                          auth: widget.auth,
-                          userToSee: userUID,
-                          map: map,
-                          code: widget.code)));
-                });
-              },
-              child: CircleAvatar(
-              radius: 20.0,
-              backgroundImage: NetworkImage(userPhoto),
-              //default image
-            )),
-          subtitle:
-                Text(comment),
-
-          title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text(name),
-
-            Text(checkSameDay(commentID), style: new TextStyle(
-              fontSize: 10.0,
-              color: Colors.grey,
-            ),),
-            if (userRole == "Organizer")
-              Transform.scale(
-                  scale: 0.8,
-                  child: IconButton(
-                      icon: Icon(FontAwesomeIcons.times, color: Color(0xff8d0000)),
-                      onPressed: () {
-                        showDeleteDialog(context, commentID);
-                      }
-                  )
-              ),
-
-          ]),
+      leading: InkWell(
+          onTap: () async {
+            FirebaseDatabase.instance
+                .reference()
+                .once()
+                .then((DataSnapshot snapshot) {
+              Map<dynamic, dynamic> map = snapshot.value;
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (context) => ViewProfile1(
+                      auth: widget.auth,
+                      userToSee: userUID,
+                      map: map,
+                      code: widget.code)));
+            });
+          },
+          child: CircleAvatar(
+            radius: 20.0,
+            backgroundImage: NetworkImage(userPhoto),
+            //default image
+          )),
+      subtitle: Text(comment),
+      title: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <
+          Widget>[
+        Text(name),
+        Text(
+          checkSameDay(commentID),
+          style: new TextStyle(
+            fontSize: 10.0,
+            color: Colors.grey,
+          ),
+        ),
+        if (userRole == "Organizer")
+          Transform.scale(
+              scale: 0.8,
+              child: IconButton(
+                  icon: Icon(FontAwesomeIcons.times, color: Color(0xff8d0000)),
+                  onPressed: () {
+                    showDeleteDialog(context, commentID);
+                  })),
+      ]),
       isThreeLine: true,
     ));
   }
@@ -220,12 +230,11 @@ class CommentsPageState extends State<CommentsPage> {
 
     if (date.contains(today))
       return "Today (" + hour + ")";
-    else if (date.contains(yester))
-      return "Yesterday (" + hour + ")";
+    else if (date.contains(yester)) return "Yesterday (" + hour + ")";
     return day + " (" + hour + ")";
   }
 
-  showDeleteDialog(BuildContext context, String commentID){
+  showDeleteDialog(BuildContext context, String commentID) {
     // configura o button cancel
     Widget cancel = FlatButton(
       child: Text("Cancel"),
@@ -253,25 +262,22 @@ class CommentsPageState extends State<CommentsPage> {
           Map<dynamic, dynamic> map = snapshot.value;
           Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (context) => CommentsPage(
-                auth: widget.auth, //user that will comment
-                map: map,
-                postID: postID,
-                confId: confId,
-                userRole: userRole,
-                code: code,
-              )));
+                    auth: widget.auth,
+                    //user that will comment
+                    map: map,
+                    postID: postID,
+                    confId: confId,
+                    userRole: userRole,
+                    code: code,
+                  )));
         });
-
       },
     );
     // configura o  AlertDialog
     AlertDialog alerta = AlertDialog(
       title: Text("Delete this comment?"),
       content: Text("Are you sure you want to delete this comment?"),
-      actions: [
-        cancel,
-        delete
-      ],
+      actions: [cancel, delete],
     );
     // exibe o dialog
     showDialog(
@@ -282,8 +288,7 @@ class CommentsPageState extends State<CommentsPage> {
     );
   }
 
-  showAlertDialog(BuildContext context)
-  {
+  showAlertDialog(BuildContext context) {
     // configura o button
     Widget stay = FlatButton(
       child: Text("Stay"),
@@ -299,11 +304,10 @@ class CommentsPageState extends State<CommentsPage> {
             .once()
             .then((DataSnapshot snapshot) {
           Map<dynamic, dynamic> map = snapshot.value;
-          String image = map.values.toList()[2]
-          [widget.auth.currentUser.uid]["photo"];
+          String image =
+              map.values.toList()[2][widget.auth.currentUser.uid]["photo"];
           Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (context) =>
-                  HomeFeed(
+              builder: (context) => HomeFeed(
                     auth: widget.auth,
                     code: widget.confId,
                     map: map,
@@ -315,10 +319,7 @@ class CommentsPageState extends State<CommentsPage> {
     AlertDialog alerta = AlertDialog(
       title: Text("Discard comment?"),
       content: Text("You have a comment ready to be posted!"),
-      actions: [
-        stay,
-        leave
-      ],
+      actions: [stay, leave],
     );
     // exibe o dialog
     showDialog(
@@ -331,83 +332,79 @@ class CommentsPageState extends State<CommentsPage> {
 
   @override
   Widget build(BuildContext context) {
-
-    return Scaffold(
-        appBar: new AppBar(
-          title: Text("Comments"),
-          leading: IconButton(
-            //button to return to feed
-            icon: Icon(FontAwesomeIcons.arrowLeft),
-            onPressed: () async {
-              if (this.comment != "") {
-                showAlertDialog(context);
-              } else {
-                FirebaseDatabase.instance
-                    .reference()
-                    .once()
-                    .then((DataSnapshot snapshot) {
-                  Map<dynamic, dynamic> map = snapshot.value;
-                  String image = map.values.toList()[2]
-                  [widget.auth.currentUser.uid]["photo"];
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) =>
-                          HomeFeed(
-                            auth: widget.auth,
-                            code: widget.confId,
-                            map: map,
-                          )));
-                });
-              }
-              },
-          ),
-          backgroundColor: const Color(0xff1A2677),
-        ),
-        body: Column(children: <Widget>[
-          Expanded(
-              //build list of current comments
-              child: _buildCommentList()
-          ),
-          //text field to add a comment
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Container(
-                width: 300,
-                child: TextField(
-                  onChanged: (String submittedStr) {
-                      this.comment = submittedStr;
-                  },
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.all(20.0),
-                    hintText: "Add comment",
-                    border: InputBorder.none, //OutlineInputBorder(),
-                  ),
-                ),
+    return WillPopScope(
+        onWillPop: () async => false,
+        child: Scaffold(
+            appBar: new AppBar(
+              title: Text("Comments"),
+              leading: IconButton(
+                //button to return to feed
+                icon: Icon(FontAwesomeIcons.arrowLeft),
+                onPressed: () async {
+                  if (this.comment != "") {
+                    showAlertDialog(context);
+                  } else {
+                    FirebaseDatabase.instance
+                        .reference()
+                        .once()
+                        .then((DataSnapshot snapshot) {
+                      Map<dynamic, dynamic> map = snapshot.value;
+                      String image = map.values.toList()[2]
+                          [widget.auth.currentUser.uid]["photo"];
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (context) => HomeFeed(
+                                auth: widget.auth,
+                                code: widget.confId,
+                                map: map,
+                              )));
+                    });
+                  }
+                },
               ),
-              Container(
-                width: 50,
-                child: RawMaterialButton(
-                  onPressed: () {
-                    if (this.comment != "") {
-                      _addComment(this.comment);
-                      this.comment = "";
-                    }
-                  },
-                  elevation: 2.0,
-                  fillColor: const Color(0xff1A2677),
-                  child: Icon(
-                    FontAwesomeIcons.paperPlane,
-                    color: Colors.white,
-                    size: 20.0,
+              backgroundColor: const Color(0xff1A2677),
+            ),
+            body: Column(children: <Widget>[
+              Expanded(
+                  //build list of current comments
+                  child: _buildCommentList()),
+              //text field to add a comment
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Container(
+                    width: 300,
+                    child: TextField(
+                      onChanged: (String submittedStr) {
+                        this.comment = submittedStr;
+                      },
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.all(20.0),
+                        hintText: "Add comment",
+                        border: InputBorder.none, //OutlineInputBorder(),
+                      ),
+                    ),
                   ),
-                  padding: EdgeInsets.all(10.0),
-                  shape: CircleBorder(),
-                )
+                  Container(
+                      width: 50,
+                      child: RawMaterialButton(
+                        onPressed: () {
+                          if (this.comment != "") {
+                            _addComment(this.comment);
+                            this.comment = "";
+                          }
+                        },
+                        elevation: 2.0,
+                        fillColor: const Color(0xff1A2677),
+                        child: Icon(
+                          FontAwesomeIcons.paperPlane,
+                          color: Colors.white,
+                          size: 20.0,
+                        ),
+                        padding: EdgeInsets.all(10.0),
+                        shape: CircleBorder(),
+                      )),
+                ],
               ),
-
-            ],
-          ),
-
-        ]));
+            ])));
   }
 }

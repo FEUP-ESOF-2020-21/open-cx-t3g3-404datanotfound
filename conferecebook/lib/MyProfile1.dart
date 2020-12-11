@@ -1,9 +1,9 @@
-
 import 'package:ConfereceBook/ConferenceHistory.dart';
 import 'package:ConfereceBook/EditProfile.dart';
 import 'package:ConfereceBook/MyProfile2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:adobe_xd/pinned.dart';
@@ -28,23 +28,23 @@ class SizeConfig {
 }
 
 class MyProfile1 extends StatefulWidget {
-  MyProfile1({
-    Key key,
-    this.auth,
-    this.image,
-    this.name,
-    this.job,
-    this.interests,
-    this.city,
-    this.bio,
-    this.area,
-    this.facebook,
-    this.instagram,
-    this.linkedin,
-    this.twitter,
-    this.github,
-    this.code
-  }) : super(key: key);
+  MyProfile1(
+      {Key key,
+      this.auth,
+      this.image,
+      this.name,
+      this.job,
+      this.interests,
+      this.city,
+      this.bio,
+      this.area,
+      this.facebook,
+      this.instagram,
+      this.linkedin,
+      this.twitter,
+      this.github,
+      this.code})
+      : super(key: key);
 
   final FirebaseAuth auth;
   final String image;
@@ -81,6 +81,23 @@ class _MyProfile1 extends State<MyProfile1> {
   String code;
   FirebaseAuth auth;
 
+  showTextDialog(BuildContext context, String text, String title) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+              title: Text(title),
+              content: Text(text),
+              actions: <Widget>[
+                new FlatButton(
+                    child: new Text('Back'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    }),
+              ]);
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -98,7 +115,6 @@ class _MyProfile1 extends State<MyProfile1> {
     twitter = widget.twitter;
     github = widget.github;
     code = widget.code;
-
 
     return WillPopScope(
         onWillPop: () async => false,
@@ -150,34 +166,24 @@ class _MyProfile1 extends State<MyProfile1> {
                   ),
                 ),
               ),
-              Container(),
-              Container(),
-              Container(),
-              Container(),
-              Container(),
-              Container(),
-              Container(),
-              Container(),
-              Container(),
-              Container(),
-              Container(),
-              Container(),
               Transform.translate(
                 offset: Offset(
                     SizeConfig.screenWidth * 70, SizeConfig.screenHeight * 430),
                 child: Container(
+                    width: 200,
+                    height: 20,
                     child: Text(
-                  bio,
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                )),
+                      bio,
+                      textAlign: TextAlign.left,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    )),
               ),
               Transform.translate(
                 offset: Offset(SizeConfig.screenWidth * 59.5,
                     SizeConfig.screenHeight * 376.5),
                 child: Text(
-                  'Bio',
+                  'Biography',
                   style: TextStyle(
                     fontFamily: 'Roboto',
                     fontSize: 20,
@@ -190,15 +196,40 @@ class _MyProfile1 extends State<MyProfile1> {
                 ),
               ),
               Transform.translate(
+                  offset: Offset(SizeConfig.screenWidth * 300,
+                      SizeConfig.screenHeight * 430),
+                  child: Container(
+                      width: 190,
+                      height: 20,
+                      child: bio.length > 28
+                          ? RichText(
+                              text: TextSpan(
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                      text: 'See More',
+                                      style: TextStyle(color: Colors.blue),
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () {
+                                          showTextDialog(
+                                              context, bio, "Biography");
+                                        }),
+                                ],
+                              ),
+                            )
+                          : Container())),
+              Transform.translate(
                 offset: Offset(
                     SizeConfig.screenWidth * 70, SizeConfig.screenHeight * 530),
                 child: Container(
+                    width: 200,
+                    height: 20,
                     child: Text(
-                  job,
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                )),
+                      job,
+                      textAlign: TextAlign.left,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    )),
               ),
               Transform.translate(
                 offset: Offset(SizeConfig.screenWidth * 59.5,
@@ -217,15 +248,39 @@ class _MyProfile1 extends State<MyProfile1> {
                 ),
               ),
               Transform.translate(
+                  offset: Offset(SizeConfig.screenWidth * 300,
+                      SizeConfig.screenHeight * 530),
+                  child: Container(
+                      width: 190,
+                      height: 20,
+                      child: job.length > 28
+                          ? RichText(
+                              text: TextSpan(
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                      text: 'See More',
+                                      style: TextStyle(color: Colors.blue),
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () {
+                                          showTextDialog(context, job, "Job");
+                                        }),
+                                ],
+                              ),
+                            )
+                          : Container())),
+              Transform.translate(
                 offset: Offset(
                     SizeConfig.screenWidth * 70, SizeConfig.screenHeight * 630),
                 child: Container(
+                    width: 200,
+                    height: 20,
                     child: Text(
-                  area,
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                )),
+                      area,
+                      textAlign: TextAlign.left,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    )),
               ),
               Transform.translate(
                 offset: Offset(SizeConfig.screenWidth * 59.5,
@@ -244,6 +299,28 @@ class _MyProfile1 extends State<MyProfile1> {
                 ),
               ),
               Transform.translate(
+                  offset: Offset(SizeConfig.screenWidth * 300,
+                      SizeConfig.screenHeight * 630),
+                  child: Container(
+                      width: 190,
+                      height: 20,
+                      child: area.length > 28
+                          ? RichText(
+                              text: TextSpan(
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                      text: 'See More',
+                                      style: TextStyle(color: Colors.blue),
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () {
+                                          showTextDialog(context, area, "Area");
+                                        }),
+                                ],
+                              ),
+                            )
+                          : Container())),
+              Transform.translate(
                 offset: Offset(SizeConfig.screenWidth * 80,
                     SizeConfig.screenHeight * 250.0),
                 child: SizedBox(
@@ -252,7 +329,7 @@ class _MyProfile1 extends State<MyProfile1> {
                     this.name,
                     style: TextStyle(
                       fontFamily: 'Roboto',
-                      fontSize: 30,
+                      fontSize: this.name.length > 10 ? 20 : 30,
                       color: const Color(0xff1A2677),
                       letterSpacing: 0.28125,
                       fontWeight: FontWeight.w500,
@@ -264,47 +341,46 @@ class _MyProfile1 extends State<MyProfile1> {
               ),
               Container(
                   child: Column(
-                    children: <Widget>[
-                      Container(
-                        child: Expanded(
-                          child: Align(
-                            alignment: FractionalOffset.bottomRight,
-                            child: Padding(
-                              padding: EdgeInsets.only(bottom: 75.0, right: 35.0),
-                              child: FloatingActionButton(
-                                onPressed: () async {
-                                  Navigator.of(context).pushReplacement(
-                                      MaterialPageRoute(
-                                          builder: (context) => MyProfile2(
-                                              auth: auth,
-                                              image: image,
-                                              name: name,
-                                              job: job,
-                                              interests: interests,
-                                              city: city,
-                                              bio: bio,
-                                              area: area,
-                                              linkedin: linkedin,
-                                              facebook: facebook,
-                                              instagram: instagram,
-                                              twitter: twitter,
-                                              github: github,
-                                              code: widget.code)));
-                                },
-                                backgroundColor: const Color(0xffededed),
-                                elevation: 0,
-                                child: Icon(
-                                  FontAwesomeIcons.arrowRight,
-                                  color: const Color(0xff1A2677),
-                                ),
-                              ),
+                children: <Widget>[
+                  Container(
+                    child: Expanded(
+                      child: Align(
+                        alignment: FractionalOffset.bottomRight,
+                        child: Padding(
+                          padding: EdgeInsets.only(bottom: 75.0, right: 35.0),
+                          child: FloatingActionButton(
+                            onPressed: () async {
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: (context) => MyProfile2(
+                                          auth: auth,
+                                          image: image,
+                                          name: name,
+                                          job: job,
+                                          interests: interests,
+                                          city: city,
+                                          bio: bio,
+                                          area: area,
+                                          linkedin: linkedin,
+                                          facebook: facebook,
+                                          instagram: instagram,
+                                          twitter: twitter,
+                                          github: github,
+                                          code: widget.code)));
+                            },
+                            backgroundColor: const Color(0xffededed),
+                            elevation: 0,
+                            child: Icon(
+                              FontAwesomeIcons.arrowRight,
+                              color: const Color(0xff1A2677),
                             ),
                           ),
                         ),
-                      )
-
-                    ],
-                  )),
+                      ),
+                    ),
+                  )
+                ],
+              )),
               Container(),
               Transform.translate(
                 offset: Offset(SizeConfig.screenWidth * 150,
@@ -319,8 +395,8 @@ class _MyProfile1 extends State<MyProfile1> {
                 ),
               ),
               Transform.translate(
-                  offset: Offset(
-                      SizeConfig.screenWidth * 43, SizeConfig.screenHeight * 705),
+                  offset: Offset(SizeConfig.screenWidth * 43,
+                      SizeConfig.screenHeight * 705),
                   child: SizedBox.fromSize(
                     size: Size(56, 56), // button width and height
                     child: ClipOval(
@@ -329,53 +405,63 @@ class _MyProfile1 extends State<MyProfile1> {
                         child: InkWell(
                           splashColor: const Color(0xffededed), // splash color
                           onTap: () async {
-
                             FirebaseDatabase.instance
                                 .reference()
                                 .once()
                                 .then((DataSnapshot snapshot) {
                               Map<dynamic, dynamic> map = snapshot.value;
                               String user = auth.currentUser.uid;
-                              this.image = map.values.toList()[2][user]["photo"];
+                              this.image =
+                                  map.values.toList()[2][user]["photo"];
                               this.name = map.values.toList()[2][user]["name"];
                               this.job = map.values.toList()[2][user]["job"];
-                              this.interests = map.values.toList()[2][user]["interests"];
+                              this.interests =
+                                  map.values.toList()[2][user]["interests"];
                               this.city = map.values.toList()[2][user]["city"];
                               this.bio = map.values.toList()[2][user]["bio"];
                               this.area = map.values.toList()[2][user]["area"];
-                              this.linkedin = map.values.toList()[2][user]["linkedin"];
-                              this.facebook = map.values.toList()[2][user]["facebook"];
-                              this.instagram = map.values.toList()[2][user]["instagram"];
-                              this.twitter = map.values.toList()[2][user]["twitter"];
-                              this.github = map.values.toList()[2][user]["github"];
-                              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                                  builder: (context) => ConferenceHistory(
-                                    auth: auth,
-                                    image: image,
-                                    name: name,
-                                    job: job,
-                                    interests: interests,
-                                    city: city,
-                                    bio: bio,
-                                    area: area,
-                                    linkedin: linkedin,
-                                    facebook: facebook,
-                                    instagram: instagram,
-                                    twitter: twitter,
-                                    github: github,
-                                    code: code,
-                                    map: map,)));
+                              this.linkedin =
+                                  map.values.toList()[2][user]["linkedin"];
+                              this.facebook =
+                                  map.values.toList()[2][user]["facebook"];
+                              this.instagram =
+                                  map.values.toList()[2][user]["instagram"];
+                              this.twitter =
+                                  map.values.toList()[2][user]["twitter"];
+                              this.github =
+                                  map.values.toList()[2][user]["github"];
+                              Navigator.of(context)
+                                  .pushReplacement(MaterialPageRoute(
+                                      builder: (context) => ConferenceHistory(
+                                            auth: auth,
+                                            image: image,
+                                            name: name,
+                                            job: job,
+                                            interests: interests,
+                                            city: city,
+                                            bio: bio,
+                                            area: area,
+                                            linkedin: linkedin,
+                                            facebook: facebook,
+                                            instagram: instagram,
+                                            twitter: twitter,
+                                            github: github,
+                                            code: code,
+                                            map: map,
+                                          )));
                             });
                           }, // button pressed
-                          child: Icon(FontAwesomeIcons.history, color: const Color(0xff1A2677),), // icon
-
+                          child: Icon(
+                            FontAwesomeIcons.history,
+                            color: const Color(0xff1A2677),
+                          ), // icon
                         ),
                       ),
                     ),
                   )),
               Transform.translate(
-                  offset: Offset(
-                      SizeConfig.screenWidth * 340 , SizeConfig.screenHeight * 20 + 20),
+                  offset: Offset(SizeConfig.screenWidth * 340,
+                      SizeConfig.screenHeight * 20 + 20),
                   child: SizedBox.fromSize(
                     size: Size(56, 56), // button width and height
                     child: ClipOval(
@@ -384,31 +470,35 @@ class _MyProfile1 extends State<MyProfile1> {
                         child: InkWell(
                           splashColor: const Color(0xff1A2677), // splash color
                           onTap: () async {
-                            Navigator.of(context).pushReplacement(MaterialPageRoute(
-                                builder: (context) => EditProfile1(
-                                    auth: widget.auth,
-                                    image: image,
-                                    name: name,
-                                    job: job,
-                                    interests: interests,
-                                    city: city,
-                                    bio: bio,
-                                    area: area,
-                                    linkedin: linkedin,
-                                    facebook: facebook,
-                                    instagram: instagram,
-                                    twitter: twitter,
-                                    github: github,
-                                    code: widget.code)));
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (context) => EditProfile1(
+                                        auth: widget.auth,
+                                        image: image,
+                                        name: name,
+                                        job: job,
+                                        interests: interests,
+                                        city: city,
+                                        bio: bio,
+                                        area: area,
+                                        linkedin: linkedin,
+                                        facebook: facebook,
+                                        instagram: instagram,
+                                        twitter: twitter,
+                                        github: github,
+                                        code: widget.code)));
                           }, // button pressed
-                          child: Icon(FontAwesomeIcons.pencilAlt, color: Colors.white,), // icon
+                          child: Icon(
+                            FontAwesomeIcons.pencilAlt,
+                            color: Colors.white,
+                          ), // icon
                         ),
                       ),
                     ),
                   )),
               Transform.translate(
-                  offset: Offset(
-                      SizeConfig.screenWidth * 10, SizeConfig.screenHeight * 20 + 20),
+                  offset: Offset(SizeConfig.screenWidth * 10,
+                      SizeConfig.screenHeight * 20 + 20),
                   child: SizedBox.fromSize(
                     size: Size(56, 56), // button width and height
                     child: ClipOval(
@@ -422,23 +512,22 @@ class _MyProfile1 extends State<MyProfile1> {
                                 .once()
                                 .then((DataSnapshot snapshot) {
                               Map<dynamic, dynamic> map = snapshot.value;
-                              print(code);
                               Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
                                       builder: (context) => HomeFeed(
                                           auth: widget.auth,
                                           code: widget.code,
-                                          map: map
-                                      )));
+                                          map: map)));
                             });
                           }, // button pressed
-                          child: Icon(FontAwesomeIcons.home, color: Colors.white,), // icon
-
+                          child: Icon(
+                            FontAwesomeIcons.home,
+                            color: Colors.white,
+                          ), // icon
                         ),
                       ),
                     ),
                   )),
-
             ],
           ),
         ));
