@@ -5,6 +5,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart';
 import "dart:async";
+import 'ViewProfile1.dart';
 import "main.dart"; //for current user
 import "HomeFeed.dart";
 import 'package:intl/intl.dart';
@@ -124,26 +125,43 @@ class CommentsPageState extends State<CommentsPage> {
         itemBuilder: (context, index) {
           //define the parameters for each comment
           String commentID = commentIDs[index];
+          String userUID = commentsAuthor[index];
           String name =
               map.values.toList()[2][commentsAuthor[index]]["name"].toString();
           String userPhoto =
               map.values.toList()[2][commentsAuthor[index]]["photo"].toString();
 
           return _buildCommentItem(
-              commentsText[index], name, userPhoto, commentID);
+              commentsText[index], userUID, name, userPhoto, commentID);
         });
   }
 
   //create comment widget
   Widget _buildCommentItem(
-      String comment, String name, String userPhoto, String commentID) {
+      String comment, String userUID, String name, String userPhoto, String commentID) {
     return Card(
         child: ListTile(
-            leading: CircleAvatar(
+            leading:InkWell(
+              onTap: () async {
+                FirebaseDatabase.instance
+                    .reference()
+                    .once()
+                    .then((DataSnapshot snapshot) {
+                  Map<dynamic, dynamic> map = snapshot.value;
+
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => ViewProfile1(
+                          auth: widget.auth,
+                          userToSee: userUID,
+                          map: map,
+                          code: widget.code)));
+                });
+              },
+              child: CircleAvatar(
               radius: 20.0,
               backgroundImage: NetworkImage(userPhoto),
               //default image
-            ),
+            )),
           subtitle:
                 Text(comment),
 
