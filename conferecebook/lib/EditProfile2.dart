@@ -358,73 +358,84 @@ class _EditProfile2 extends State<EditProfile2> {
                   color: const Color(0xfff5f5f5),
                 ),
               ),
-            ),
-            Container(
-              padding: EdgeInsets.only(top: 570, right: 90, left: 90),
-              child: Text(
-                'Tap the Icons to edit',
-                style: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontSize: 18,
-                  color: const Color(0xff1A2677),
-                  letterSpacing: 0.36,
-                  fontWeight: FontWeight.w500,
-                  height: 1,
+
+
+              Container(
+                padding: EdgeInsets.only(top: 670 * SizeConfig.screenHeight, right: 90, left: 90),
+                child: Text(
+                  'Tap the Icons to edit',
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontSize: 18,
+                    color: const Color(0xff1A2677),
+                    letterSpacing: 0.36,
+                    fontWeight: FontWeight.w500,
+                    height: 1,
+                  ),
+                  textAlign: TextAlign.center,
+
                 ),
                 textAlign: TextAlign.center,
               ),
-            ),
-            Container(
-                padding: EdgeInsets.only(top: 600, right: 50, left: 50),
-                child:
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  IconButton(
-                      icon: Icon(FontAwesomeIcons.linkedin,
-                          color: const Color(0xff1A2677)),
-                      onPressed: () async {
-                        showTextEditDialog(
-                            context, "LinkedIn", _linkedinController);
-                      }),
-                  IconButton(
-                      icon: Icon(FontAwesomeIcons.twitter,
-                          color: const Color(0xff1A2677)),
-                      onPressed: () async {
-                        showTextEditDialog(
-                            context, "Twitter", _twitterController);
-                      }),
-                  IconButton(
-                      icon: Icon(FontAwesomeIcons.github,
-                          color: const Color(0xff1A2677)),
-                      onPressed: () async {
-                        showTextEditDialog(
-                            context, "GitHub", _githubController);
-                      }),
-                  IconButton(
-                      icon: Icon(FontAwesomeIcons.instagram,
-                          color: const Color(0xff1A2677)),
-                      onPressed: () async {
-                        showTextEditDialog(
-                            context, "Instagram", _instagramController);
-                      }),
-                  IconButton(
-                      icon: Icon(FontAwesomeIcons.facebook,
-                          color: const Color(0xff1A2677)),
-                      onPressed: () async {
-                        showTextEditDialog(
-                            context, "Facebook", _facebookController);
-                      }),
-                ])),
-            Container(
-              padding: EdgeInsets.only(top: 220, right: 100, left: 100),
-              child: Text(
-                'Edit your interests',
-                style: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontSize: 18,
-                  color: const Color(0xff1A2677),
-                  letterSpacing: 0.36,
-                  fontWeight: FontWeight.w500,
-                  height: 1,
+
+
+              Container(
+                  padding: EdgeInsets.only(top: 700 * SizeConfig.screenHeight, right: 50, left: 50),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          icon: Icon(FontAwesomeIcons.linkedin,
+                              color: const Color(0xff1A2677)),
+                          onPressed: () async {
+                            showTextEditDialog(context, "LinkedIn");
+                            }
+                          ),
+
+                        IconButton(
+                                  icon: Icon(FontAwesomeIcons.twitter,
+                                      color: const Color(0xff1A2677)),
+                                  onPressed: () async {
+                                    showTextEditDialog(context, "Twitter");
+                                  }),
+
+                        IconButton(
+                                    icon: Icon(FontAwesomeIcons.github,
+                                        color: const Color(0xff1A2677)),
+                                    onPressed: () async {
+                                      showTextEditDialog(context, "GitHub");
+                                    }),
+
+                        IconButton(
+                                  icon: Icon(FontAwesomeIcons.instagram,
+                                      color: const Color(0xff1A2677)),
+                                  onPressed: () async {
+                                    showTextEditDialog(context, "Instagram");
+                                  }),
+
+                        IconButton(
+                          icon: Icon(FontAwesomeIcons.facebook,
+                              color: const Color(0xff1A2677)),
+                          onPressed: () async {
+                            showTextEditDialog(context, "Facebook");
+                          }),
+
+                      ])),
+
+              Container(
+                padding: EdgeInsets.only(top: 220, right: 100, left: 100),
+                child: Text(
+                  'Edit your interests',
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontSize: 18,
+                    color: const Color(0xff1A2677),
+                    letterSpacing: 0.36,
+                    fontWeight: FontWeight.w500,
+                    height: 1,
+                  ),
+                  textAlign: TextAlign.center,
+
                 ),
                 textAlign: TextAlign.center,
               ),
