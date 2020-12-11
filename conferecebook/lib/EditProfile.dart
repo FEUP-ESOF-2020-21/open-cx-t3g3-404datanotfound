@@ -396,10 +396,9 @@ class _EditProfile1 extends State<EditProfile1> {
               ),
               Transform.translate(
                   offset: Offset(SizeConfig.screenWidth * 70,
-                      SizeConfig.screenHeight * 405),
+                      SizeConfig.screenHeight * 390),
                   child: Container(
                     width: 250,
-                    height: 50,
                     child: TextField(
                       controller: bioController,
                       onChanged: (String value) async {
@@ -414,7 +413,7 @@ class _EditProfile1 extends State<EditProfile1> {
                   )),
               Transform.translate(
                 offset: Offset(SizeConfig.screenWidth * 59.5,
-                    SizeConfig.screenHeight * 376.5),
+                    SizeConfig.screenHeight * 365),
                 child: Text(
                   'Bio',
                   style: TextStyle(
@@ -430,10 +429,9 @@ class _EditProfile1 extends State<EditProfile1> {
               ),
               Transform.translate(
                   offset: Offset(SizeConfig.screenWidth * 70,
-                      SizeConfig.screenHeight * 505),
+                      SizeConfig.screenHeight * 495),
                   child: Container(
                     width: 250,
-                    height: 50,
                     child: TextField(
                       controller: jobController,
                       onChanged: (String value) async {
@@ -448,7 +446,7 @@ class _EditProfile1 extends State<EditProfile1> {
                   )),
               Transform.translate(
                 offset: Offset(SizeConfig.screenWidth * 59.5,
-                    SizeConfig.screenHeight * 476.5),
+                    SizeConfig.screenHeight * 470),
                 child: Text(
                   'Job',
                   style: TextStyle(
@@ -464,10 +462,9 @@ class _EditProfile1 extends State<EditProfile1> {
               ),
               Transform.translate(
                   offset: Offset(SizeConfig.screenWidth * 70,
-                      SizeConfig.screenHeight * 605),
+                      SizeConfig.screenHeight * 595),
                   child: Container(
                     width: 250,
-                    height: 50,
                     child: TextField(
                       controller: areaController,
                       onChanged: (String value) async {
@@ -482,7 +479,7 @@ class _EditProfile1 extends State<EditProfile1> {
                   )),
               Transform.translate(
                 offset: Offset(SizeConfig.screenWidth * 59.5,
-                    SizeConfig.screenHeight * 576.5),
+                    SizeConfig.screenHeight * 570),
                 child: Text(
                   'Area',
                   style: TextStyle(
@@ -491,7 +488,7 @@ class _EditProfile1 extends State<EditProfile1> {
                     color: const Color(0xff1A2677),
                     letterSpacing: 0.36,
                     fontWeight: FontWeight.w500,
-                    height: 1,
+                    height: 1
                   ),
                   textAlign: TextAlign.left,
                 ),

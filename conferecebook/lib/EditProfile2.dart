@@ -102,27 +102,27 @@ class _EditProfile2 extends State<EditProfile2> {
     DatabaseReference firebaseDatabaseRef =
         FirebaseDatabase.instance.reference().child('Users');
     await firebaseDatabaseRef.child(widget.auth.currentUser.uid).update({
-      'facebook': _facebookController.value.text.toString().toLowerCase(),
-      'linkedin': _linkedinController.value.text.toString().toLowerCase(),
-      'twitter': _twitterController.value.text.toString().toLowerCase(),
-      'github': _githubController.value.text.toString().toLowerCase(),
-      'instagram': _instagramController.value.text.toString().toLowerCase(),
+      'facebook': _facebookController.value.text,
+      'linkedin': _linkedinController.value.text,
+      'twitter': _twitterController.value.text,
+      'github': _githubController.value.text,
+      'instagram': _instagramController.value.text,
     });
     Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) => MyProfile1(
+        builder: (context) => MyProfile2(
             auth: auth,
             image: image,
             name: name,
             job: job,
-            interests: interests,
+            interests: _interests,
             city: city,
             bio: bio,
             area: area,
-            linkedin: _linkedinController.value.text.toString().toLowerCase(),
-            facebook: _facebookController.value.text.toString().toLowerCase(),
-            instagram: _instagramController.value.text.toString().toLowerCase(),
-            twitter: _twitterController.value.text.toString().toLowerCase(),
-            github: _githubController.value.text.toString().toLowerCase(),
+            linkedin: _linkedinController.value.text,
+            facebook: _facebookController.value.text,
+            instagram: _instagramController.value.text,
+            twitter: _twitterController.value.text,
+            github: _githubController.value.text,
             code: code)));
   }
 
@@ -215,6 +215,7 @@ class _EditProfile2 extends State<EditProfile2> {
 
   @override
   void initState() {
+    super.initState();
     super.initState();
     interests = widget.interests;
     values = interests.split(',').toList();
