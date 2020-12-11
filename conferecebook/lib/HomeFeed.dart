@@ -827,6 +827,8 @@ class _HomeFeed extends State<HomeFeed> {
                                                         map: map,
                                                         postID: postID,
                                                         confId: confId,
+                                                        userRole: userRole,
+                                                        code: code,
                                                     )));
                                               });
 
