@@ -358,7 +358,7 @@ class _EditProfile2 extends State<EditProfile2> {
                       BorderRadius.all(Radius.elliptical(9999.0, 9999.0)),
                   color: const Color(0xfff5f5f5),
                 ),
-              ),
+              )),
 
 
               Container(
@@ -374,9 +374,7 @@ class _EditProfile2 extends State<EditProfile2> {
                     height: 1,
                   ),
                   textAlign: TextAlign.center,
-
                 ),
-                textAlign: TextAlign.center,
               ),
 
 
@@ -389,7 +387,7 @@ class _EditProfile2 extends State<EditProfile2> {
                           icon: Icon(FontAwesomeIcons.linkedin,
                               color: const Color(0xff1A2677)),
                           onPressed: () async {
-                            showTextEditDialog(context, "LinkedIn");
+                            showTextEditDialog(context, "LinkedIn", _linkedinController);
                             }
                           ),
 
@@ -397,28 +395,28 @@ class _EditProfile2 extends State<EditProfile2> {
                                   icon: Icon(FontAwesomeIcons.twitter,
                                       color: const Color(0xff1A2677)),
                                   onPressed: () async {
-                                    showTextEditDialog(context, "Twitter");
+                                    showTextEditDialog(context, "Twitter", _twitterController);
                                   }),
 
                         IconButton(
                                     icon: Icon(FontAwesomeIcons.github,
                                         color: const Color(0xff1A2677)),
                                     onPressed: () async {
-                                      showTextEditDialog(context, "GitHub");
+                                      showTextEditDialog(context, "GitHub", _githubController);
                                     }),
 
                         IconButton(
                                   icon: Icon(FontAwesomeIcons.instagram,
                                       color: const Color(0xff1A2677)),
                                   onPressed: () async {
-                                    showTextEditDialog(context, "Instagram");
+                                    showTextEditDialog(context, "Instagram", _instagramController);
                                   }),
 
                         IconButton(
                           icon: Icon(FontAwesomeIcons.facebook,
                               color: const Color(0xff1A2677)),
                           onPressed: () async {
-                            showTextEditDialog(context, "Facebook");
+                            showTextEditDialog(context, "Facebook", _facebookController);
                           }),
 
                       ])),
@@ -437,8 +435,6 @@ class _EditProfile2 extends State<EditProfile2> {
                   ),
                   textAlign: TextAlign.center,
 
-                ),
-                textAlign: TextAlign.center,
               ),
             ),
             Container(

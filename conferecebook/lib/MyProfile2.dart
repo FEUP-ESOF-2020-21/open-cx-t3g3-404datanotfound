@@ -309,11 +309,11 @@ class _MyProfile2 extends State<MyProfile2> {
                 child: Container(
                     child: IconButton(
                         icon: Icon(FontAwesomeIcons.linkedin,
-                            color: this.linkedin != null
+                            color: this.linkedin.isNotEmpty
                                 ? const Color(0xff1A2677)
                                 : const Color(0xffdddddd)),
                         onPressed: () async {
-                          if (this.linkedin == null)
+                          if (this.linkedin.isEmpty)
                             showAlertDialog(context, "LinkedIn");
                           else {
                             String url =
@@ -332,11 +332,11 @@ class _MyProfile2 extends State<MyProfile2> {
                 child: Container(
                     child: IconButton(
                         icon: Icon(FontAwesomeIcons.twitter,
-                            color: this.twitter != null
+                            color: this.twitter.isNotEmpty
                                 ? const Color(0xff1A2677)
                                 : const Color(0xffdddddd)),
                         onPressed: () async {
-                          if (this.twitter == null)
+                          if (this.twitter.isEmpty)
                             showAlertDialog(context, "Twitter");
                           else {
                             String url = 'https://twitter.com/' + this.twitter;
@@ -354,11 +354,11 @@ class _MyProfile2 extends State<MyProfile2> {
                 child: Container(
                     child: IconButton(
                         icon: Icon(FontAwesomeIcons.github,
-                            color: this.github != null
+                            color: this.github.isNotEmpty
                                 ? const Color(0xff1A2677)
                                 : const Color(0xffdddddd)),
                         onPressed: () async {
-                          if (this.github == null)
+                          if (this.github.isEmpty)
                             showAlertDialog(context, "Github");
                           else {
                             String url = 'https://github.com/' + this.github;
@@ -376,11 +376,11 @@ class _MyProfile2 extends State<MyProfile2> {
                 child: Container(
                     child: IconButton(
                         icon: Icon(FontAwesomeIcons.instagram,
-                            color: this.instagram != null
+                            color: this.instagram.isNotEmpty
                                 ? const Color(0xff1A2677)
                                 : const Color(0xffdddddd)),
                         onPressed: () async {
-                          if (this.instagram == null)
+                          if (this.instagram.isEmpty)
                             showAlertDialog(context, "Instagram");
                           else {
                             String url =
@@ -399,11 +399,11 @@ class _MyProfile2 extends State<MyProfile2> {
                 child: Container(
                     child: IconButton(
                         icon: Icon(FontAwesomeIcons.facebook,
-                            color: this.facebook != null
+                            color: this.facebook.isNotEmpty
                                 ? const Color(0xff1A2677)
                                 : const Color(0xffdddddd)),
                         onPressed: () async {
-                          if (this.facebook == null)
+                          if (this.facebook.isEmpty)
                             showAlertDialog(context, "Facebook");
                           else {
                             String url =
