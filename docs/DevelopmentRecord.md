@@ -312,9 +312,9 @@ The UserInterface package extends the Presentation package, as there is some nee
 
 Our project's physical structure is very simple. The user installs ConferenceBook on their smartphone, and whenever the need to connect with our database arises, it communicates with it via HTTPS requests, where it will store and retrieve all the information needed.
 
-With this in mind, we wrote a general Deployment Diagram, with the two devices that compose our system. In addition, we also developed a Component Diagram with the detailing of system's components, their responsibilities and the technology details.
+With this in mind, we wrote a general Deployment Diagram, with the two devices that compose our system.
 
-Our project was fully developed using Flutter - an emerging framework for mobile development that supports both iOS and Android - combined with Firebase to store participants data. We used Firebase for our database server because of its easy integration with flutter, as well as simple setup.
+Our project was fully developed using Flutter - an emerging framework for mobile development that supports both iOS and Android - combined with Firebase to store participants and conferences data. We used Firebase for our database server because of its easy integration with flutter, as well as simple setup.
 
 #### Deployment Diagram
 
