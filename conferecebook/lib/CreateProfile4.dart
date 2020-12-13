@@ -14,18 +14,18 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:path/path.dart';
 
 class CreateProfile4 extends StatefulWidget {
-  CreateProfile4(
-      {Key key,
-      this.auth,
-      this.userId,
-      this.name,
-      this.areaOfWork,
-      this.currentJob,
-      this.bio,
-      this.city,
-      this.interests,
-      this.imageFile,})
-      : super(key: key);
+  CreateProfile4({
+    Key key,
+    this.auth,
+    this.userId,
+    this.name,
+    this.areaOfWork,
+    this.currentJob,
+    this.bio,
+    this.city,
+    this.interests,
+    this.imageFile,
+  }) : super(key: key);
 
   final FirebaseAuth auth;
   final String userId;
@@ -50,7 +50,7 @@ class _CreateProfile4 extends State<CreateProfile4> {
   String linkedin;
   String github;
   String imageURL;
-  bool showConferenceHistory=true;
+  bool showConferenceHistory = true;
 
   Future insertDataBase() async {
     String image = basename(widget.imageFile.path);
@@ -86,207 +86,213 @@ class _CreateProfile4 extends State<CreateProfile4> {
   Widget build(BuildContext context) {
     userId = widget.userId;
     return WillPopScope(
-    onWillPop: () async => false, child: Scaffold(
-        resizeToAvoidBottomPadding: false,
-        appBar: AppBar(
-          title: Text("Additional Information 3/3"),
-          backgroundColor: const Color(0xff1A2677),
-        ),
-        body: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Transform.translate(
-                  offset: Offset(SizeConfig.screenWidth * 53.5,
-                      SizeConfig.screenHeight * 100.0),
-                  child: Container(
-                    width: SizeConfig.screenWidth * 270.0,
-                    child: TextFormField(
-                      onChanged: (String value) async {
-                        this.facebook = value;
-                      },
-                      obscureText: false,
-                      decoration: InputDecoration(
-                        icon: new Icon(FontAwesomeIcons.facebook,
-                            color: const Color(0xff1A2677)),
-                        hintText: 'Facebook',
-                        border: InputBorder.none,
-                      ),
-                      style: TextStyle(
-                        fontFamily: 'Roboto',
-                        fontSize: 16,
-                        color: const Color(0xff1A2677),
-                        letterSpacing: 0.15,
-                        height: 1,
-                      ),
-                      textAlign: TextAlign.left,
-                    ),
-                  )),
-              Transform.translate(
-                  offset: Offset(SizeConfig.screenWidth * 53.5,
-                      SizeConfig.screenHeight * 120.0),
-                  child: Container(
-                    width: SizeConfig.screenWidth * 270.0,
-                    child: TextFormField(
-                      onChanged: (String value) async {
-                        this.instagram = value;
-                      },
-                      obscureText: false,
-                      decoration: InputDecoration(
-                        icon: Icon(FontAwesomeIcons.instagram,
-                            color: const Color(0xff1A2677)),
-                        hintText: 'Instagram',
-                        border: InputBorder.none,
-                      ),
-                      style: TextStyle(
-                        fontFamily: 'Roboto',
-                        fontSize: 16,
-                        color: const Color(0xff1A2677),
-                        letterSpacing: 0.15,
-                        height: 1,
-                      ),
-                      textAlign: TextAlign.left,
-                    ),
-                  )),
-              Transform.translate(
-                  offset: Offset(SizeConfig.screenWidth * 53.5,
-                      SizeConfig.screenHeight * 140.0),
-                  child: Container(
-                    width: SizeConfig.screenWidth * 270.0,
-                    child: TextFormField(
-                      onChanged: (String value) async {
-                        this.twitter = value;
-                      },
-                      obscureText: false,
-                      decoration: InputDecoration(
-                        icon: Icon(FontAwesomeIcons.twitter,
-                            color: const Color(0xff1A2677)),
-                        hintText: 'Twitter',
-                        border: InputBorder.none,
-                      ),
-                      style: TextStyle(
-                        fontFamily: 'Roboto',
-                        fontSize: 16,
-                        color: const Color(0xff1A2677),
-                        letterSpacing: 0.15,
-                        height: 1,
-                      ),
-                      textAlign: TextAlign.left,
-                    ),
-                  )),
-              Transform.translate(
-                  offset: Offset(SizeConfig.screenWidth * 53.5,
-                      SizeConfig.screenHeight * 160.0),
-                  child: Container(
-                    width: SizeConfig.screenWidth * 270.0,
-                    child: TextFormField(
-                      onChanged: (String value) async {
-                        this.linkedin = value;
-                      },
-                      obscureText: false,
-                      decoration: InputDecoration(
-                        icon: Icon(FontAwesomeIcons.linkedin,
-                            color: const Color(0xff1A2677)),
-                        hintText: 'LinkedIn',
-                        border: InputBorder.none,
-                      ),
-                      style: TextStyle(
-                        fontFamily: 'Roboto',
-                        fontSize: 16,
-                        color: const Color(0xff1A2677),
-                        letterSpacing: 0.15,
-                        height: 1,
-                      ),
-                      textAlign: TextAlign.left,
-                    ),
-                  )),
-              Transform.translate(
-                  offset: Offset(SizeConfig.screenWidth * 53.5,
-                      SizeConfig.screenHeight * 180.0),
-                  child: Container(
-                    width: SizeConfig.screenWidth * 270.0,
-                    child: TextFormField(
-                      onChanged: (String value) async {
-                        this.github = value;
-                      },
-                      obscureText: false,
-                      decoration: InputDecoration(
-                        icon: Icon(FontAwesomeIcons.github,
-                            color: const Color(0xff1A2677)),
-                        hintText: 'Github',
-                        border: InputBorder.none,
-                      ),
-                      style: TextStyle(
-                        fontFamily: 'Roboto',
-                        fontSize: 16,
-                        color: const Color(0xff1A2677),
-                        letterSpacing: 0.15,
-                        height: 1,
-                      ),
-                      textAlign: TextAlign.left,
-                    ),
-                  )),
-              Transform.translate(
-                offset: Offset(SizeConfig.screenWidth * 120,
-                    SizeConfig.screenHeight * 250.0),
-                child: Container(
-                  child: InkWell(
-                    onTap: () async {
-                      insertDataBase().then((value) {
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (context) => MyLogin(auth: widget.auth)));
-                      });
-                    },
-                    child: SizedBox(
-                      width: SizeConfig.screenWidth * 149.0,
-                      height: SizeConfig.screenHeight * 57.0,
-                      child: Stack(
-                        children: <Widget>[
-                          Pinned.fromSize(
-                            bounds: Rect.fromLTWH(
-                                0.0,
-                                0.0,
-                                SizeConfig.screenWidth * 149.0,
-                                SizeConfig.screenHeight * 57.0),
-                            size: Size(SizeConfig.screenWidth * 149.0,
-                                SizeConfig.screenHeight * 57.0),
-                            pinLeft: true,
-                            pinRight: true,
-                            pinTop: true,
-                            pinBottom: true,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(35.0),
-                                color: const Color(0xff1A2677),
-                                border: Border.all(
-                                    width: 1.0, color: const Color(0xff1A2677)),
-                              ),
-                              child: SizedBox(
-                                width: SizeConfig.screenWidth * 88.0,
-                                child: Text(
-                                  'NEXT',
-                                  style: TextStyle(
-                                    fontFamily: 'Roboto',
-                                    fontSize: 15,
-                                    color: const Color(0xffffffff),
-                                    letterSpacing: 1.6909999999999998,
-                                    height: 2,
+        onWillPop: () async => false,
+        child: Scaffold(
+            resizeToAvoidBottomPadding: false,
+            appBar: AppBar(
+              title: Text("Additional Information 3/3"),
+              backgroundColor: const Color(0xff1A2677),
+              automaticallyImplyLeading: false,
+              centerTitle: true,
+            ),
+            body: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Transform.translate(
+                      offset: Offset(SizeConfig.screenWidth * 53.5,
+                          SizeConfig.screenHeight * 100.0),
+                      child: Container(
+                        width: SizeConfig.screenWidth * 270.0,
+                        child: TextFormField(
+                          onChanged: (String value) async {
+                            this.facebook = value;
+                          },
+                          obscureText: false,
+                          decoration: InputDecoration(
+                            icon: new Icon(FontAwesomeIcons.facebook,
+                                color: const Color(0xff1A2677)),
+                            hintText: 'Facebook',
+                            border: InputBorder.none,
+                          ),
+                          style: TextStyle(
+                            fontFamily: 'Roboto',
+                            fontSize: 16,
+                            color: const Color(0xff1A2677),
+                            letterSpacing: 0.15,
+                            height: 1,
+                          ),
+                          textAlign: TextAlign.left,
+                        ),
+                      )),
+                  Transform.translate(
+                      offset: Offset(SizeConfig.screenWidth * 53.5,
+                          SizeConfig.screenHeight * 120.0),
+                      child: Container(
+                        width: SizeConfig.screenWidth * 270.0,
+                        child: TextFormField(
+                          onChanged: (String value) async {
+                            this.instagram = value;
+                          },
+                          obscureText: false,
+                          decoration: InputDecoration(
+                            icon: Icon(FontAwesomeIcons.instagram,
+                                color: const Color(0xff1A2677)),
+                            hintText: 'Instagram',
+                            border: InputBorder.none,
+                          ),
+                          style: TextStyle(
+                            fontFamily: 'Roboto',
+                            fontSize: 16,
+                            color: const Color(0xff1A2677),
+                            letterSpacing: 0.15,
+                            height: 1,
+                          ),
+                          textAlign: TextAlign.left,
+                        ),
+                      )),
+                  Transform.translate(
+                      offset: Offset(SizeConfig.screenWidth * 53.5,
+                          SizeConfig.screenHeight * 140.0),
+                      child: Container(
+                        width: SizeConfig.screenWidth * 270.0,
+                        child: TextFormField(
+                          onChanged: (String value) async {
+                            this.twitter = value;
+                          },
+                          obscureText: false,
+                          decoration: InputDecoration(
+                            icon: Icon(FontAwesomeIcons.twitter,
+                                color: const Color(0xff1A2677)),
+                            hintText: 'Twitter',
+                            border: InputBorder.none,
+                          ),
+                          style: TextStyle(
+                            fontFamily: 'Roboto',
+                            fontSize: 16,
+                            color: const Color(0xff1A2677),
+                            letterSpacing: 0.15,
+                            height: 1,
+                          ),
+                          textAlign: TextAlign.left,
+                        ),
+                      )),
+                  Transform.translate(
+                      offset: Offset(SizeConfig.screenWidth * 53.5,
+                          SizeConfig.screenHeight * 160.0),
+                      child: Container(
+                        width: SizeConfig.screenWidth * 270.0,
+                        child: TextFormField(
+                          onChanged: (String value) async {
+                            this.linkedin = value;
+                          },
+                          obscureText: false,
+                          decoration: InputDecoration(
+                            icon: Icon(FontAwesomeIcons.linkedin,
+                                color: const Color(0xff1A2677)),
+                            hintText: 'LinkedIn',
+                            border: InputBorder.none,
+                          ),
+                          style: TextStyle(
+                            fontFamily: 'Roboto',
+                            fontSize: 16,
+                            color: const Color(0xff1A2677),
+                            letterSpacing: 0.15,
+                            height: 1,
+                          ),
+                          textAlign: TextAlign.left,
+                        ),
+                      )),
+                  Transform.translate(
+                      offset: Offset(SizeConfig.screenWidth * 53.5,
+                          SizeConfig.screenHeight * 180.0),
+                      child: Container(
+                        width: SizeConfig.screenWidth * 270.0,
+                        child: TextFormField(
+                          onChanged: (String value) async {
+                            this.github = value;
+                          },
+                          obscureText: false,
+                          decoration: InputDecoration(
+                            icon: Icon(FontAwesomeIcons.github,
+                                color: const Color(0xff1A2677)),
+                            hintText: 'Github',
+                            border: InputBorder.none,
+                          ),
+                          style: TextStyle(
+                            fontFamily: 'Roboto',
+                            fontSize: 16,
+                            color: const Color(0xff1A2677),
+                            letterSpacing: 0.15,
+                            height: 1,
+                          ),
+                          textAlign: TextAlign.left,
+                        ),
+                      )),
+                  Transform.translate(
+                    offset: Offset(SizeConfig.screenWidth * 120,
+                        SizeConfig.screenHeight * 250.0),
+                    child: Container(
+                      child: InkWell(
+                        onTap: () async {
+                          insertDataBase().then((value) {
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        MyLogin(auth: widget.auth)));
+                          });
+                        },
+                        child: SizedBox(
+                          width: SizeConfig.screenWidth * 149.0,
+                          height: SizeConfig.screenHeight * 57.0,
+                          child: Stack(
+                            children: <Widget>[
+                              Pinned.fromSize(
+                                bounds: Rect.fromLTWH(
+                                    0.0,
+                                    0.0,
+                                    SizeConfig.screenWidth * 149.0,
+                                    SizeConfig.screenHeight * 57.0),
+                                size: Size(SizeConfig.screenWidth * 149.0,
+                                    SizeConfig.screenHeight * 57.0),
+                                pinLeft: true,
+                                pinRight: true,
+                                pinTop: true,
+                                pinBottom: true,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(35.0),
+                                    color: const Color(0xff1A2677),
+                                    border: Border.all(
+                                        width: 1.0,
+                                        color: const Color(0xff1A2677)),
                                   ),
-                                  textAlign: TextAlign.center,
+                                  child: SizedBox(
+                                    width: SizeConfig.screenWidth * 88.0,
+                                    child: Text(
+                                      'NEXT',
+                                      style: TextStyle(
+                                        fontFamily: 'Roboto',
+                                        fontSize: 15,
+                                        color: const Color(0xffffffff),
+                                        letterSpacing: 1.6909999999999998,
+                                        height: 2,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
-        )));
+            )));
   } // Widget build
 } // StatelessWidget
 

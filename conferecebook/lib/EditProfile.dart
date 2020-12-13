@@ -35,8 +35,8 @@ class SizeConfig {
   }
 }
 
-class EditProfile extends StatefulWidget {
-  EditProfile(
+class EditProfile1 extends StatefulWidget {
+  EditProfile1(
       {Key key,
       this.auth,
       this.image,
@@ -70,10 +70,10 @@ class EditProfile extends StatefulWidget {
   final String code;
 
   @override
-  State<StatefulWidget> createState() => MyEditProfile();
+  State<StatefulWidget> createState() => _EditProfile1();
 }
 
-class MyEditProfile extends State<EditProfile> {
+class _EditProfile1 extends State<EditProfile1> {
   String image;
   String interests;
   String facebook;
@@ -182,8 +182,21 @@ class MyEditProfile extends State<EditProfile> {
             .then((DataSnapshot snapshot) {
           Map<dynamic, dynamic> map = snapshot.value;
           Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (context) =>
-                  HomeFeed(auth: auth, code: widget.code, map: map)));
+              builder: (context) => MyProfile1(
+                  auth: auth,
+                  image: image,
+                  name: name,
+                  job: job,
+                  interests: interests,
+                  city: city,
+                  bio: bio,
+                  area: area,
+                  linkedin: linkedin,
+                  facebook: facebook,
+                  instagram: instagram,
+                  twitter: twitter,
+                  github: github,
+                  code: widget.code)));
         });
       },
     );
@@ -383,10 +396,9 @@ class MyEditProfile extends State<EditProfile> {
               ),
               Transform.translate(
                   offset: Offset(SizeConfig.screenWidth * 70,
-                      SizeConfig.screenHeight * 405),
+                      SizeConfig.screenHeight * 390),
                   child: Container(
                     width: 250,
-                    height: 50,
                     child: TextField(
                       controller: bioController,
                       onChanged: (String value) async {
@@ -401,7 +413,7 @@ class MyEditProfile extends State<EditProfile> {
                   )),
               Transform.translate(
                 offset: Offset(SizeConfig.screenWidth * 59.5,
-                    SizeConfig.screenHeight * 376.5),
+                    SizeConfig.screenHeight * 365),
                 child: Text(
                   'Bio',
                   style: TextStyle(
@@ -417,10 +429,9 @@ class MyEditProfile extends State<EditProfile> {
               ),
               Transform.translate(
                   offset: Offset(SizeConfig.screenWidth * 70,
-                      SizeConfig.screenHeight * 505),
+                      SizeConfig.screenHeight * 495),
                   child: Container(
                     width: 250,
-                    height: 50,
                     child: TextField(
                       controller: jobController,
                       onChanged: (String value) async {
@@ -435,7 +446,7 @@ class MyEditProfile extends State<EditProfile> {
                   )),
               Transform.translate(
                 offset: Offset(SizeConfig.screenWidth * 59.5,
-                    SizeConfig.screenHeight * 476.5),
+                    SizeConfig.screenHeight * 470),
                 child: Text(
                   'Job',
                   style: TextStyle(
@@ -451,10 +462,9 @@ class MyEditProfile extends State<EditProfile> {
               ),
               Transform.translate(
                   offset: Offset(SizeConfig.screenWidth * 70,
-                      SizeConfig.screenHeight * 605),
+                      SizeConfig.screenHeight * 595),
                   child: Container(
                     width: 250,
-                    height: 50,
                     child: TextField(
                       controller: areaController,
                       onChanged: (String value) async {
@@ -469,7 +479,7 @@ class MyEditProfile extends State<EditProfile> {
                   )),
               Transform.translate(
                 offset: Offset(SizeConfig.screenWidth * 59.5,
-                    SizeConfig.screenHeight * 576.5),
+                    SizeConfig.screenHeight * 570),
                 child: Text(
                   'Area',
                   style: TextStyle(
@@ -478,7 +488,7 @@ class MyEditProfile extends State<EditProfile> {
                     color: const Color(0xff1A2677),
                     letterSpacing: 0.36,
                     fontWeight: FontWeight.w500,
-                    height: 1,
+                    height: 1
                   ),
                   textAlign: TextAlign.left,
                 ),
@@ -582,15 +592,26 @@ class MyEditProfile extends State<EditProfile> {
                                 Map<dynamic, dynamic> map = snapshot.value;
                                 Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
-                                        builder: (context) => HomeFeed(
+                                        builder: (context) => MyProfile1(
                                             auth: auth,
-                                            code: widget.code,
-                                            map: map)));
+                                            image: image,
+                                            name: name,
+                                            job: job,
+                                            interests: interests,
+                                            city: city,
+                                            bio: bio,
+                                            area: area,
+                                            linkedin: linkedin,
+                                            facebook: facebook,
+                                            instagram: instagram,
+                                            twitter: twitter,
+                                            github: github,
+                                            code: widget.code)));
                               });
                             }
                           }, // button pressed
                           child: Icon(
-                            FontAwesomeIcons.home,
+                            FontAwesomeIcons.times,
                             color: Colors.white,
                           ), // icon
                         ),

@@ -301,10 +301,8 @@ The best approach towards the simplification of the project structure is the MVC
 
 #### Package Diagram
 
-The View package represents every output to the user, which are subdivided into two packages, the UserInterface Package and the Presentation Package.
-The UserInterface package includes all files that have an active role on the interaction with the user, especially user input.
-The Presentation package is more focused on the files which have mainly the role on displaying information.
-The UserInterface package extends the Presentation package, as there is some need for information from the Presentation package in the UserInterface package.
+The Feed Package depends on both the Event-Specific and the Profile packages.
+Profile package, on its turn, depends on Login and Create_Account packages.
 
 ![Package Diagram](PackageDiagram.png)
 
@@ -320,12 +318,7 @@ Our project was fully developed using Flutter - an emerging framework for mobile
 
 ![Deployment Diagram](DeploymentDiagram.png)
 
-#### Component Diagram
 
-![Component Diagram](ComponentDiagram.png)
-
-As described on the Domain Model, the Model here contains all the data for the Conference, Users, etc.
-The View displays the pages and associated tools. The View and the model relate to the controller, consisting of objects that query the database and provide authentication funtions. The UserInterface asks the Controller to update the Model.
 
 <!--The goal of this subsection is to document the high-level physical structure of the software system (machines, connections, software components installed, and their dependencies) using UML deployment diagrams or component diagrams (separate or integrated), showing the physical structure of the system.
 

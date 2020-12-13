@@ -10,6 +10,7 @@ class CreateProfile2 extends StatefulWidget {
   CreateProfile2({Key key, this.auth, this.userId}) : super(key: key);
 
   final FirebaseAuth auth;
+
   // ignore: deprecated_member_use
   final String userId;
 
@@ -32,10 +33,13 @@ class _CreateProfile2 extends State<CreateProfile2> {
   Widget build(BuildContext context) {
     userId = widget.userId;
     return WillPopScope(
-    onWillPop: () async => false, child: Scaffold(
+        onWillPop: () async => false,
+    child: Scaffold(
         resizeToAvoidBottomPadding: false,
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           title: Text("Additional Information 1/3"),
+          centerTitle: true,
           backgroundColor: const Color(0xff1A2677),
         ),
         body: Form(
@@ -49,12 +53,18 @@ class _CreateProfile2 extends State<CreateProfile2> {
                 child: Container(
                   width: SizeConfig.screenWidth * 270.0,
                   child: TextFormField(
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'You must provide a name';
+                      }
+                      return null;
+                    },
                     onChanged: (String value) async {
                       this.name = value;
                     },
                     decoration: InputDecoration(
                       icon: Icon(Icons.person, color: const Color(0xff1A2677)),
-                      hintText: 'Full Name',
+                      hintText: 'Name',
                       border: InputBorder.none,
                     ),
                     style: TextStyle(
@@ -175,12 +185,18 @@ class _CreateProfile2 extends State<CreateProfile2> {
                 child: Container(
                   child: InkWell(
                     onTap: () {
-                      Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      CreateProfile3(auth: widget.auth, userId: userId, name: name, bio: bio,
-                                      city: city, areaOfWork: areaOfWork, currentJob: currentJob)));
-
+                      if (_formKey.currentState.validate()) {
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                            builder: (context) =>
+                                CreateProfile3(
+                                    auth: widget.auth,
+                                    userId: userId,
+                                    name: name,
+                                    bio: bio,
+                                    city: city,
+                                    areaOfWork: areaOfWork,
+                                    currentJob: currentJob)));
+                      }
                     },
                     child: SizedBox(
                       width: SizeConfig.screenWidth * 149.0,
@@ -188,8 +204,13 @@ class _CreateProfile2 extends State<CreateProfile2> {
                       child: Stack(
                         children: <Widget>[
                           Pinned.fromSize(
-                            bounds: Rect.fromLTWH(0.0, 0.0, SizeConfig.screenWidth * 149.0, SizeConfig.screenHeight * 57.0),
-                            size: Size(SizeConfig.screenWidth * 149.0, SizeConfig.screenHeight * 57.0),
+                            bounds: Rect.fromLTWH(
+                                0.0,
+                                0.0,
+                                SizeConfig.screenWidth * 149.0,
+                                SizeConfig.screenHeight * 57.0),
+                            size: Size(SizeConfig.screenWidth * 149.0,
+                                SizeConfig.screenHeight * 57.0),
                             pinLeft: true,
                             pinRight: true,
                             pinTop: true,

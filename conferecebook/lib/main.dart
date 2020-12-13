@@ -10,16 +10,17 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   Map<dynamic, dynamic> map;
-  await FirebaseDatabase.instance.reference().once().then((DataSnapshot snapshot) {
-     map = snapshot.value;
+  await FirebaseDatabase.instance
+      .reference()
+      .once()
+      .then((DataSnapshot snapshot) {
+    map = snapshot.value;
   });
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((value) => runApp(MyApp(map: map)));
-
 }
 
 class MyApp extends StatelessWidget {
-
   MyApp({Key key, this.map}) : super(key: key);
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -28,18 +29,17 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: 'ConferenceBook',
-            theme: ThemeData(
-              primarySwatch: Colors.blue,
-            ),
-            home:
-            (_auth.currentUser == null) ? MyLogin(auth: _auth) : JoinAnEvent(auth: _auth, map: map)
-          );
+    return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'ConferenceBook',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: (_auth.currentUser == null)
+            ? MyLogin(auth: _auth)
+            : JoinAnEvent(auth: _auth, map: map));
   }
 }
-
 
 //What is this?
 const String _svg_2rnm7d =

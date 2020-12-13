@@ -37,26 +37,19 @@ class SizeConfig {
 }
 
 class ViewProfile2 extends StatefulWidget {
-  ViewProfile2({
-    Key key,
-    this.auth,
-    this.userToSee,
-    this.map,
-    this.code
-  }) : super(key: key);
+  ViewProfile2({Key key, this.auth, this.userToSee, this.map, this.code})
+      : super(key: key);
 
   final FirebaseAuth auth;
   final String userToSee;
   final Map<dynamic, dynamic> map;
   final String code;
 
-
   @override
   State<StatefulWidget> createState() => _ViewProfile2();
 }
 
 class _ViewProfile2 extends State<ViewProfile2> {
-
   FirebaseAuth auth;
   String userToSee;
   Map<dynamic, dynamic> map;
@@ -131,7 +124,6 @@ class _ViewProfile2 extends State<ViewProfile2> {
     interests = map.values.toList()[2][userToSee]["interests"];
     myInterests = interests.split(',').toList();
 
-
     String code;
 
     return WillPopScope(
@@ -160,7 +152,7 @@ class _ViewProfile2 extends State<ViewProfile2> {
                   height: SizeConfig.screenHeight * 194.0,
                   decoration: BoxDecoration(
                     borderRadius:
-                    BorderRadius.all(Radius.elliptical(9999.0, 9999.0)),
+                        BorderRadius.all(Radius.elliptical(9999.0, 9999.0)),
                     color: const Color(0xffeeeeee),
                   ),
                 ),
@@ -362,7 +354,7 @@ class _ViewProfile2 extends State<ViewProfile2> {
                     this.name,
                     style: TextStyle(
                       fontFamily: 'Roboto',
-                      fontSize: 30,
+                      fontSize: this.name.length > 10 ? 20 : 30,
                       color: const Color(0xff1A2677),
                       letterSpacing: 0.28125,
                       fontWeight: FontWeight.w500,
@@ -376,8 +368,8 @@ class _ViewProfile2 extends State<ViewProfile2> {
                 offset: Offset(SizeConfig.screenWidth * 150,
                     SizeConfig.screenHeight * 100.0),
                 child:
-                // Adobe XD layer: 'NoPath' (shape)
-                Container(
+                    // Adobe XD layer: 'NoPath' (shape)
+                    Container(
                   child: CircleAvatar(
                     backgroundImage: NetworkImage(this.image),
                     radius: 50,
@@ -386,46 +378,45 @@ class _ViewProfile2 extends State<ViewProfile2> {
               ),
               Container(
                   child: Column(
-                    children: <Widget>[
-                      Container(
-                        child: Expanded(
-                          child: Align(
-                            alignment: FractionalOffset.bottomLeft,
-                            child: Padding(
-                              padding: EdgeInsets.only(bottom: 75.0, left: 35.0),
-                              child: FloatingActionButton(
-                                onPressed: () async {
-                                  interestsToString();
-                                  FirebaseDatabase.instance
-                                      .reference()
-                                      .child('Users')
-                                      .child(widget.auth.currentUser.uid)
-                                      .update({interests: interests}).then((value) {
-                                    Navigator.of(context).pushReplacement(
-                                        MaterialPageRoute(
-                                            builder: (context) => ViewProfile1(
-                                                auth: widget.auth,
-                                                userToSee: userToSee,
-                                                map: map,
-                                                code: widget.code)));
-                                  });
-                                },
-                                backgroundColor: const Color(0xffdddddd),
-                                elevation: 0,
-                                child: Icon(
-                                  FontAwesomeIcons.arrowLeft,
-                                  color: const Color(0xff1A2677),
-                                ),
-                              ),
+                children: <Widget>[
+                  Container(
+                    child: Expanded(
+                      child: Align(
+                        alignment: FractionalOffset.bottomLeft,
+                        child: Padding(
+                          padding: EdgeInsets.only(bottom: 75.0, left: 35.0),
+                          child: FloatingActionButton(
+                            onPressed: () async {
+                              FirebaseDatabase.instance
+                                  .reference()
+                                  .once()
+                                  .then((DataSnapshot snapshot) {
+                                Map<dynamic, dynamic> map = snapshot.value;
+                                Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                        builder: (context) => ViewProfile1(
+                                            auth: widget.auth,
+                                            userToSee: userToSee,
+                                            map: map,
+                                            code: widget.code)));
+                              });
+                            },
+                            backgroundColor: const Color(0xffdddddd),
+                            elevation: 0,
+                            child: Icon(
+                              FontAwesomeIcons.arrowLeft,
+                              color: const Color(0xff1A2677),
                             ),
                           ),
                         ),
-                      )
-                    ],
-                  )),
+                      ),
+                    ),
+                  )
+                ],
+              )),
               Transform.translate(
-                  offset: Offset(
-                      SizeConfig.screenWidth * 10, SizeConfig.screenHeight * 20 + 20),
+                  offset: Offset(SizeConfig.screenWidth * 10,
+                      SizeConfig.screenHeight * 20 + 20),
                   child: SizedBox.fromSize(
                     size: Size(56, 56), // button width and height
                     child: ClipOval(
@@ -439,28 +430,30 @@ class _ViewProfile2 extends State<ViewProfile2> {
                                 .once()
                                 .then((DataSnapshot snapshot) {
                               Map<dynamic, dynamic> map = snapshot.value;
-                              print(code);
-                              Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
+                              Navigator.of(context)
+                                  .pushReplacement(MaterialPageRoute(
                                       builder: (context) => ParticipantsList(
-                                          auth: widget.auth,
-                                          code: widget.code,
-                                          map: map,
-                                        attendeeFilter: true,
-                                        speakerFilter: true,
-                                        sponsorFilter: true,
-                                        organizerFilter: true,
-                                      )));
+                                            auth: widget.auth,
+                                            code: widget.code,
+                                            map: map,
+                                            attendeeFilter: true,
+                                            speakerFilter: true,
+                                            sponsorFilter: true,
+                                            organizerFilter: true,
+                                          )));
                             });
                           }, // button pressed
-                          child: Icon(FontAwesomeIcons.users, color: Colors.white,), // icon
-
+                          child: Icon(
+                            FontAwesomeIcons.users,
+                            color: Colors.white,
+                          ), // icon
                         ),
                       ),
                     ),
                   )),
               Transform.translate(
-                  offset: Offset(SizeConfig.screenWidth * 340 , SizeConfig.screenHeight * 20 + 20),
+                  offset: Offset(SizeConfig.screenWidth * 340,
+                      SizeConfig.screenHeight * 20 + 20),
                   child: SizedBox.fromSize(
                     size: Size(56, 56), // button width and height
                     child: ClipOval(
@@ -479,11 +472,7 @@ class _ViewProfile2 extends State<ViewProfile2> {
                                       builder: (context) => HomeFeed(
                                           auth: widget.auth,
                                           code: widget.code,
-                                          map: map
-                                      )));
-                              print("hello");
-                              print(code);
-                              print(map);
+                                          map: map)));
                             });
                           }, // button pressed
                           child: Icon(
@@ -497,5 +486,5 @@ class _ViewProfile2 extends State<ViewProfile2> {
             ],
           ),
         ));
-    }
   }
+}

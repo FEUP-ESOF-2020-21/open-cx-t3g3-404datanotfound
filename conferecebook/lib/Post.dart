@@ -33,11 +33,8 @@ class SizeConfig {
 }
 
 class Post extends StatefulWidget {
-  Post({Key key,
-    this.auth,
-    this.postsLeft,
-    this.userRole,
-    this.code}) : super(key: key);
+  Post({Key key, this.auth, this.postsLeft, this.userRole, this.code})
+      : super(key: key);
 
   final FirebaseAuth auth;
   final String code;
@@ -55,8 +52,7 @@ class _Post extends State<Post> {
   String userRole;
   final ImagePicker _picker = ImagePicker();
 
-  showAlertDialog2(BuildContext context)
-  {
+  showAlertDialog2(BuildContext context) {
     // configura o button
     Widget stay = FlatButton(
       child: Text("Stay"),
@@ -72,15 +68,14 @@ class _Post extends State<Post> {
             .once()
             .then((DataSnapshot snapshot) {
           Map<dynamic, dynamic> map = snapshot.value;
-          String image = map.values.toList()[2][widget
-              .auth.currentUser.uid]["photo"];
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                  builder: (context) =>
-                      HomeFeed(
-                        auth: widget.auth,
-                        code: widget.code,
-                        map: map,)));
+          String image =
+              map.values.toList()[2][widget.auth.currentUser.uid]["photo"];
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) => HomeFeed(
+                    auth: widget.auth,
+                    code: widget.code,
+                    map: map,
+                  )));
         });
       },
     );
@@ -88,10 +83,7 @@ class _Post extends State<Post> {
     AlertDialog alerta = AlertDialog(
       title: Text("Discard post?"),
       content: Text("You've content loaded and ready to be posted!"),
-      actions: [
-        stay,
-        leave
-      ],
+      actions: [stay, leave],
     );
     // exibe o dialog
     showDialog(
@@ -260,9 +252,7 @@ class _Post extends State<Post> {
     userRole = widget.userRole;
     String textPostsLeft;
 
-
-
-    if(userRole != "Organizer")
+    if (userRole != "Organizer")
       textPostsLeft = "\nNumber of Posts left: $postsLeft";
     else
       textPostsLeft = null;
@@ -283,14 +273,14 @@ class _Post extends State<Post> {
                         .once()
                         .then((DataSnapshot snapshot) {
                       Map<dynamic, dynamic> map = snapshot.value;
-                      String image = map.values.toList()[2][widget
-                          .auth.currentUser.uid]["photo"];
-                      Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  HomeFeed(auth: widget.auth,
-                                    code: widget.code,
-                                    map: map,)));
+                      String image = map.values.toList()[2]
+                          [widget.auth.currentUser.uid]["photo"];
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (context) => HomeFeed(
+                                auth: widget.auth,
+                                code: widget.code,
+                                map: map,
+                              )));
                     });
                   } else {
                     showAlertDialog2(context);
@@ -302,12 +292,12 @@ class _Post extends State<Post> {
                   text: "New Post",
                   style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
                   children: <TextSpan>[
-                    TextSpan(text: textPostsLeft,
+                    TextSpan(
+                        text: textPostsLeft,
                         style: TextStyle(fontSize: 17, color: Colors.white60)),
                   ],
                 ),
               ),
-
               backgroundColor: const Color(0xff1A2677),
             ),
             body: Form(
@@ -318,7 +308,11 @@ class _Post extends State<Post> {
                   Transform.translate(
                     offset: Offset(SizeConfig.screenWidth * 50,
                         SizeConfig.screenHeight * 270.0),
-                    child: Text(multimediaLoaded, style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold),),
+                    child: Text(
+                      multimediaLoaded,
+                      style: TextStyle(
+                          color: Colors.green, fontWeight: FontWeight.bold),
+                    ),
                   ),
                   Transform.translate(
                       offset: Offset(SizeConfig.screenWidth * 50,

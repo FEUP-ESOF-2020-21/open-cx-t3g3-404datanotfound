@@ -15,6 +15,10 @@ import 'package:flutter/widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 
+import 'package:page_transition/page_transition.dart';
+
+import 'EditProfile2.dart';
+
 class SizeConfig {
   static MediaQueryData _mediaQueryData;
   static double screenWidth;
@@ -173,7 +177,28 @@ class _MyProfile2 extends State<MyProfile2> {
                         color: const Color(0xff1A2677), // button color
                         child: InkWell(
                           splashColor: const Color(0xff1A2677), // splash color
-                          onTap: () async {}, // button pressed
+                          onTap: () async {
+                            Navigator.of(
+                              context,
+                            ).pushReplacement(
+                              MaterialPageRoute(
+                                  builder: (context) => EditProfile2(
+                                      auth: widget.auth,
+                                      image: image,
+                                      name: name,
+                                      job: job,
+                                      interests: interests,
+                                      city: city,
+                                      bio: bio,
+                                      area: area,
+                                      linkedin: linkedin,
+                                      facebook: facebook,
+                                      instagram: instagram,
+                                      twitter: twitter,
+                                      github: github,
+                                      code: widget.code)),
+                            );
+                          }, // button pressed
                           child: Icon(
                             FontAwesomeIcons.pencilAlt,
                             color: Colors.white,
@@ -284,11 +309,11 @@ class _MyProfile2 extends State<MyProfile2> {
                 child: Container(
                     child: IconButton(
                         icon: Icon(FontAwesomeIcons.linkedin,
-                            color: this.linkedin != null
+                            color: this.linkedin.isNotEmpty
                                 ? const Color(0xff1A2677)
                                 : const Color(0xffdddddd)),
                         onPressed: () async {
-                          if (this.linkedin == null)
+                          if (this.linkedin.isEmpty)
                             showAlertDialog(context, "LinkedIn");
                           else {
                             String url =
@@ -307,11 +332,11 @@ class _MyProfile2 extends State<MyProfile2> {
                 child: Container(
                     child: IconButton(
                         icon: Icon(FontAwesomeIcons.twitter,
-                            color: this.twitter != null
+                            color: this.twitter.isNotEmpty
                                 ? const Color(0xff1A2677)
                                 : const Color(0xffdddddd)),
                         onPressed: () async {
-                          if (this.twitter == null)
+                          if (this.twitter.isEmpty)
                             showAlertDialog(context, "Twitter");
                           else {
                             String url = 'https://twitter.com/' + this.twitter;
@@ -329,11 +354,11 @@ class _MyProfile2 extends State<MyProfile2> {
                 child: Container(
                     child: IconButton(
                         icon: Icon(FontAwesomeIcons.github,
-                            color: this.github != null
+                            color: this.github.isNotEmpty
                                 ? const Color(0xff1A2677)
                                 : const Color(0xffdddddd)),
                         onPressed: () async {
-                          if (this.github == null)
+                          if (this.github.isEmpty)
                             showAlertDialog(context, "Github");
                           else {
                             String url = 'https://github.com/' + this.github;
@@ -351,11 +376,11 @@ class _MyProfile2 extends State<MyProfile2> {
                 child: Container(
                     child: IconButton(
                         icon: Icon(FontAwesomeIcons.instagram,
-                            color: this.instagram != null
+                            color: this.instagram.isNotEmpty
                                 ? const Color(0xff1A2677)
                                 : const Color(0xffdddddd)),
                         onPressed: () async {
-                          if (this.instagram == null)
+                          if (this.instagram.isEmpty)
                             showAlertDialog(context, "Instagram");
                           else {
                             String url =
@@ -374,11 +399,11 @@ class _MyProfile2 extends State<MyProfile2> {
                 child: Container(
                     child: IconButton(
                         icon: Icon(FontAwesomeIcons.facebook,
-                            color: this.facebook != null
+                            color: this.facebook.isNotEmpty
                                 ? const Color(0xff1A2677)
                                 : const Color(0xffdddddd)),
                         onPressed: () async {
-                          if (this.facebook == null)
+                          if (this.facebook.isEmpty)
                             showAlertDialog(context, "Facebook");
                           else {
                             String url =
@@ -401,7 +426,7 @@ class _MyProfile2 extends State<MyProfile2> {
                     this.name,
                     style: TextStyle(
                       fontFamily: 'Roboto',
-                      fontSize: 30,
+                      fontSize: this.name.length > 10 ? 20 : 30,
                       color: const Color(0xff1A2677),
                       letterSpacing: 0.28125,
                       fontWeight: FontWeight.w500,
@@ -417,7 +442,7 @@ class _MyProfile2 extends State<MyProfile2> {
                     SizeConfig.screenHeight * 710.0),
                 child:
                     // Adobe XD layer: 'NoPath' (shape)
-                RaisedButton(
+                    RaisedButton(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(18.0),
                       side: BorderSide(color: Colors.red)),
@@ -425,8 +450,8 @@ class _MyProfile2 extends State<MyProfile2> {
                     widget.auth.signOut();
                     Navigator.of(context).pushReplacement(MaterialPageRoute(
                         builder: (context) => MyLogin(
-                          auth: widget.auth,
-                        )));
+                              auth: widget.auth,
+                            )));
                   },
                   color: Colors.red,
                   textColor: Colors.white,
