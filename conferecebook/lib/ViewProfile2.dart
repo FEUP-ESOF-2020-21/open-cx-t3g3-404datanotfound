@@ -419,6 +419,7 @@ class _ViewProfile2 extends State<ViewProfile2> {
                                   .once()
                                   .then((DataSnapshot snapshot) {
                                 Map<dynamic, dynamic> map = snapshot.value;
+                                Navigator.pop(context);
                                 Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
                                         builder: (context) => ViewProfile1(

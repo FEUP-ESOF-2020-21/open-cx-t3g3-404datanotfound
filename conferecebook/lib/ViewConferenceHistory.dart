@@ -76,19 +76,16 @@ class _ViewConferenceHistoryState extends State<ViewConferenceHistory> {
   Widget build(BuildContext context) {
     if (showConferenceHistory == true) {
       return WillPopScope(
-          onWillPop: () async => false,
+          // ignore: missing_return
+          onWillPop: () {
+            Navigator.pop(context);
+          },
           child: Scaffold(
             appBar: AppBar(
               leading: IconButton(
                   icon: Icon(FontAwesomeIcons.arrowLeft, color: Colors.white),
                   onPressed: () async {
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => ViewProfile1(
-                              auth: auth,
-                              userToSee: userToSee, // id of user pressed
-                              map: map,
-                              code: widget.code,
-                            )));
+                    Navigator.pop(context);
                   }),
               title: Text("Conference History"),
               backgroundColor: Color(0xff1A2677),
@@ -130,19 +127,15 @@ class _ViewConferenceHistoryState extends State<ViewConferenceHistory> {
           ));
     } else {
       return WillPopScope(
-          onWillPop: () async => false,
+          onWillPop: () {
+            Navigator.pop(context);
+          },
           child: Scaffold(
               appBar: AppBar(
                 leading: IconButton(
                     icon: Icon(FontAwesomeIcons.arrowLeft, color: Colors.white),
                     onPressed: () async {
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) => ViewProfile1(
-                                auth: auth,
-                                userToSee: userToSee, // id of user pressed
-                                map: map,
-                                code: widget.code,
-                              )));
+                      Navigator.pop(context);
                     }),
                 title: Text("Conference History"),
                 backgroundColor: Color(0xff1A2677),
