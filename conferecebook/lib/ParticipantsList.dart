@@ -97,7 +97,7 @@ class _ParticipantsList extends State<ParticipantsList> {
                     onPressed: () async {
                       this.searchToDo = _textFieldController.text;
                       Navigator.of(context).pop();
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      Navigator.push(context, MaterialPageRoute(
                           builder: (context) => SearchParticipants(
                               auth: auth,
                               code: widget.code,
@@ -406,8 +406,42 @@ class _ParticipantsList extends State<ParticipantsList> {
                               icon: Icon(FontAwesomeIcons.arrowRight,
                                   color: Color(0xff1A2677)),
                               onPressed: () async {
-                                Navigator.of(context)
-                                    .pushReplacement(MaterialPageRoute(
+                                if (auth.currentUser.uid == userToSee) {
+                                  String user = auth.currentUser.uid;
+                                  String image = map.values.toList()[2][user]["photo"];
+                                  String name = map.values.toList()[2][user]["name"];
+                                  String job = map.values.toList()[2][user]["job"];
+                                  String interests =
+                                  map.values.toList()[2][user]["interests"];
+                                  String city = map.values.toList()[2][user]["city"];
+                                  String bio = map.values.toList()[2][user]["bio"];
+                                  String area = map.values.toList()[2][user]["area"];
+                                  String linkedin =
+                                  map.values.toList()[2][user]["linkedin"];
+                                  String facebook =
+                                  map.values.toList()[2][user]["facebook"];
+                                  String instagram =
+                                  map.values.toList()[2][user]["instagram"];
+                                  String twitter = map.values.toList()[2][user]["twitter"];
+                                  String github = map.values.toList()[2][user]["github"];
+                                  Navigator.push(context, MaterialPageRoute(
+                                      builder: (context) => MyProfile1(
+                                          auth: auth,
+                                          image: image,
+                                          name: name,
+                                          job: job,
+                                          interests: interests,
+                                          city: city,
+                                          bio: bio,
+                                          area: area,
+                                          linkedin: linkedin,
+                                          facebook: facebook,
+                                          instagram: instagram,
+                                          twitter: twitter,
+                                          github: github,
+                                          code: code)));
+                                } else {
+                                Navigator.push(context, MaterialPageRoute(
                                         builder: (context) => ViewProfile1(
                                               auth: auth,
                                               userToSee: userToSee,
@@ -415,6 +449,7 @@ class _ParticipantsList extends State<ParticipantsList> {
                                               map: map,
                                               code: widget.code,
                                             )));
+                                }
                               })),
                       semanticContainer: true,
                       clipBehavior: Clip.antiAliasWithSaveLayer,

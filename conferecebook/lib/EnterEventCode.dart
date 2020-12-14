@@ -26,9 +26,10 @@ class SizeConfig {
 }
 
 class EnterEventCode extends StatefulWidget {
-  EnterEventCode({Key key, this.auth}) : super(key: key);
+  EnterEventCode({Key key, this.auth, this.previous}) : super(key: key);
 
   final FirebaseAuth auth;
+  final String previous;
 
   @override
   State<StatefulWidget> createState() => _EnterEventCode();
@@ -159,6 +160,8 @@ class _EnterEventCode extends State<EnterEventCode> {
   bool _success = false;
   FirebaseAuth auth;
 
+  String previous;
+
   Future<String> _register() async {
     await FirebaseDatabase.instance
         .reference()
@@ -203,6 +206,7 @@ class _EnterEventCode extends State<EnterEventCode> {
   @override
   Widget build(BuildContext context) {
     auth = widget.auth;
+    previous = widget.previous;
     SizeConfig().init(context);
     return WillPopScope(
         onWillPop: () async => false,
@@ -222,18 +226,33 @@ class _EnterEventCode extends State<EnterEventCode> {
                             padding: EdgeInsets.only(top: 25.0, left: 10.0),
                             child: FloatingActionButton(
                               onPressed: () async {
-                                FirebaseDatabase.instance
-                                    .reference()
-                                    .once()
-                                    .then((DataSnapshot snapshot) {
-                                  Map<dynamic, dynamic> map = snapshot.value;
-                                  Navigator.of(context)
-                                      .pushReplacement(MaterialPageRoute(
-                                          builder: (context) => JoinAnEvent(
-                                                auth: widget.auth,
-                                                map: map,
-                                              )));
-                                });
+                                if (previous != "") {
+                                  FirebaseDatabase.instance
+                                      .reference()
+                                      .once()
+                                      .then((DataSnapshot snapshot) {
+                                    Map<dynamic, dynamic> map = snapshot.value;
+                                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                        builder: (context) => HomeFeed(
+                                          auth: this.auth,
+                                          code: previous,
+                                          map: map,
+                                        )));
+                                  });
+                                } else {
+                                  FirebaseDatabase.instance
+                                      .reference()
+                                      .once()
+                                      .then((DataSnapshot snapshot) {
+                                    Map<dynamic, dynamic> map = snapshot.value;
+                                    Navigator.of(context)
+                                        .pushReplacement(MaterialPageRoute(
+                                            builder: (context) => JoinAnEvent(
+                                                  auth: widget.auth,
+                                                  map: map,
+                                                )));
+                                  });
+                                }
                               },
                               backgroundColor: const Color(0xff1A2677),
                               child: Icon(

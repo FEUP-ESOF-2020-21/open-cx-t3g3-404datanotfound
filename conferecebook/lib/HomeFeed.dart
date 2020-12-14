@@ -11,6 +11,7 @@ import 'package:adobe_xd/pinned.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:flutter/rendering.dart';
 import 'package:ConfereceBook/ParticipantsList.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/widgets.dart';
@@ -53,7 +54,9 @@ class HomeFeed extends StatefulWidget {
 }
 
 class _HomeFeed extends State<HomeFeed> {
-  VideoPlayerController _controller;
+  List<VideoPlayerController> _controller = new List<VideoPlayerController>();
+  List<Future<void>> _initializeVideoPlayerFuture = new List<Future<void>>();
+
   FirebaseAuth auth;
   String image;
   String name;
@@ -101,6 +104,38 @@ class _HomeFeed extends State<HomeFeed> {
       newName = names[0];
     }
     return newName;
+  }
+
+  @override
+  void initState() {
+    int numPosts = widget.map.values.toList()[1][widget.code].length;
+    var confPosts = widget.map.values.toList()[1][widget.code].keys;
+    _initializeVideoPlayerFuture.add(null);
+    _controller.add(null);
+    for (int i = 0; i < numPosts; i++) {
+      String post = confPosts.elementAt(i);
+      String url =
+          widget.map.values.toList()[1][widget.code][post]["multimedia"];
+      if (!url.contains("jpg") && url.trimRight().isNotEmpty) {
+        VideoPlayerController aux =
+            VideoPlayerController.network(url.trimRight());
+        _initializeVideoPlayerFuture.add(aux.initialize());
+        aux.setLooping(true);
+        aux.setVolume(1.0);
+        _controller.add(aux);
+      }
+    }
+
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    for (VideoPlayerController controller in _controller) {
+      controller.dispose();
+    }
+    super.dispose();
   }
 
   @override
@@ -494,22 +529,24 @@ class _HomeFeed extends State<HomeFeed> {
                             map.values.toList()[2][user]["instagram"];
                         this.twitter = map.values.toList()[2][user]["twitter"];
                         this.github = map.values.toList()[2][user]["github"];
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (context) => MyProfile1(
-                                auth: auth,
-                                image: image,
-                                name: name,
-                                job: job,
-                                interests: interests,
-                                city: city,
-                                bio: bio,
-                                area: area,
-                                linkedin: linkedin,
-                                facebook: facebook,
-                                instagram: instagram,
-                                twitter: twitter,
-                                github: github,
-                                code: code)));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MyProfile1(
+                                    auth: auth,
+                                    image: image,
+                                    name: name,
+                                    job: job,
+                                    interests: interests,
+                                    city: city,
+                                    bio: bio,
+                                    area: area,
+                                    linkedin: linkedin,
+                                    facebook: facebook,
+                                    instagram: instagram,
+                                    twitter: twitter,
+                                    github: github,
+                                    code: code)));
                       });
                     },
                     child: CircleAvatar(
@@ -565,21 +602,23 @@ class _HomeFeed extends State<HomeFeed> {
                             map.values.toList()[2][user]["instagram"];
                         this.twitter = map.values.toList()[2][user]["twitter"];
                         this.github = map.values.toList()[2][user]["github"];
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (context) => MyProfile1(
-                                auth: auth,
-                                image: image,
-                                name: name,
-                                job: job,
-                                interests: interests,
-                                city: city,
-                                bio: bio,
-                                area: area,
-                                linkedin: linkedin,
-                                facebook: facebook,
-                                instagram: instagram,
-                                twitter: twitter,
-                                github: github)));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MyProfile1(
+                                    auth: auth,
+                                    image: image,
+                                    name: name,
+                                    job: job,
+                                    interests: interests,
+                                    city: city,
+                                    bio: bio,
+                                    area: area,
+                                    linkedin: linkedin,
+                                    facebook: facebook,
+                                    instagram: instagram,
+                                    twitter: twitter,
+                                    github: github)));
                       });
                     },
                   ),
@@ -593,6 +632,7 @@ class _HomeFeed extends State<HomeFeed> {
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
                           builder: (context) => EnterEventCode(
                                 auth: widget.auth,
+                                previous: widget.code,
                               )));
                     },
                   ),
@@ -765,6 +805,11 @@ class _HomeFeed extends State<HomeFeed> {
                           numLikes = this.likes.length.toString();
                         }
 
+                        if (_controller.length > 1) {
+                          _controller.removeAt(0);
+                          _initializeVideoPlayerFuture.removeAt(0);
+                        }
+
                         return Container(
                             margin: const EdgeInsets.all(15.0),
                             padding: const EdgeInsets.all(3.0),
@@ -775,7 +820,7 @@ class _HomeFeed extends State<HomeFeed> {
                                 color: const Color(0xffD3D3D3),
                               ),
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(20)),
+                                  BorderRadius.all(Radius.circular(10)),
                             ),
                             child: SizedBox(
                                 width: multimedia != " "
@@ -786,21 +831,26 @@ class _HomeFeed extends State<HomeFeed> {
                                         ? SizeConfig.screenHeight * 500 +
                                             (text.length / 30) * 10
                                         : SizeConfig.screenHeight * 500)
-                                    : SizeConfig.screenHeight * 130 +
+                                    : SizeConfig.screenHeight * 150 +
                                         (text.length / 30) * 10,
                                 child: Stack(
                                   children: <Widget>[
                                     if (userRole == "Organizer")
-                                      IconButton(
-                                          icon: Icon(FontAwesomeIcons.times,
-                                              color: Color(0xff8d0000)),
-                                          onPressed: () {
-                                            showDeleteDialog(context, postID);
-                                          }),
-                                    Transform.translate(
+                                      Transform.translate(
                                         offset: Offset(
                                             SizeConfig.screenWidth * 0.0,
                                             SizeConfig.screenHeight * 0.0),
+                                        child: IconButton(
+                                            icon: Icon(FontAwesomeIcons.times,
+                                                color: Color(0xff8d0000)),
+                                            onPressed: () {
+                                              showDeleteDialog(context, postID);
+                                            }),
+                                      ),
+                                    Transform.translate(
+                                        offset: Offset(
+                                            SizeConfig.screenWidth * -6.0,
+                                            SizeConfig.screenHeight * 6.0),
                                         child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.end,
@@ -814,26 +864,104 @@ class _HomeFeed extends State<HomeFeed> {
                                             ),
                                             InkWell(
                                               onTap: () async {
-                                                FirebaseDatabase.instance
-                                                    .reference()
-                                                    .once()
-                                                    .then((DataSnapshot
-                                                        snapshot) {
-                                                  Map<dynamic, dynamic> map =
-                                                      snapshot.value;
+                                                if (auth.currentUser.uid ==
+                                                    userUID) {
+                                                  FirebaseDatabase.instance
+                                                      .reference()
+                                                      .once()
+                                                      .then((DataSnapshot
+                                                          snapshot) {
+                                                    Map<dynamic, dynamic> map =
+                                                        snapshot.value;
+                                                    String user =
+                                                        auth.currentUser.uid;
+                                                    String image =
+                                                        map.values.toList()[2]
+                                                            [user]["photo"];
+                                                    String name =
+                                                        map.values.toList()[2]
+                                                            [user]["name"];
+                                                    String job =
+                                                        map.values.toList()[2]
+                                                            [user]["job"];
+                                                    String interests =
+                                                        map.values.toList()[2]
+                                                            [user]["interests"];
+                                                    String city =
+                                                        map.values.toList()[2]
+                                                            [user]["city"];
+                                                    String bio =
+                                                        map.values.toList()[2]
+                                                            [user]["bio"];
+                                                    String area =
+                                                        map.values.toList()[2]
+                                                            [user]["area"];
+                                                    String linkedin =
+                                                        map.values.toList()[2]
+                                                            [user]["linkedin"];
+                                                    String facebook =
+                                                        map.values.toList()[2]
+                                                            [user]["facebook"];
+                                                    String instagram =
+                                                        map.values.toList()[2]
+                                                            [user]["instagram"];
+                                                    String twitter =
+                                                        map.values.toList()[2]
+                                                            [user]["twitter"];
+                                                    String github =
+                                                        map.values.toList()[2]
+                                                            [user]["github"];
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                MyProfile1(
+                                                                    auth: auth,
+                                                                    image:
+                                                                        image,
+                                                                    name: name,
+                                                                    job: job,
+                                                                    interests:
+                                                                        interests,
+                                                                    city: city,
+                                                                    bio: bio,
+                                                                    area: area,
+                                                                    linkedin:
+                                                                        linkedin,
+                                                                    facebook:
+                                                                        facebook,
+                                                                    instagram:
+                                                                        instagram,
+                                                                    twitter:
+                                                                        twitter,
+                                                                    github:
+                                                                        github,
+                                                                    code:
+                                                                        code)));
+                                                  });
+                                                } else {
+                                                  FirebaseDatabase.instance
+                                                      .reference()
+                                                      .once()
+                                                      .then((DataSnapshot
+                                                          snapshot) {
+                                                    Map<dynamic, dynamic> map =
+                                                        snapshot.value;
 
-                                                  Navigator.of(context).pushReplacement(
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              ViewProfile1(
-                                                                  auth: widget
-                                                                      .auth,
-                                                                  userToSee:
-                                                                      userUID,
-                                                                  map: map,
-                                                                  code: widget
-                                                                      .code)));
-                                                });
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                ViewProfile1(
+                                                                    auth: widget
+                                                                        .auth,
+                                                                    userToSee:
+                                                                        userUID,
+                                                                    map: map,
+                                                                    code: widget
+                                                                        .code)));
+                                                  });
+                                                }
                                               },
                                               child: CircleAvatar(
                                                 radius: 20.0,
@@ -885,15 +1013,75 @@ class _HomeFeed extends State<HomeFeed> {
                                                   ? Image(
                                                       image: NetworkImage(
                                                           multimedia))
-                                                  : Container(
-                                                      child: Scaffold(
-                                                        body: Center(
-                                                            child: Container(
-                                                          child: Text(
-                                                              'Unable to show media'),
-                                                        )),
-                                                      ),
-                                                    )
+                                                  : Stack(
+                                                      alignment: Alignment
+                                                          .bottomCenter,
+                                                      children: <Widget>[
+                                                          FutureBuilder(
+                                                            future:
+                                                                _initializeVideoPlayerFuture[
+                                                                    0],
+                                                            builder: (context,
+                                                                snapshot) {
+                                                              if (snapshot
+                                                                      .connectionState ==
+                                                                  ConnectionState
+                                                                      .done) {
+                                                                return Center(
+                                                                  child:
+                                                                      AspectRatio(
+                                                                    aspectRatio:
+                                                                        _controller[0]
+                                                                            .value
+                                                                            .aspectRatio,
+                                                                    child: VideoPlayer(
+                                                                        _controller[
+                                                                            0]),
+                                                                  ),
+                                                                );
+                                                              } else {
+                                                                return Center(
+                                                                  child:
+                                                                      CircularProgressIndicator(),
+                                                                );
+                                                              }
+                                                            },
+                                                          ),
+                                                          RaisedButton(
+                                                            shape: RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            18.0),
+                                                                side: BorderSide(
+                                                                    color: const Color(
+                                                                        0xff1A2677))),
+                                                            onPressed: () {
+                                                              setState(() {
+                                                                if (_controller[
+                                                                        0]
+                                                                    .value
+                                                                    .isPlaying) {
+                                                                  _controller[0]
+                                                                      .pause();
+                                                                } else {
+                                                                  _controller[0]
+                                                                      .play();
+                                                                }
+                                                              });
+                                                            },
+                                                            child: Icon(
+                                                              _controller[0]
+                                                                      .value
+                                                                      .isPlaying
+                                                                  ? Icons.pause
+                                                                  : Icons
+                                                                      .play_arrow,
+                                                              color: const Color(
+                                                                  0xff1A2677),
+                                                            ),
+                                                          ),
+                                                        ])
                                               : Container(),
                                         ),
                                       ),
@@ -909,13 +1097,12 @@ class _HomeFeed extends State<HomeFeed> {
                                               "      " + checkSameDay(postID),
                                               style: new TextStyle(
                                                 fontSize: 10.0,
-                                                color: Colors.grey,
+                                                color: Colors.black45,
                                               ),
                                             ),
                                             Expanded(child: SizedBox()),
                                             Text("    " +
-                                                numComments.toString() +
-                                                "   "),
+                                                numComments.toString()),
                                             IconButton(
                                                 icon: isCommented
                                                     ? Icon(
@@ -1148,22 +1335,24 @@ class _HomeFeed extends State<HomeFeed> {
                             map.values.toList()[2][user]["instagram"];
                         this.twitter = map.values.toList()[2][user]["twitter"];
                         this.github = map.values.toList()[2][user]["github"];
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (context) => MyProfile1(
-                                auth: auth,
-                                image: image,
-                                name: name,
-                                job: job,
-                                interests: interests,
-                                city: city,
-                                bio: bio,
-                                area: area,
-                                linkedin: linkedin,
-                                facebook: facebook,
-                                instagram: instagram,
-                                twitter: twitter,
-                                github: github,
-                                code: code)));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MyProfile1(
+                                    auth: auth,
+                                    image: image,
+                                    name: name,
+                                    job: job,
+                                    interests: interests,
+                                    city: city,
+                                    bio: bio,
+                                    area: area,
+                                    linkedin: linkedin,
+                                    facebook: facebook,
+                                    instagram: instagram,
+                                    twitter: twitter,
+                                    github: github,
+                                    code: code)));
                       });
                     },
                     child: CircleAvatar(
@@ -1216,21 +1405,23 @@ class _HomeFeed extends State<HomeFeed> {
                             map.values.toList()[2][user]["instagram"];
                         this.twitter = map.values.toList()[2][user]["twitter"];
                         this.github = map.values.toList()[2][user]["github"];
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (context) => MyProfile1(
-                                auth: auth,
-                                image: image,
-                                name: name,
-                                job: job,
-                                interests: interests,
-                                city: city,
-                                bio: bio,
-                                area: area,
-                                linkedin: linkedin,
-                                facebook: facebook,
-                                instagram: instagram,
-                                twitter: twitter,
-                                github: github)));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MyProfile1(
+                                    auth: auth,
+                                    image: image,
+                                    name: name,
+                                    job: job,
+                                    interests: interests,
+                                    city: city,
+                                    bio: bio,
+                                    area: area,
+                                    linkedin: linkedin,
+                                    facebook: facebook,
+                                    instagram: instagram,
+                                    twitter: twitter,
+                                    github: github)));
                       });
                     },
                   ),
@@ -1244,6 +1435,7 @@ class _HomeFeed extends State<HomeFeed> {
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
                           builder: (context) => EnterEventCode(
                                 auth: widget.auth,
+                                previous: widget.code,
                               )));
                     },
                   ),

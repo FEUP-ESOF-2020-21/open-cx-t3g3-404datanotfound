@@ -74,7 +74,6 @@ class EditProfile1 extends StatefulWidget {
 }
 
 class _EditProfile1 extends State<EditProfile1> {
-  String image;
   String interests;
   String facebook;
   String instagram;
@@ -83,11 +82,6 @@ class _EditProfile1 extends State<EditProfile1> {
   String github;
   String code;
   FirebaseAuth auth;
-  String name;
-  String job;
-  String city;
-  String bio;
-  String area;
 
   TextEditingController bioController;
   TextEditingController jobController;
@@ -184,13 +178,13 @@ class _EditProfile1 extends State<EditProfile1> {
           Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (context) => MyProfile1(
                   auth: auth,
-                  image: image,
-                  name: name,
-                  job: job,
+                  image: widget.image,
+                  name: widget.name,
+                  job: widget.job,
                   interests: interests,
-                  city: city,
-                  bio: bio,
-                  area: area,
+                  city: widget.city,
+                  bio: widget.bio,
+                  area: widget.area,
                   linkedin: linkedin,
                   facebook: facebook,
                   instagram: instagram,
@@ -265,7 +259,7 @@ class _EditProfile1 extends State<EditProfile1> {
       Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (context) => MyProfile1(
               auth: auth,
-              image: image,
+              image: widget.image,
               name: nameController.value.text,
               job: jobController.value.text,
               interests: interests,
@@ -281,12 +275,32 @@ class _EditProfile1 extends State<EditProfile1> {
     }
   }
 
+  showAlertDialog(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+              title: Text('Empty Name'),
+              content:
+                  Text('The field name is empty. Please fill it with a name.'),
+              actions: <Widget>[
+                new FlatButton(
+                    child: new Text('Ok'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    }),
+              ]);
+        });
+  }
+
   @override
   void initState() {
     super.initState();
     bioController = TextEditingController(text: widget.bio);
     jobController = TextEditingController(text: widget.job);
-    areaController = TextEditingController(text: widget.area);
+    areaController = widget.area.trimRight().isEmpty
+        ? TextEditingController(text: "")
+        : TextEditingController(text: widget.area);
     nameController = TextEditingController(text: widget.name);
     cityController = TextEditingController(text: widget.city);
   }
@@ -305,7 +319,6 @@ class _EditProfile1 extends State<EditProfile1> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     auth = widget.auth;
-    image = widget.image;
     interests = widget.interests;
     facebook = widget.facebook;
     instagram = widget.instagram;
@@ -313,11 +326,6 @@ class _EditProfile1 extends State<EditProfile1> {
     twitter = widget.twitter;
     github = widget.github;
     code = widget.code;
-    name = widget.name;
-    city = widget.city;
-    area = widget.area;
-    job = widget.job;
-    bio = widget.bio;
     final bottom = MediaQuery.of(context).viewInsets.bottom;
     return WillPopScope(
         onWillPop: () async => false,
@@ -328,7 +336,11 @@ class _EditProfile1 extends State<EditProfile1> {
                 padding: EdgeInsets.only(top: 52.0, right: 0.0),
                 child: FloatingActionButton(
                   onPressed: () {
-                    updateDataBase(context);
+                    if (nameController.value.text.trimRight().isEmpty) {
+                      showAlertDialog(context);
+                    } else {
+                      updateDataBase(context);
+                    }
                   },
                   backgroundColor: const Color(0xff1A2677),
                   child: Icon(
@@ -367,55 +379,153 @@ class _EditProfile1 extends State<EditProfile1> {
               ),
               Transform.translate(
                 offset: Offset(SizeConfig.screenWidth * 79,
-                    SizeConfig.screenHeight * 320.0),
+                    SizeConfig.screenHeight * 310.0),
                 child: SizedBox(
                     width: SizeConfig.screenWidth * 260.0,
                     child: Container(
                       width: 260,
-                      height: 20,
-                      child: TextField(
-                        controller: cityController,
-                        onChanged: (String value) async {
-                          city = value;
-                        },
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(0.1)),
-                        ),
-                        style: TextStyle(
-                          fontFamily: 'Roboto',
-                          fontSize: 12,
-                          color: const Color(0xff1A2677),
-                          letterSpacing: 0.1875,
-                          fontWeight: FontWeight.w500,
-                          height: 1.2,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
+                      height: 30,
+                      child: widget.city.trimRight().isEmpty
+                          ? TextField(
+                              controller: cityController,
+                              decoration: InputDecoration(
+                                hintText: 'Write your city here',
+                                contentPadding:
+                                    EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 0.0),
+                                prefixIcon: Icon(
+                                  FontAwesomeIcons.pencilAlt,
+                                  size: 15.0,
+                                  color: const Color(0xff1A2677),
+                                ),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                              ),
+                              style: TextStyle(
+                                fontFamily: 'Roboto',
+                                fontSize: 12,
+                                color: const Color(0xff1A2677),
+                                letterSpacing: 0.1875,
+                                fontWeight: FontWeight.w500,
+                                height: 1.2,
+                              ),
+                              textAlign: TextAlign.center,
+                            )
+                          : TextField(
+                              controller: cityController,
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(
+                                  FontAwesomeIcons.pencilAlt,
+                                  size: 15.0,
+                                  color: const Color(0xff1A2677),
+                                ),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                              ),
+                              style: TextStyle(
+                                fontFamily: 'Roboto',
+                                fontSize: 12,
+                                color: const Color(0xff1A2677),
+                                letterSpacing: 0.1875,
+                                fontWeight: FontWeight.w500,
+                                height: 1.2,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
                     )),
               ),
               Transform.translate(
                   offset: Offset(SizeConfig.screenWidth * 70,
-                      SizeConfig.screenHeight * 390),
+                      SizeConfig.screenHeight * 400),
                   child: Container(
                     width: 250,
-                    child: TextField(
-                      controller: bioController,
-                      onChanged: (String value) async {
-                        this.bio = value;
-                      },
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.zero)),
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.left,
-                    ),
+                    child: widget.bio.trimRight().isEmpty
+                        ? TextField(
+                            controller: bioController,
+                            decoration: InputDecoration(
+                                hintText: 'Write your bio here',
+                                contentPadding:
+                                    EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 0.0),
+                                prefixIcon: Icon(
+                                  FontAwesomeIcons.pencilAlt,
+                                  size: 15.0,
+                                  color: const Color(0xff1A2677),
+                                ),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10))),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: const Color(0xff1A2677),
+                            ),
+                            textAlign: TextAlign.left,
+                          )
+                        : TextField(
+                            controller: bioController,
+                            decoration: InputDecoration(
+                                contentPadding:
+                                    EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 0.0),
+                                prefixIcon: Icon(
+                                  FontAwesomeIcons.pencilAlt,
+                                  size: 15.0,
+                                  color: const Color(0xff1A2677),
+                                ),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10))),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: const Color(0xff1A2677),
+                            ),
+                            textAlign: TextAlign.left,
+                          ),
+                  )),
+              Transform.translate(
+                  offset: Offset(SizeConfig.screenWidth * 70,
+                      SizeConfig.screenHeight * 600),
+                  child: Container(
+                    width: 250,
+                    child: widget.area.trimRight().isEmpty
+                        ? TextField(
+                            controller: areaController,
+                            decoration: InputDecoration(
+                                hintText: 'Write your area here',
+                                contentPadding:
+                                    EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 0.0),
+                                prefixIcon: Icon(
+                                  FontAwesomeIcons.pencilAlt,
+                                  size: 15.0,
+                                  color: const Color(0xff1A2677),
+                                ),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10))),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: const Color(0xff1A2677),
+                            ),
+                            textAlign: TextAlign.left,
+                          )
+                        : TextField(
+                            controller: areaController,
+                            decoration: InputDecoration(
+                                contentPadding:
+                                    EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 0.0),
+                                prefixIcon: Icon(
+                                  FontAwesomeIcons.pencilAlt,
+                                  size: 15.0,
+                                  color: const Color(0xff1A2677),
+                                ),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10))),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: const Color(0xff1A2677),
+                            ),
+                            textAlign: TextAlign.left,
+                          ),
                   )),
               Transform.translate(
                 offset: Offset(SizeConfig.screenWidth * 59.5,
                     SizeConfig.screenHeight * 365),
                 child: Text(
-                  'Bio',
+                  'Biography',
                   style: TextStyle(
                     fontFamily: 'Roboto',
                     fontSize: 20,
@@ -429,20 +539,45 @@ class _EditProfile1 extends State<EditProfile1> {
               ),
               Transform.translate(
                   offset: Offset(SizeConfig.screenWidth * 70,
-                      SizeConfig.screenHeight * 495),
+                      SizeConfig.screenHeight * 500),
                   child: Container(
                     width: 250,
-                    child: TextField(
-                      controller: jobController,
-                      onChanged: (String value) async {
-                        job = value;
-                      },
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.zero)),
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.left,
-                    ),
+                    child: widget.job.trimRight().isEmpty
+                        ? TextField(
+                            controller: jobController,
+                            decoration: InputDecoration(
+                                hintText: 'Write your job here',
+                                contentPadding:
+                                    EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 0.0),
+                                prefixIcon: Icon(
+                                  FontAwesomeIcons.pencilAlt,
+                                  size: 15.0,
+                                  color: const Color(0xff1A2677),
+                                ),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10))),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xff1A2677)),
+                            textAlign: TextAlign.left,
+                          )
+                        : TextField(
+                            controller: jobController,
+                            decoration: InputDecoration(
+                                contentPadding:
+                                    EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 0.0),
+                                prefixIcon: Icon(
+                                  FontAwesomeIcons.pencilAlt,
+                                  size: 15.0,
+                                  color: const Color(0xff1A2677),
+                                ),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10))),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xff1A2677)),
+                            textAlign: TextAlign.left,
+                          ),
                   )),
               Transform.translate(
                 offset: Offset(SizeConfig.screenWidth * 59.5,
@@ -461,58 +596,45 @@ class _EditProfile1 extends State<EditProfile1> {
                 ),
               ),
               Transform.translate(
-                  offset: Offset(SizeConfig.screenWidth * 70,
-                      SizeConfig.screenHeight * 595),
-                  child: Container(
-                    width: 250,
-                    child: TextField(
-                      controller: areaController,
-                      onChanged: (String value) async {
-                        area = value;
-                      },
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.zero)),
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.left,
-                    ),
-                  )),
-              Transform.translate(
                 offset: Offset(SizeConfig.screenWidth * 59.5,
                     SizeConfig.screenHeight * 570),
                 child: Text(
                   'Area',
                   style: TextStyle(
-                    fontFamily: 'Roboto',
-                    fontSize: 20,
-                    color: const Color(0xff1A2677),
-                    letterSpacing: 0.36,
-                    fontWeight: FontWeight.w500,
-                    height: 1
-                  ),
+                      fontFamily: 'Roboto',
+                      fontSize: 20,
+                      color: const Color(0xff1A2677),
+                      letterSpacing: 0.36,
+                      fontWeight: FontWeight.w500,
+                      height: 1),
                   textAlign: TextAlign.left,
                 ),
               ),
               Transform.translate(
                 offset: Offset(SizeConfig.screenWidth * 80,
-                    SizeConfig.screenHeight * 230.0),
+                    SizeConfig.screenHeight * 240.0),
                 child: SizedBox(
                   width: 226.0,
+                  height: 50.0,
                   child: TextField(
                     controller: nameController,
-                    onChanged: (String value) async {
-                      name = value;
-                    },
                     decoration: InputDecoration(
+                        contentPadding:
+                            EdgeInsets.fromLTRB(20.0, 0.0, 0.0, 0.0),
+                        prefixIcon: Icon(
+                          FontAwesomeIcons.pencilAlt,
+                          size: 15.0,
+                          color: const Color(0xff1A2677),
+                        ),
                         border: OutlineInputBorder(
-                            borderRadius: BorderRadius.zero)),
+                            borderRadius: BorderRadius.circular(10))),
                     style: TextStyle(
                       fontFamily: 'Roboto',
                       fontSize: 30,
                       color: const Color(0xff1A2677),
-                      letterSpacing: 0.28125,
+                      letterSpacing: 0.1875,
                       fontWeight: FontWeight.w500,
-                      height: 0.8,
+                      height: 1.5,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -527,30 +649,13 @@ class _EditProfile1 extends State<EditProfile1> {
                         child: Stack(children: <Widget>[
                   CircleAvatar(
                     backgroundImage: _imageFile == null
-                        ? NetworkImage(this.image)
+                        ? NetworkImage(widget.image)
                         : FileImage(File(_imageFile.path)),
                     radius: 50,
                   ),
                   Positioned(
-                    bottom: 35.0,
-                    right: 55.0,
-                    child: InkWell(
-                      onTap: () {
-                        showModalBottomSheet(
-                          context: context,
-                          builder: ((builder) => bottomSheet()),
-                        );
-                      },
-                      child: Icon(
-                        FontAwesomeIcons.retweet,
-                        color: const Color(0xffffffff),
-                        size: 30.0,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 35.0,
-                    right: 15.0,
+                    bottom: 0.0,
+                    right: 0.0,
                     child: InkWell(
                       onTap: () {
                         showModalBottomSheet(
@@ -560,7 +665,7 @@ class _EditProfile1 extends State<EditProfile1> {
                       },
                       child: Icon(
                         FontAwesomeIcons.camera,
-                        color: const Color(0xffffffff),
+                        color: const Color(0xff1A2677),
                         size: 30.0,
                       ),
                     ),
@@ -578,11 +683,11 @@ class _EditProfile1 extends State<EditProfile1> {
                         child: InkWell(
                           splashColor: const Color(0xff1A2677), // splash color
                           onTap: () async {
-                            if ((name != nameController.value.text) ||
-                                (city != cityController.value.text) ||
-                                (area != areaController.value.text) ||
-                                (job != jobController.value.text) ||
-                                (bio != bioController.value.text)) {
+                            if ((widget.name != nameController.value.text) ||
+                                (widget.city != cityController.value.text) ||
+                                (widget.area != areaController.value.text) ||
+                                (widget.job != jobController.value.text) ||
+                                (widget.bio != bioController.value.text)) {
                               check(context);
                             } else {
                               FirebaseDatabase.instance
@@ -594,13 +699,13 @@ class _EditProfile1 extends State<EditProfile1> {
                                     MaterialPageRoute(
                                         builder: (context) => MyProfile1(
                                             auth: auth,
-                                            image: image,
-                                            name: name,
-                                            job: job,
+                                            image: widget.image,
+                                            name: widget.name,
+                                            job: widget.job,
                                             interests: interests,
-                                            city: city,
-                                            bio: bio,
-                                            area: area,
+                                            city: widget.city,
+                                            bio: widget.bio,
+                                            area: widget.area,
                                             linkedin: linkedin,
                                             facebook: facebook,
                                             instagram: instagram,

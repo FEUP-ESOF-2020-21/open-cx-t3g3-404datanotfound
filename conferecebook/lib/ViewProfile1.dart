@@ -77,7 +77,7 @@ class _ViewProfile1 extends State<ViewProfile1> {
                 new FlatButton(
                     child: new Text('Back'),
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      Navigator.pop(context);
                     }),
               ]);
         });
@@ -98,9 +98,7 @@ class _ViewProfile1 extends State<ViewProfile1> {
     job = map.values.toList()[2][userToSee]["job"];
     area = map.values.toList()[2][userToSee]["area"];
 
-    return WillPopScope(
-        onWillPop: () async => false,
-        child: Scaffold(
+    return Scaffold(
           backgroundColor: const Color(0xffffffff),
           body: Stack(
             children: <Widget>[
@@ -135,15 +133,15 @@ class _ViewProfile1 extends State<ViewProfile1> {
                 child: SizedBox(
                   width: SizeConfig.screenWidth * 100.0,
                   child: Text(
-                    this.city,
+                    this.city.trimRight().isEmpty
+                        ? 'Undefined city'
+                        : this.city,
                     style: TextStyle(
                       fontFamily: 'Roboto',
                       fontSize: 12,
-                      color: const Color(0xff1A2677),
-                      letterSpacing: 0.1875,
-                      fontWeight: FontWeight.w500,
-                      height: 1.2,
-                    ),
+                      color: this.city.trimRight().isEmpty
+                          ? const Color(0xffd3d3d3)
+                          : const Color(0xff1A2677)),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -155,10 +153,14 @@ class _ViewProfile1 extends State<ViewProfile1> {
                     width: 200,
                     height: 20,
                     child: Text(
-                      bio,
+                      bio.trimRight().isEmpty ? 'Undefined bio' : bio,
                       textAlign: TextAlign.left,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: bio.trimRight().isEmpty
+                              ? const Color(0xffd3d3d3)
+                              : const Color(0xff1A2677)),
                     )),
               ),
               Transform.translate(
@@ -207,10 +209,12 @@ class _ViewProfile1 extends State<ViewProfile1> {
                     width: 200,
                     height: 20,
                     child: Text(
-                      job,
+                      job.trimRight().isEmpty ? 'Undefined job' : job,
                       textAlign: TextAlign.left,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: TextStyle(fontWeight: FontWeight.bold, color: job.trimRight().isEmpty
+                          ? const Color(0xffd3d3d3)
+                          : const Color(0xff1A2677)),
                     )),
               ),
               Transform.translate(
@@ -236,10 +240,14 @@ class _ViewProfile1 extends State<ViewProfile1> {
                     width: 200,
                     height: 20,
                     child: Text(
-                      area,
+                      area.trimRight().isEmpty ? 'Undefined area' : area,
                       textAlign: TextAlign.left,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: area.trimRight().isEmpty
+                              ? const Color(0xffd3d3d3)
+                              : const Color(0xff1A2677)),
                     )),
               ),
               Transform.translate(
@@ -345,8 +353,7 @@ class _ViewProfile1 extends State<ViewProfile1> {
                           child: FloatingActionButton(
                             heroTag: "btn1",
                             onPressed: () async {
-                              Navigator.of(context)
-                                  .pushReplacement(MaterialPageRoute(
+                              Navigator.push(context, MaterialPageRoute(
                                       builder: (context) => ViewProfile2(
                                             auth: auth,
                                             userToSee: userToSee,
@@ -378,58 +385,10 @@ class _ViewProfile1 extends State<ViewProfile1> {
                         child: InkWell(
                           splashColor: const Color(0xff1A2677), // splash color
                           onTap: () async {
-                            FirebaseDatabase.instance
-                                .reference()
-                                .once()
-                                .then((DataSnapshot snapshot) {
-                              Map<dynamic, dynamic> map = snapshot.value;
-                              Navigator.of(context)
-                                  .pushReplacement(MaterialPageRoute(
-                                      builder: (context) => ParticipantsList(
-                                            auth: widget.auth,
-                                            code: widget.code,
-                                            map: map,
-                                            attendeeFilter: true,
-                                            speakerFilter: true,
-                                            sponsorFilter: true,
-                                            organizerFilter: true,
-                                          )));
-                            });
+                            Navigator.of(context).pop();
                           }, // button pressed
                           child: Icon(
-                            FontAwesomeIcons.users,
-                            color: Colors.white,
-                          ), // icon
-                        ),
-                      ),
-                    ),
-                  )),
-              Transform.translate(
-                  offset: Offset(SizeConfig.screenWidth * 340,
-                      SizeConfig.screenHeight * 20 + 20),
-                  child: SizedBox.fromSize(
-                    size: Size(56, 56), // button width and height
-                    child: ClipOval(
-                      child: Material(
-                        color: const Color(0xff1A2677), // button color
-                        child: InkWell(
-                          splashColor: const Color(0xff1A2677), // splash color
-                          onTap: () async {
-                            FirebaseDatabase.instance
-                                .reference()
-                                .once()
-                                .then((DataSnapshot snapshot) {
-                              Map<dynamic, dynamic> map = snapshot.value;
-                              Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                      builder: (context) => HomeFeed(
-                                          auth: widget.auth,
-                                          code: widget.code,
-                                          map: map)));
-                            });
-                          }, // button pressed
-                          child: Icon(
-                            FontAwesomeIcons.home,
+                            FontAwesomeIcons.arrowLeft,
                             color: Colors.white,
                           ), // icon
                         ),
@@ -466,6 +425,6 @@ class _ViewProfile1 extends State<ViewProfile1> {
                   )),
             ],
           ),
-        ));
+        );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:ConfereceBook/JoinAnEvent.dart';
+import 'package:ConfereceBook/ResetPassword.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
@@ -237,6 +238,51 @@ class _MyLogin extends State<MyLogin> {
                   ],
                   child: Text(
                     'Create account!',
+                    style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontSize: 16,
+                      color: const Color(0xff1A2677),
+                      letterSpacing: 0.15,
+                      decoration: TextDecoration.underline,
+                      height: 1.5,
+                    ),
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+              ),
+              Transform.translate(
+                offset: Offset(SizeConfig.screenWidth * 53.5,
+                    SizeConfig.screenHeight * 680.0),
+                child:
+                // Adobe XD layer: '✏️ Input text' (text)
+                Text(
+                  'Forgot your password?',
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontSize: 16,
+                    color: const Color(0x99000000),
+                    letterSpacing: 0.15,
+                    height: 1.5,
+                  ),
+                  textAlign: TextAlign.left,
+                ),
+              ),
+              Transform.translate(
+                offset: Offset(SizeConfig.screenWidth * 53.5,
+                    SizeConfig.screenHeight * 703.0),
+                child:
+                // Adobe XD layer: '✏️ Input text' (text)
+                PageLink(
+                  links: [
+                    PageLinkInfo(
+                      transition: LinkTransition.Fade,
+                      ease: Curves.easeOut,
+                      duration: 0.3,
+                      pageBuilder: () => MyResetPassword(auth: auth),
+                    ),
+                  ],
+                  child: Text(
+                    'Reset Password',
                     style: TextStyle(
                       fontFamily: 'Roboto',
                       fontSize: 16,

@@ -104,7 +104,7 @@ class _ModerationSettings extends State<ModerationSettings> {
                   //initial value
                   value: postsFromSponsors,
                   textOn: 'Allowed',
-                  textOff: 'No',
+                  textOff: 'Blocked',
                   colorOn: Color(0xff1A2677),
                   colorOff: Colors.black54,
                   iconOn: Icons.done,
@@ -129,7 +129,7 @@ class _ModerationSettings extends State<ModerationSettings> {
                   //initial value
                   value: postsFromSpeakers,
                   textOn: 'Allowed',
-                  textOff: 'No',
+                  textOff: 'Blocked',
                   colorOn: Color(0xff1A2677),
                   colorOff: Colors.black54,
                   iconOn: Icons.done,
@@ -154,7 +154,7 @@ class _ModerationSettings extends State<ModerationSettings> {
                   //initial value
                   value: postsFromAttendees,
                   textOn: 'Allowed',
-                  textOff: 'No',
+                  textOff: 'Blocked',
                   colorOn: Color(0xff1A2677),
                   colorOff: Colors.black54,
                   iconOn: Icons.done,

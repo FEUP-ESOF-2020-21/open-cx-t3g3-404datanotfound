@@ -193,6 +193,7 @@ class _JoinAnEvent extends State<JoinAnEvent> {
                                   duration: 0.3,
                                   pageBuilder: () => EnterEventCode(
                                     auth: auth,
+                                    previous: "",
                                   ),
                                 ),
                               ],
@@ -429,6 +430,7 @@ class _JoinAnEvent extends State<JoinAnEvent> {
                                   duration: 0.3,
                                   pageBuilder: () => EnterEventCode(
                                     auth: auth,
+                                    previous: "",
                                   ),
                                 ),
                               ],
