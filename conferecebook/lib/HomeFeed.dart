@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:ConfereceBook/ConferenceHistory.dart';
 import 'package:ConfereceBook/EnterEventCode.dart';
 import 'package:ConfereceBook/JoinAnEvent.dart';
@@ -54,8 +56,8 @@ class HomeFeed extends StatefulWidget {
 }
 
 class _HomeFeed extends State<HomeFeed> {
-  List<VideoPlayerController> _controller = new List<VideoPlayerController>();
-  List<Future<void>> _initializeVideoPlayerFuture = new List<Future<void>>();
+  Map<String, VideoPlayerController> _controller = new HashMap<String, VideoPlayerController>();
+  Map<String, Future<void>> _initializeVideoPlayerFuture = new HashMap<String, Future<void>>();
 
   FirebaseAuth auth;
   String image;
@@ -71,6 +73,7 @@ class _HomeFeed extends State<HomeFeed> {
   String twitter;
   String github;
   String code;
+  String confName;
   Map<dynamic, dynamic> myMap;
   int numPosts;
   final GlobalKey<ScaffoldState> _scaffoldState = GlobalKey();
@@ -106,33 +109,32 @@ class _HomeFeed extends State<HomeFeed> {
     return newName;
   }
 
+
   @override
   void initState() {
-    int numPosts = widget.map.values.toList()[1][widget.code].length;
-    var confPosts = widget.map.values.toList()[1][widget.code].keys;
-    _initializeVideoPlayerFuture.add(null);
-    _controller.add(null);
-    for (int i = 0; i < numPosts; i++) {
-      String post = confPosts.elementAt(i);
-      String url =
-          widget.map.values.toList()[1][widget.code][post]["multimedia"];
-      if (!url.contains("jpg") && url.trimRight().isNotEmpty) {
-        VideoPlayerController aux =
-            VideoPlayerController.network(url.trimRight());
-        _initializeVideoPlayerFuture.add(aux.initialize());
-        aux.setLooping(true);
-        aux.setVolume(1.0);
-        _controller.add(aux);
+    try {
+      int numPosts = widget.map.values.toList()[1][widget.code].length;
+      var confPosts = widget.map.values.toList()[1][widget.code].keys;
+      for (int i = 0; i < numPosts; i++) {
+        String post = confPosts.elementAt(i);
+        String url =
+            widget.map.values.toList()[1][widget.code][post]["multimedia"];
+        String type = widget.map.values.toList()[1][widget.code][post]["type"];
+        if (type == "video") {
+          VideoPlayerController video = VideoPlayerController.network(url.trimRight());
+          _initializeVideoPlayerFuture[post] = video.initialize();
+          video.setLooping(true);
+          video.setVolume(1.0);
+          _controller[post] = video;
+        }
       }
-    }
-
-
+    } catch (e) {}
     super.initState();
   }
 
   @override
   void dispose() {
-    for (VideoPlayerController controller in _controller) {
+    for (VideoPlayerController controller in _controller.values) {
       controller.dispose();
     }
     super.dispose();
@@ -144,7 +146,6 @@ class _HomeFeed extends State<HomeFeed> {
     myMap = widget.map;
     code = widget.code;
     image = myMap.values.toList()[2][auth.currentUser.uid]["photo"];
-
     // get the role of current user
     int numConferences = myMap.values.toList()[0].length;
 
@@ -246,9 +247,7 @@ class _HomeFeed extends State<HomeFeed> {
     var posts;
     List<String> postsIDs = new List();
 
-    if (myMap.values.toList()[1][code] == null)
-      numTotalPosts = 0;
-    else {
+    try {
       numTotalPosts = myMap.values.toList()[1][code].length;
 
       // get posts
@@ -261,6 +260,8 @@ class _HomeFeed extends State<HomeFeed> {
       }
       postsIDs.sort((b, a) => a.compareTo(b)); //sort posts
 
+    } catch (e) {
+      numTotalPosts = 0;
     }
 
     // compute number of posts from this user
@@ -505,6 +506,7 @@ class _HomeFeed extends State<HomeFeed> {
                                 )));
                       });
                     }),
+                Container(width: 10,),
                 InkWell(
                     onTap: () async {
                       FirebaseDatabase.instance
@@ -745,6 +747,8 @@ class _HomeFeed extends State<HomeFeed> {
                             myMap.values.toList()[1][confId][postID]["text"];
                         String multimedia = myMap.values.toList()[1][confId]
                             [postID]["multimedia"];
+                        String subtype = myMap.values.toList()[1][confId]
+                        [postID]["type"];
                         String name = myMap.values.toList()[2][userUID]["name"];
                         String userPhoto =
                             myMap.values.toList()[2][userUID]["photo"];
@@ -785,9 +789,9 @@ class _HomeFeed extends State<HomeFeed> {
                         }
 
                         String type = "";
-                        if (typeString == "jpg") {
+                        if (subtype == "photo") {
                           type = "image";
-                        } else if (typeString == "mp4") {
+                        } else if (subtype == "video") {
                           type = "video";
                         }
 
@@ -803,11 +807,6 @@ class _HomeFeed extends State<HomeFeed> {
                           numLikes = "0";
                         } else {
                           numLikes = this.likes.length.toString();
-                        }
-
-                        if (_controller.length > 1) {
-                          _controller.removeAt(0);
-                          _initializeVideoPlayerFuture.removeAt(0);
                         }
 
                         return Container(
@@ -1017,10 +1016,10 @@ class _HomeFeed extends State<HomeFeed> {
                                                       alignment: Alignment
                                                           .bottomCenter,
                                                       children: <Widget>[
+                                                        type=="video" ?
                                                           FutureBuilder(
                                                             future:
-                                                                _initializeVideoPlayerFuture[
-                                                                    0],
+                                                                _initializeVideoPlayerFuture[postID],
                                                             builder: (context,
                                                                 snapshot) {
                                                               if (snapshot
@@ -1031,7 +1030,7 @@ class _HomeFeed extends State<HomeFeed> {
                                                                   child:
                                                                       AspectRatio(
                                                                     aspectRatio:
-                                                                        _controller[0]
+                                                                        _controller[postID]
                                                                             .value
                                                                             .aspectRatio,
                                                                     child: VideoPlayer(
@@ -1046,8 +1045,8 @@ class _HomeFeed extends State<HomeFeed> {
                                                                 );
                                                               }
                                                             },
-                                                          ),
-                                                          RaisedButton(
+                                                          ) : Container(),
+                                                          type=="video" ? RaisedButton(
                                                             shape: RoundedRectangleBorder(
                                                                 borderRadius:
                                                                     BorderRadius
@@ -1058,20 +1057,19 @@ class _HomeFeed extends State<HomeFeed> {
                                                                         0xff1A2677))),
                                                             onPressed: () {
                                                               setState(() {
-                                                                if (_controller[
-                                                                        0]
+                                                                if (_controller[postID]
                                                                     .value
                                                                     .isPlaying) {
-                                                                  _controller[0]
+                                                                  _controller[postID]
                                                                       .pause();
                                                                 } else {
-                                                                  _controller[0]
+                                                                  _controller[postID]
                                                                       .play();
                                                                 }
                                                               });
                                                             },
                                                             child: Icon(
-                                                              _controller[0]
+                                                              _controller[postID]
                                                                       .value
                                                                       .isPlaying
                                                                   ? Icons.pause
@@ -1080,7 +1078,7 @@ class _HomeFeed extends State<HomeFeed> {
                                                               color: const Color(
                                                                   0xff1A2677),
                                                             ),
-                                                          ),
+                                                          ) : Container()
                                                         ])
                                               : Container(),
                                         ),
@@ -1126,8 +1124,7 @@ class _HomeFeed extends State<HomeFeed> {
                                                         map.values.toList()[1]
                                                             [widget.code];
 
-                                                    Navigator.of(context)
-                                                        .pushReplacement(
+                                                    Navigator.push(context,
                                                             MaterialPageRoute(
                                                                 builder:
                                                                     (context) =>
@@ -1290,6 +1287,25 @@ class _HomeFeed extends State<HomeFeed> {
               actions: <Widget>[
                 IconButton(
                     icon: new Icon(
+                      FontAwesomeIcons.redoAlt,
+                      color: const Color(0xffffffff),
+                    ),
+                    onPressed: () async {
+                      FirebaseDatabase.instance
+                          .reference()
+                          .once()
+                          .then((DataSnapshot snapshot) {
+                        Map<dynamic, dynamic> map = snapshot.value;
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                            builder: (context) => HomeFeed(
+                              auth: auth,
+                              map: map,
+                              code: code,
+                            )));
+                      });
+                    }),
+                IconButton(
+                    icon: new Icon(
                       FontAwesomeIcons.users,
                       color: const Color(0xffffffff),
                     ),
@@ -1311,6 +1327,7 @@ class _HomeFeed extends State<HomeFeed> {
                                 )));
                       });
                     }),
+                Container(width: 10,),
                 InkWell(
                     onTap: () async {
                       FirebaseDatabase.instance
@@ -1484,6 +1501,29 @@ class _HomeFeed extends State<HomeFeed> {
                       });
                     },
                   ),
+                  if (userRole == "Organizer")
+                    ListTile(
+                      leading: new Icon(
+                        FontAwesomeIcons.wrench,
+                        color: const Color(0xff1A2677),
+                      ),
+                      title: Text("Moderation Settings"),
+                      onTap: () {
+                        FirebaseDatabase.instance
+                            .reference()
+                            .once()
+                            .then((DataSnapshot snapshot) {
+                          Map<dynamic, dynamic> map = snapshot.value;
+                          Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                  builder: (context) => ModerationSettings(
+                                      auth: auth,
+                                      code: code,
+                                      confId: confId,
+                                      map: map)));
+                        });
+                      },
+                    ),
                   ListTile(
                     leading: new Icon(
                       FontAwesomeIcons.signOutAlt,
@@ -1504,6 +1544,15 @@ class _HomeFeed extends State<HomeFeed> {
             backgroundColor: const Color(0xffffffff),
             body: Stack(
               children: <Widget>[
+                Container(
+                    child: Expanded(
+                        child: Align(
+                            alignment: FractionalOffset.center,
+                            child: Text(
+                                  "There's no post for this conference",
+                                  textAlign: TextAlign.center,
+                              style: TextStyle(fontWeight: FontWeight.bold, color: const Color(0xff1A2677)),
+                                )))),
                 Center(
                     child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,

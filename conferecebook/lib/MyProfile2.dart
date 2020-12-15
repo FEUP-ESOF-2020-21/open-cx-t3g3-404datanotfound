@@ -510,6 +510,7 @@ class _MyProfile2 extends State<MyProfile2> {
                     padding: EdgeInsets.only(bottom: 75.0, left: 35.0),
                     child: FloatingActionButton(
                       onPressed: () async {
+                        Navigator.pop(context);
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
                             builder: (context) => MyProfile1(
                                 auth: widget.auth,

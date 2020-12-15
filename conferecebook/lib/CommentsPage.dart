@@ -381,7 +381,9 @@ class CommentsPageState extends State<CommentsPage> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-        onWillPop: () async => false,
+        onWillPop: () {
+          Navigator.pop(context);
+        },
         child: Scaffold(
             appBar: new AppBar(
               title: Text("Comments"),
@@ -392,20 +394,7 @@ class CommentsPageState extends State<CommentsPage> {
                   if (this.comment != "") {
                     showAlertDialog(context);
                   } else {
-                    FirebaseDatabase.instance
-                        .reference()
-                        .once()
-                        .then((DataSnapshot snapshot) {
-                      Map<dynamic, dynamic> map = snapshot.value;
-                      String image = map.values.toList()[2]
-                          [widget.auth.currentUser.uid]["photo"];
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) => HomeFeed(
-                                auth: widget.auth,
-                                code: widget.confId,
-                                map: map,
-                              )));
-                    });
+                    Navigator.pop(context);
                   }
                 },
               ),

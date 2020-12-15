@@ -470,9 +470,7 @@ class _MyProfile1 extends State<MyProfile1> {
                                   map.values.toList()[2][user]["twitter"];
                               this.github =
                                   map.values.toList()[2][user]["github"];
-                              Navigator.of(context)
-                                  .pushReplacement(MaterialPageRoute(
-                                      builder: (context) => ConferenceHistory(
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => ConferenceHistory(
                                             auth: auth,
                                             image: image,
                                             name: name,

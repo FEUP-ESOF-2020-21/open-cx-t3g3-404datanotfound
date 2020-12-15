@@ -130,47 +130,15 @@ class _ConferenceHistoryState extends State<ConferenceHistory> {
         .child('Users')
         .child(widget.auth.currentUser.uid);
     return WillPopScope(
-        onWillPop: () async => false,
+        onWillPop: () {
+          Navigator.pop(context);
+        },
         child: Scaffold(
           appBar: AppBar(
             leading: IconButton(
                 icon: Icon(FontAwesomeIcons.arrowLeft, color: Colors.white),
                 onPressed: () async {
-                  FirebaseDatabase.instance
-                      .reference()
-                      .once()
-                      .then((DataSnapshot snapshot) {
-                    Map<dynamic, dynamic> map = snapshot.value;
-                    String user = auth.currentUser.uid;
-                    this.image = map.values.toList()[2][user]["photo"];
-                    this.name = map.values.toList()[2][user]["name"];
-                    this.job = map.values.toList()[2][user]["job"];
-                    this.interests = map.values.toList()[2][user]["interests"];
-                    this.city = map.values.toList()[2][user]["city"];
-                    this.bio = map.values.toList()[2][user]["bio"];
-                    this.area = map.values.toList()[2][user]["area"];
-                    this.linkedin = map.values.toList()[2][user]["linkedin"];
-                    this.facebook = map.values.toList()[2][user]["facebook"];
-                    this.instagram = map.values.toList()[2][user]["instagram"];
-                    this.twitter = map.values.toList()[2][user]["twitter"];
-                    this.github = map.values.toList()[2][user]["github"];
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => MyProfile1(
-                            auth: widget.auth,
-                            image: image,
-                            name: name,
-                            job: job,
-                            interests: interests,
-                            city: city,
-                            bio: bio,
-                            area: area,
-                            linkedin: linkedin,
-                            facebook: facebook,
-                            instagram: instagram,
-                            twitter: twitter,
-                            github: github,
-                            code: widget.code)));
-                  });
+                  Navigator.pop(context);
                 }),
             title: Text("Conference History"),
             backgroundColor: Color(0xff1A2677),

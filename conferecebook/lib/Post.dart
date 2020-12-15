@@ -138,6 +138,7 @@ class _Post extends State<Post> {
 
   void take(ImageSource source, String type) async {
     if (type == "photo") {
+      type = "photo";
       final pickedFile = await _picker.getImage(
         source: source,
       );
@@ -146,6 +147,7 @@ class _Post extends State<Post> {
         multimediaLoaded = "Picture loaded with success!";
       });
     } else if (type == "video") {
+      type = "video";
       final pickedFile = await _picker.getVideo(
         source: source,
       );
@@ -201,6 +203,7 @@ class _Post extends State<Post> {
   // ignore: non_constant_identifier_names
   String URL;
   dynamic likes;
+  String type;
 
   Future insertDatabase() async {
     if (_multiFile != null) {
@@ -220,6 +223,7 @@ class _Post extends State<Post> {
         firebaseDatabaseRef.child(formattedDate).set({
           'text': text,
           'multimedia': URL,
+          'type': type,
           'user': widget.auth.currentUser.uid,
           'likes': likes,
         });
@@ -232,10 +236,11 @@ class _Post extends State<Post> {
       String formattedDate = DateFormat('yyyy-MM-dd – HH:mm').format(now);
       if (text == "") text = " ";
       URL = " ";
-
+      type = " ";
       firebaseDatabaseRef.child(formattedDate).set({
         'text': text,
         'multimedia': URL,
+        'type': type,
         'user': widget.auth.currentUser.uid,
         'likes': likes,
       });

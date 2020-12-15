@@ -406,8 +406,7 @@ class _ViewProfile1 extends State<ViewProfile1> {
                         child: InkWell(
                           splashColor: const Color(0xffededed), // splash color
                           onTap: () async {
-                            Navigator.of(context)
-                                .pushReplacement(MaterialPageRoute(
+                            Navigator.push(context, MaterialPageRoute(
                                     builder: (context) => ViewConferenceHistory(
                                           auth: auth,
                                           userToSee: userToSee,
