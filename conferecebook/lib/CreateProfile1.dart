@@ -167,7 +167,6 @@ class _CreateProfile1 extends State<CreateProfile1> {
     }
   }
 
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -183,29 +182,21 @@ class _CreateProfile1 extends State<CreateProfile1> {
   Widget build(BuildContext context) {
     auth = widget.auth;
     return Scaffold(
-        resizeToAvoidBottomPadding: false,
-        appBar: AppBar(
-          title: Text("New Account"),
-          backgroundColor: const Color(0xff1A2677),
-        ),
         body: Stack(
           children: <Widget>[
+            Container(),
+            Container(),
             Transform.translate(
               offset: Offset(SizeConfig.screenWidth * 164.0,
-                  SizeConfig.screenHeight * 50.0),
+                  SizeConfig.screenHeight * 134.0),
               child: Image.asset(
                 'images/icon.png',
-                width: SizeConfig.screenWidth * 90.0,
+                width: 90.0,
               ),
             ),
-            Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
                   Transform.translate(
                     offset: Offset(SizeConfig.screenWidth * 53.5,
-                        SizeConfig.screenHeight * 300.0),
+                        SizeConfig.screenHeight * 400.0),
                     child: Container(
                       width: 270.0,
                       child: TextFormField(
@@ -233,7 +224,7 @@ class _CreateProfile1 extends State<CreateProfile1> {
                   ),
                   Transform.translate(
                       offset: Offset(SizeConfig.screenWidth * 53.5,
-                          SizeConfig.screenHeight * 150.0),
+                          SizeConfig.screenHeight * 300.0),
                       child: Container(
                         width: 270.0,
                         child: TextFormField(
@@ -259,14 +250,38 @@ class _CreateProfile1 extends State<CreateProfile1> {
                         ),
                       )),
                   Transform.translate(
-                    offset: Offset(SizeConfig.screenWidth / 2,
-                        SizeConfig.screenHeight * 300.0),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      alignment: Alignment.center,
+                    offset: Offset(SizeConfig.screenWidth * 132.0,
+                        SizeConfig.screenHeight * 504.0),
+                    child: SizedBox(
+                      width: 149.0,
+                      height: 57.0,
+                      child: Stack(
+                        children: <Widget>[
+                          Pinned.fromSize(
+                            bounds: Rect.fromLTWH(0.0, 0.0, 149.0, 57.0),
+                            size: Size(149.0, 57.0),
+                            pinLeft: true,
+                            pinRight: true,
+                            pinTop: true,
+                            pinBottom: true,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(35.0),
+                                color: const Color(0xff1A2677),
+                                border: Border.all(
+                                    width: 1.0, color: const Color(0xff1A2677)),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Transform.translate(
+                      offset: Offset(SizeConfig.screenWidth * 133,
+                          SizeConfig.screenHeight * 520.0),
                       child: InkWell(
-                        onTap: () async {
-                          if (_formKey.currentState.validate()) {
+                        onTap: () {
                             _register().then((value) {
                               if ((this.email == "") || (this.password == "")) {
                                 showAlertDialog0(context);
@@ -283,69 +298,38 @@ class _CreateProfile1 extends State<CreateProfile1> {
                                             auth: auth, userId: userId)));
                               }
                             });
-                          }
                         },
                         child: SizedBox(
-                          width: 149.0,
-                          height: 57.0,
-                          child: Stack(
-                            children: <Widget>[
-                              Pinned.fromSize(
-                                bounds: Rect.fromLTWH(0.0, 0.0, 149.0, 57.0),
-                                size: Size(149.0, 57.0),
-                                pinLeft: true,
-                                pinRight: true,
-                                pinTop: true,
-                                pinBottom: true,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(35.0),
-                                    color: const Color(0xff1A2677),
-                                    border: Border.all(
-                                        width: 1.0,
-                                        color: const Color(0xff1A2677)),
-                                  ),
-                                  child: SizedBox(
-                                    width: 88.0,
-                                    child: Text(
-                                      'REGISTER',
-                                      style: TextStyle(
-                                        fontFamily: 'Roboto',
-                                        fontSize: 20,
-                                        color: const Color(0xffffffff),
-                                        letterSpacing: 1.6909999999999998,
-                                        height: 2,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
+                          width: 150.0,
+                          child: Text(
+                            'REGISTER',
+                            style: TextStyle(
+                              fontFamily: 'Roboto',
+                              fontSize: 25,
+                              color: const Color(0xffffffff),
+                              letterSpacing: 1.6909999999999998,
+                              height: 1.2,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
                         ),
-                      ),
-                    ),
+                      )),
+            Transform.translate(
+              offset: Offset(SizeConfig.screenWidth * 135.0,
+                  SizeConfig.screenHeight * 829.0),
+              child: SizedBox(
+                width: SizeConfig.screenWidth * 144.0,
+                child: Text(
+                  'ConferenceBook',
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontSize: 16,
+                    color: const Color(0xff1A2677),
+                    letterSpacing: 0.15,
+                    height: SizeConfig.screenHeight * 1.5,
                   ),
-                  Transform.translate(
-                    offset: Offset(SizeConfig.screenWidth * 135.0,
-                        SizeConfig.screenHeight * 460.0),
-                    child: SizedBox(
-                      width: SizeConfig.screenWidth * 144.0,
-                      child: Text(
-                        'ConferenceBook',
-                        style: TextStyle(
-                          fontFamily: 'Roboto',
-                          fontSize: 16,
-                          color: const Color(0xff1A2677),
-                          letterSpacing: 0.15,
-                          height: SizeConfig.screenHeight * 1.5,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                ],
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
           ],

@@ -158,44 +158,92 @@ class CommentsPageState extends State<CommentsPage> {
         child: ListTile(
       leading: InkWell(
           onTap: () async {
-            FirebaseDatabase.instance
-                .reference()
-                .once()
-                .then((DataSnapshot snapshot) {
-              Map<dynamic, dynamic> map = snapshot.value;
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (context) => ViewProfile1(
-                      auth: widget.auth,
-                      userToSee: userUID,
-                      map: map,
-                      code: widget.code)));
-            });
+            if (auth.currentUser.uid == userUID) {
+              FirebaseDatabase.instance
+                  .reference()
+                  .once()
+                  .then((DataSnapshot snapshot) {
+                Map<dynamic, dynamic> map = snapshot.value;
+                String user = auth.currentUser.uid;
+                String image = map.values.toList()[2][user]["photo"];
+                String name = map.values.toList()[2][user]["name"];
+                String job = map.values.toList()[2][user]["job"];
+                String interests = map.values.toList()[2][user]["interests"];
+                String city = map.values.toList()[2][user]["city"];
+                String bio = map.values.toList()[2][user]["bio"];
+                String area = map.values.toList()[2][user]["area"];
+                String linkedin = map.values.toList()[2][user]["linkedin"];
+                String facebook = map.values.toList()[2][user]["facebook"];
+                String instagram = map.values.toList()[2][user]["instagram"];
+                String twitter = map.values.toList()[2][user]["twitter"];
+                String github = map.values.toList()[2][user]["github"];
+                Navigator.push(context, MaterialPageRoute(
+                    builder: (context) => MyProfile1(
+                        auth: auth,
+                        image: image,
+                        name: name,
+                        job: job,
+                        interests: interests,
+                        city: city,
+                        bio: bio,
+                        area: area,
+                        linkedin: linkedin,
+                        facebook: facebook,
+                        instagram: instagram,
+                        twitter: twitter,
+                        github: github,
+                        code: code)));
+              });
+            } else {
+              FirebaseDatabase.instance
+                  .reference()
+                  .once()
+                  .then((DataSnapshot snapshot) {
+                Map<dynamic, dynamic> map = snapshot.value;
+
+                Navigator.push(context, MaterialPageRoute(
+                    builder: (context) => ViewProfile1(
+                        auth: widget.auth,
+                        userToSee: userUID,
+                        map: map,
+                        code: widget.code)));
+              });
+            }
           },
           child: CircleAvatar(
             radius: 20.0,
             backgroundImage: NetworkImage(userPhoto),
             //default image
           )),
-      subtitle: Text(comment),
-      title: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <
-          Widget>[
-        Text(name),
-        Text(
-          checkSameDay(commentID),
-          style: new TextStyle(
-            fontSize: 10.0,
-            color: Colors.grey,
-          ),
-        ),
-        if (userRole == "Organizer")
-          Transform.scale(
-              scale: 0.8,
-              child: IconButton(
+      subtitle: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Container(
+              width: 200,
+                child: Text(comment)),
+            if (userRole == "Organizer")
+              IconButton(
                   icon: Icon(FontAwesomeIcons.times, color: Color(0xff8d0000)),
                   onPressed: () {
                     showDeleteDialog(context, commentID);
-                  })),
-      ]),
+                  })
+          ]),
+      title: Stack(
+        children: <Widget>[
+          Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(name),
+                Text(
+                  checkSameDay(commentID),
+                  style: new TextStyle(
+                    fontSize: 10.0,
+                    color: Colors.black45,
+                  ),
+                ),
+              ]),
+        ],
+      ),
       isThreeLine: true,
     ));
   }

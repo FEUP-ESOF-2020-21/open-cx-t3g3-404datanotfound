@@ -129,15 +129,20 @@ class _MyProfile2 extends State<MyProfile2> {
     city = widget.city;
     bio = widget.bio;
     area = widget.area;
-    facebook = widget.facebook;
-    instagram = widget.instagram;
-    linkedin = widget.linkedin;
-    twitter = widget.twitter;
-    github = widget.github;
+    facebook = widget.facebook == null ? "" : widget.facebook;
+    instagram = widget.instagram == null ? "" : widget.instagram;
+    linkedin = widget.linkedin == null ? "" : widget.linkedin;
+    twitter = widget.twitter == null ? "" : widget.twitter;
+    github = widget.github == null? "" : widget.github;
+
     myInterests = interests.split(',').toList();
 
     return WillPopScope(
-        onWillPop: () async => false,
+        // ignore: missing_return
+        onWillPop: () {
+          Navigator.pop(context);
+          Navigator.pop(context);
+        },
         child: Scaffold(
           backgroundColor: const Color(0xffffffff),
           body: Stack(
@@ -213,11 +218,15 @@ class _MyProfile2 extends State<MyProfile2> {
                 child: SizedBox(
                   width: SizeConfig.screenWidth * 100.0,
                   child: Text(
-                    this.city,
+                    this.city.trimRight().isEmpty
+                        ? 'Undefined city'
+                        : this.city,
                     style: TextStyle(
                       fontFamily: 'Roboto',
                       fontSize: 12,
-                      color: const Color(0xff1A2677),
+                      color: this.city.trimRight().isEmpty
+                          ? const Color(0xffd3d3d3)
+                          : const Color(0xff1A2677),
                       letterSpacing: 0.1875,
                       fontWeight: FontWeight.w500,
                       height: 1.2,
@@ -226,20 +235,8 @@ class _MyProfile2 extends State<MyProfile2> {
                   ),
                 ),
               ),
-              Container(),
-              Container(),
-              Container(),
-              Container(),
-              Container(),
-              Container(),
-              Container(),
-              Container(),
-              Container(),
-              Container(),
-              Container(),
-              Container(),
               Transform.translate(
-                offset: Offset(SizeConfig.screenWidth * 130,
+                offset: Offset(SizeConfig.screenWidth * 140,
                     SizeConfig.screenHeight * 350),
                 child: Text(
                   'Social Media',
@@ -255,7 +252,7 @@ class _MyProfile2 extends State<MyProfile2> {
                 ),
               ),
               Transform.translate(
-                offset: Offset(SizeConfig.screenWidth * 150,
+                offset: Offset(SizeConfig.screenWidth * 158,
                     SizeConfig.screenHeight * 550),
                 child: Text(
                   'Interests',
@@ -275,36 +272,49 @@ class _MyProfile2 extends State<MyProfile2> {
                       SizeConfig.screenHeight * 600),
                   child: Container(
                     width: SizeConfig.screenWidth * 250,
-                    child: Tags(
-                      key: _tagStateKey,
-                      itemCount: myInterests.length, // required
-                      itemBuilder: (int index) {
-                        final item = myInterests[index];
-                        return ItemTags(
-                          // Each ItemTags must contain a Key. Keys allow Flutter to
-                          // uniquely identify widgets.
-                          key: Key(index.toString()),
-                          index: index,
-                          // required
-                          title: item,
-                          textStyle: TextStyle(
-                            fontSize: 10,
+                    child: interests.trimRight().isEmpty
+                        ? Text(
+                            'No interest',
+                            style: TextStyle(
+                              fontFamily: 'Roboto',
+                              fontSize: 15,
+                              color: const Color(0xffd3d3d3),
+                              letterSpacing: 0.36,
+                              fontWeight: FontWeight.w500,
+                              height: 1,
+                            ),
+                            textAlign: TextAlign.center,
+                          )
+                        : Tags(
+                            key: _tagStateKey,
+                            itemCount: myInterests.length, // required
+                            itemBuilder: (int index) {
+                              final item = myInterests[index];
+                              return ItemTags(
+                                // Each ItemTags must contain a Key. Keys allow Flutter to
+                                // uniquely identify widgets.
+                                key: Key(index.toString()),
+                                index: index,
+                                // required
+                                title: item,
+                                textStyle: TextStyle(
+                                  fontSize: 10,
+                                ),
+                                combine: ItemTagsCombine.withTextBefore,
+                                image: null,
+                                // OR null,
+                                icon: null,
+                                // OR null,
+                                removeButton: null,
+                                // OR null,
+                                onPressed: (item) => print(item),
+                                onLongPressed: (item) => print(item),
+                              );
+                            },
                           ),
-                          combine: ItemTagsCombine.withTextBefore,
-                          image: null,
-                          // OR null,
-                          icon: null,
-                          // OR null,
-                          removeButton: null,
-                          // OR null,
-                          onPressed: (item) => print(item),
-                          onLongPressed: (item) => print(item),
-                        );
-                      },
-                    ),
                   )),
               Transform.translate(
-                offset: Offset(SizeConfig.screenWidth * 200,
+                offset: Offset(SizeConfig.screenWidth * 210,
                     SizeConfig.screenHeight * 440.0),
                 child: Container(
                     child: IconButton(
@@ -327,7 +337,7 @@ class _MyProfile2 extends State<MyProfile2> {
                         })),
               ),
               Transform.translate(
-                offset: Offset(SizeConfig.screenWidth * 220,
+                offset: Offset(SizeConfig.screenWidth * 230,
                     SizeConfig.screenHeight * 380.0),
                 child: Container(
                     child: IconButton(
@@ -349,7 +359,7 @@ class _MyProfile2 extends State<MyProfile2> {
                         })),
               ),
               Transform.translate(
-                offset: Offset(SizeConfig.screenWidth * 150,
+                offset: Offset(SizeConfig.screenWidth * 160,
                     SizeConfig.screenHeight * 440.0),
                 child: Container(
                     child: IconButton(
@@ -371,7 +381,7 @@ class _MyProfile2 extends State<MyProfile2> {
                         })),
               ),
               Transform.translate(
-                offset: Offset(SizeConfig.screenWidth * 170,
+                offset: Offset(SizeConfig.screenWidth * 180,
                     SizeConfig.screenHeight * 380.0),
                 child: Container(
                     child: IconButton(
@@ -394,7 +404,7 @@ class _MyProfile2 extends State<MyProfile2> {
                         })),
               ),
               Transform.translate(
-                offset: Offset(SizeConfig.screenWidth * 120,
+                offset: Offset(SizeConfig.screenWidth * 130,
                     SizeConfig.screenHeight * 380.0),
                 child: Container(
                     child: IconButton(
@@ -482,21 +492,11 @@ class _MyProfile2 extends State<MyProfile2> {
                         child: InkWell(
                           splashColor: const Color(0xff1A2677), // splash color
                           onTap: () async {
-                            FirebaseDatabase.instance
-                                .reference()
-                                .once()
-                                .then((DataSnapshot snapshot) {
-                              Map<dynamic, dynamic> map = snapshot.value;
-                              Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                      builder: (context) => HomeFeed(
-                                          auth: widget.auth,
-                                          code: widget.code,
-                                          map: map)));
-                            });
+                            Navigator.of(context).pop();
+                            Navigator.of(context).pop();
                           }, // button pressed
                           child: Icon(
-                            FontAwesomeIcons.home,
+                            FontAwesomeIcons.arrowLeft,
                             color: Colors.white,
                           ), // icon
                         ),

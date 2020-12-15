@@ -186,7 +186,7 @@ class _ConferenceHistoryState extends State<ConferenceHistory> {
                     //initial value
                     value: this.showConferenceHistory,
                     textOn: 'Allowed',
-                    textOff: 'No',
+                    textOff: 'Blocked',
                     colorOn: Color(0xff1A2677),
                     colorOff: Colors.black54,
                     iconOn: Icons.done,

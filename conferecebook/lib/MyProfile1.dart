@@ -117,7 +117,11 @@ class _MyProfile1 extends State<MyProfile1> {
     code = widget.code;
 
     return WillPopScope(
-        onWillPop: () async => false,
+        // ignore: missing_return
+        onWillPop: () {
+          Navigator.pop(context);
+          Navigator.pop(context);
+        },
         child: Scaffold(
           backgroundColor: const Color(0xffffffff),
           body: Stack(
@@ -153,11 +157,15 @@ class _MyProfile1 extends State<MyProfile1> {
                 child: SizedBox(
                   width: SizeConfig.screenWidth * 100.0,
                   child: Text(
-                    this.city,
+                    this.city.trimRight().isEmpty
+                        ? 'Undefined city'
+                        : this.city,
                     style: TextStyle(
                       fontFamily: 'Roboto',
                       fontSize: 12,
-                      color: const Color(0xff1A2677),
+                      color: this.city.trimRight().isEmpty
+                          ? const Color(0xffd3d3d3)
+                          : const Color(0xff1A2677),
                       letterSpacing: 0.1875,
                       fontWeight: FontWeight.w500,
                       height: 1.2,
@@ -173,10 +181,14 @@ class _MyProfile1 extends State<MyProfile1> {
                     width: 200,
                     height: 20,
                     child: Text(
-                      bio,
+                      bio.trimRight().isEmpty ? 'Undefined bio' : bio,
                       textAlign: TextAlign.left,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: bio.trimRight().isEmpty
+                              ? const Color(0xffd3d3d3)
+                              : const Color(0xff1A2677)),
                     )),
               ),
               Transform.translate(
@@ -225,10 +237,14 @@ class _MyProfile1 extends State<MyProfile1> {
                     width: 200,
                     height: 20,
                     child: Text(
-                      job,
+                      job.trimRight().isEmpty ? 'Undefined job' : job,
                       textAlign: TextAlign.left,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: job.trimRight().isEmpty
+                              ? const Color(0xffd3d3d3)
+                              : const Color(0xff1A2677)),
                     )),
               ),
               Transform.translate(
@@ -276,10 +292,14 @@ class _MyProfile1 extends State<MyProfile1> {
                     width: 200,
                     height: 20,
                     child: Text(
-                      area,
+                      area.trimRight().isEmpty ? 'Undefined area' : area,
                       textAlign: TextAlign.left,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: area.trimRight().isEmpty
+                              ? const Color(0xffd3d3d3)
+                              : const Color(0xff1A2677)),
                     )),
               ),
               Transform.translate(
@@ -350,7 +370,7 @@ class _MyProfile1 extends State<MyProfile1> {
                           padding: EdgeInsets.only(bottom: 75.0, right: 35.0),
                           child: FloatingActionButton(
                             onPressed: () async {
-                              Navigator.of(context).pushReplacement(
+                              Navigator.push(context,
                                   MaterialPageRoute(
                                       builder: (context) => MyProfile2(
                                           auth: auth,
@@ -381,7 +401,27 @@ class _MyProfile1 extends State<MyProfile1> {
                   )
                 ],
               )),
-              Container(),
+              Transform.translate(
+                  offset: Offset(SizeConfig.screenWidth * 10,
+                      SizeConfig.screenHeight * 20 + 20),
+                  child: SizedBox.fromSize(
+                    size: Size(56, 56), // button width and height
+                    child: ClipOval(
+                      child: Material(
+                        color: const Color(0xff1A2677), // button color
+                        child: InkWell(
+                          splashColor: const Color(0xff1A2677), // splash color
+                          onTap: () async {
+                            Navigator.of(context).pop();
+                          }, // button pressed
+                          child: Icon(
+                            FontAwesomeIcons.arrowLeft,
+                            color: Colors.white,
+                          ), // icon
+                        ),
+                      ),
+                    ),
+                  )),
               Transform.translate(
                 offset: Offset(SizeConfig.screenWidth * 150,
                     SizeConfig.screenHeight * 100.0),
@@ -496,38 +536,7 @@ class _MyProfile1 extends State<MyProfile1> {
                       ),
                     ),
                   )),
-              Transform.translate(
-                  offset: Offset(SizeConfig.screenWidth * 10,
-                      SizeConfig.screenHeight * 20 + 20),
-                  child: SizedBox.fromSize(
-                    size: Size(56, 56), // button width and height
-                    child: ClipOval(
-                      child: Material(
-                        color: const Color(0xff1A2677), // button color
-                        child: InkWell(
-                          splashColor: const Color(0xff1A2677), // splash color
-                          onTap: () async {
-                            FirebaseDatabase.instance
-                                .reference()
-                                .once()
-                                .then((DataSnapshot snapshot) {
-                              Map<dynamic, dynamic> map = snapshot.value;
-                              Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                      builder: (context) => HomeFeed(
-                                          auth: widget.auth,
-                                          code: widget.code,
-                                          map: map)));
-                            });
-                          }, // button pressed
-                          child: Icon(
-                            FontAwesomeIcons.home,
-                            color: Colors.white,
-                          ), // icon
-                        ),
-                      ),
-                    ),
-                  )),
+
             ],
           ),
         ));

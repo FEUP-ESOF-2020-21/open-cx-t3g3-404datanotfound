@@ -116,18 +116,22 @@ class _ViewProfile2 extends State<ViewProfile2> {
     image = map.values.toList()[2][userToSee]["photo"];
     name = map.values.toList()[2][userToSee]["name"];
     city = map.values.toList()[2][userToSee]["city"];
-    facebook = map.values.toList()[2][userToSee]["facebook"];
-    instagram = map.values.toList()[2][userToSee]["instagram"];
-    github = map.values.toList()[2][userToSee]["github"];
-    twitter = map.values.toList()[2][userToSee]["twitter"];
-    linkedin = map.values.toList()[2][userToSee]["linkedin"];
+    facebook = map.values.toList()[2][userToSee]["facebook"] == null ? "" : map.values.toList()[2][userToSee]["facebook"];
+    instagram = map.values.toList()[2][userToSee]["instagram"] == null ? "" : map.values.toList()[2][userToSee]["instagram"];
+    github = map.values.toList()[2][userToSee]["github"] == null ? "" : map.values.toList()[2][userToSee]["github"];
+    twitter = map.values.toList()[2][userToSee]["twitter"] == null ? "" : map.values.toList()[2][userToSee]["twitter"];
+    linkedin = map.values.toList()[2][userToSee]["linkedin"] == null ? "" : map.values.toList()[2][userToSee]["linkedin"];
     interests = map.values.toList()[2][userToSee]["interests"];
     myInterests = interests.split(',').toList();
 
     String code;
 
     return WillPopScope(
-        onWillPop: () async => false,
+        // ignore: missing_return
+        onWillPop: () {
+          Navigator.pop(context);
+          Navigator.pop(context);
+        },
         child: Scaffold(
           backgroundColor: const Color(0xffffffff),
           body: Stack(
@@ -163,21 +167,21 @@ class _ViewProfile2 extends State<ViewProfile2> {
                 child: SizedBox(
                   width: SizeConfig.screenWidth * 100.0,
                   child: Text(
-                    this.city,
+                    this.city.trimRight().isEmpty
+                        ? 'Undefined city'
+                        : this.city,
                     style: TextStyle(
-                      fontFamily: 'Roboto',
-                      fontSize: 12,
-                      color: const Color(0xff1A2677),
-                      letterSpacing: 0.1875,
-                      fontWeight: FontWeight.w500,
-                      height: 1.2,
-                    ),
+                        fontFamily: 'Roboto',
+                        fontSize: 12,
+                        color: this.city.trimRight().isEmpty
+                            ? const Color(0xffd3d3d3)
+                            : const Color(0xff1A2677)),
                     textAlign: TextAlign.center,
                   ),
                 ),
               ),
               Transform.translate(
-                offset: Offset(SizeConfig.screenWidth * 130,
+                offset: Offset(SizeConfig.screenWidth * 140,
                     SizeConfig.screenHeight * 350),
                 child: Text(
                   'Social Media',
@@ -193,7 +197,7 @@ class _ViewProfile2 extends State<ViewProfile2> {
                 ),
               ),
               Transform.translate(
-                offset: Offset(SizeConfig.screenWidth * 150,
+                offset: Offset(SizeConfig.screenWidth * 158,
                     SizeConfig.screenHeight * 550),
                 child: Text(
                   'Interests',
@@ -213,43 +217,58 @@ class _ViewProfile2 extends State<ViewProfile2> {
                       SizeConfig.screenHeight * 600),
                   child: Container(
                     width: SizeConfig.screenWidth * 250,
-                    child: Tags(
-                      key: _tagStateKey,
-                      itemCount: myInterests.length, // required
-                      itemBuilder: (int index) {
-                        final item = myInterests[index];
-                        return ItemTags(
-                          // Each ItemTags must contain a Key. Keys allow Flutter to
-                          // uniquely identify widgets.
-                          key: Key(index.toString()),
-                          index: index,
-                          // required
-                          title: item,
-                          textStyle: TextStyle(
-                            fontSize: 10,
+                    child: interests.trimRight().isEmpty
+                        ? Text(
+                            'No interest',
+                            style: TextStyle(
+                              fontFamily: 'Roboto',
+                              fontSize: 15,
+                              color: const Color(0xffd3d3d3),
+                              letterSpacing: 0.36,
+                              fontWeight: FontWeight.w500,
+                              height: 1,
+                            ),
+                            textAlign: TextAlign.center,
+                          )
+                        : Tags(
+                            key: _tagStateKey,
+                            itemCount: myInterests.length, // required
+                            itemBuilder: (int index) {
+                              final item = myInterests[index];
+                              return ItemTags(
+                                // Each ItemTags must contain a Key. Keys allow Flutter to
+                                // uniquely identify widgets.
+                                key: Key(index.toString()),
+                                index: index,
+                                // required
+                                title: item,
+                                textStyle: TextStyle(
+                                  fontSize: 10,
+                                ),
+                                combine: ItemTagsCombine.withTextBefore,
+                                image: null,
+                                // OR null,
+                                icon: null,
+                                // OR null,
+                                removeButton: null,
+                                // OR null,
+                                onPressed: (item) => print(item),
+                                onLongPressed: (item) => print(item),
+                              );
+                            },
                           ),
-                          combine: ItemTagsCombine.withTextBefore,
-                          image: null,
-                          // OR null,
-                          icon: null,
-                          // OR null,
-                          removeButton: null,
-                          // OR null,
-                          onPressed: (item) => print(item),
-                          onLongPressed: (item) => print(item),
-                        );
-                      },
-                    ),
                   )),
               Transform.translate(
-                offset: Offset(SizeConfig.screenWidth * 200,
+                offset: Offset(SizeConfig.screenWidth * 210,
                     SizeConfig.screenHeight * 440.0),
                 child: Container(
                     child: IconButton(
                         icon: Icon(FontAwesomeIcons.linkedin,
-                            color: const Color(0xff1A2677)),
+                            color: this.linkedin.isNotEmpty
+                                ? const Color(0xff1A2677)
+                                : const Color(0xffdddddd)),
                         onPressed: () async {
-                          if (this.linkedin == null)
+                          if (this.linkedin.isEmpty)
                             showAlertDialog(context, "LinkedIn");
                           else {
                             String url =
@@ -263,14 +282,16 @@ class _ViewProfile2 extends State<ViewProfile2> {
                         })),
               ),
               Transform.translate(
-                offset: Offset(SizeConfig.screenWidth * 220,
+                offset: Offset(SizeConfig.screenWidth * 230,
                     SizeConfig.screenHeight * 380.0),
                 child: Container(
                     child: IconButton(
                         icon: Icon(FontAwesomeIcons.twitter,
-                            color: const Color(0xff1A2677)),
+                            color: this.twitter.isNotEmpty
+                                ? const Color(0xff1A2677)
+                                : const Color(0xffdddddd)),
                         onPressed: () async {
-                          if (this.twitter == null)
+                          if (this.twitter.isEmpty)
                             showAlertDialog(context, "Twitter");
                           else {
                             String url = 'https://twitter.com/' + this.twitter;
@@ -283,14 +304,16 @@ class _ViewProfile2 extends State<ViewProfile2> {
                         })),
               ),
               Transform.translate(
-                offset: Offset(SizeConfig.screenWidth * 150,
+                offset: Offset(SizeConfig.screenWidth * 160,
                     SizeConfig.screenHeight * 440.0),
                 child: Container(
                     child: IconButton(
                         icon: Icon(FontAwesomeIcons.github,
-                            color: const Color(0xff1A2677)),
+                            color: this.github.isNotEmpty
+                                ? const Color(0xff1A2677)
+                                : const Color(0xffdddddd)),
                         onPressed: () async {
-                          if (this.github == null)
+                          if (this.github.isEmpty)
                             showAlertDialog(context, "Github");
                           else {
                             String url = 'https://github.com/' + this.github;
@@ -303,14 +326,16 @@ class _ViewProfile2 extends State<ViewProfile2> {
                         })),
               ),
               Transform.translate(
-                offset: Offset(SizeConfig.screenWidth * 170,
+                offset: Offset(SizeConfig.screenWidth * 180,
                     SizeConfig.screenHeight * 380.0),
                 child: Container(
                     child: IconButton(
                         icon: Icon(FontAwesomeIcons.instagram,
-                            color: const Color(0xff1A2677)),
+                            color: this.instagram.isNotEmpty
+                                ? const Color(0xff1A2677)
+                                : const Color(0xffdddddd)),
                         onPressed: () async {
-                          if (this.instagram == null)
+                          if (this.instagram.isEmpty)
                             showAlertDialog(context, "Instagram");
                           else {
                             String url =
@@ -324,14 +349,16 @@ class _ViewProfile2 extends State<ViewProfile2> {
                         })),
               ),
               Transform.translate(
-                offset: Offset(SizeConfig.screenWidth * 120,
+                offset: Offset(SizeConfig.screenWidth * 130,
                     SizeConfig.screenHeight * 380.0),
                 child: Container(
                     child: IconButton(
                         icon: Icon(FontAwesomeIcons.facebook,
-                            color: const Color(0xff1A2677)),
+                            color: this.facebook.isNotEmpty
+                                ? const Color(0xff1A2677)
+                                : const Color(0xffdddddd)),
                         onPressed: () async {
-                          if (this.facebook == null)
+                          if (this.facebook.isEmpty)
                             showAlertDialog(context, "Facebook");
                           else {
                             String url =
@@ -425,58 +452,11 @@ class _ViewProfile2 extends State<ViewProfile2> {
                         child: InkWell(
                           splashColor: const Color(0xff1A2677), // splash color
                           onTap: () async {
-                            FirebaseDatabase.instance
-                                .reference()
-                                .once()
-                                .then((DataSnapshot snapshot) {
-                              Map<dynamic, dynamic> map = snapshot.value;
-                              Navigator.of(context)
-                                  .pushReplacement(MaterialPageRoute(
-                                      builder: (context) => ParticipantsList(
-                                            auth: widget.auth,
-                                            code: widget.code,
-                                            map: map,
-                                            attendeeFilter: true,
-                                            speakerFilter: true,
-                                            sponsorFilter: true,
-                                            organizerFilter: true,
-                                          )));
-                            });
+                            Navigator.of(context).pop();
+                            Navigator.of(context).pop();
                           }, // button pressed
                           child: Icon(
-                            FontAwesomeIcons.users,
-                            color: Colors.white,
-                          ), // icon
-                        ),
-                      ),
-                    ),
-                  )),
-              Transform.translate(
-                  offset: Offset(SizeConfig.screenWidth * 340,
-                      SizeConfig.screenHeight * 20 + 20),
-                  child: SizedBox.fromSize(
-                    size: Size(56, 56), // button width and height
-                    child: ClipOval(
-                      child: Material(
-                        color: const Color(0xff1A2677), // button color
-                        child: InkWell(
-                          splashColor: const Color(0xff1A2677), // splash color
-                          onTap: () async {
-                            FirebaseDatabase.instance
-                                .reference()
-                                .once()
-                                .then((DataSnapshot snapshot) {
-                              Map<dynamic, dynamic> map = snapshot.value;
-                              Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                      builder: (context) => HomeFeed(
-                                          auth: widget.auth,
-                                          code: widget.code,
-                                          map: map)));
-                            });
-                          }, // button pressed
-                          child: Icon(
-                            FontAwesomeIcons.home,
+                            FontAwesomeIcons.arrowLeft,
                             color: Colors.white,
                           ), // icon
                         ),
