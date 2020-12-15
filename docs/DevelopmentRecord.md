@@ -26,7 +26,6 @@ Please contact us!
 
 Thank you!
 
-- Abel Augusto Dias Tiago
 - Guilherme Lucas Peralta
 - João Carlos Machado Rocha Pires
 - João Carlos Ramos Gonçalves de Matos
