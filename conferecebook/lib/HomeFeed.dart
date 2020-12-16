@@ -459,6 +459,7 @@ class _HomeFeed extends State<HomeFeed> {
     SizeConfig().init(context);
     if (numPosts != 0) {
       return WillPopScope(
+          key: Key("HomeFeed"),
           onWillPop: () async => false,
           child: Scaffold(
             key: _scaffoldState,
@@ -1253,6 +1254,7 @@ class _HomeFeed extends State<HomeFeed> {
                       child: Padding(
                         padding: EdgeInsets.only(bottom: 10.0, left: 20.0),
                         child: FloatingActionButton(
+                            key: Key("addpost"),
                           onPressed: () {
                             if (canPost) {
                               Navigator.of(context)
@@ -1281,6 +1283,7 @@ class _HomeFeed extends State<HomeFeed> {
           ));
     } else {
       return WillPopScope(
+        key: Key("HomeFeed"),
           onWillPop: () async => false,
           child: Scaffold(
             key: _scaffoldState,

@@ -49,10 +49,15 @@ dependencies:
 
   http: ^0.12.1
   path_provider: ^1.6.7
+  flutter_gherkin: ^1.0.5
+
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_driver:
+    sdk: flutter
+  test: any
 
 
 flutter_icons:

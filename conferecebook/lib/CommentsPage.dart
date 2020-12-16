@@ -109,8 +109,8 @@ class CommentsPageState extends State<CommentsPage> {
     insertDatabase(val);
     FirebaseDatabase.instance.reference().once().then((DataSnapshot snapshot) {
       Map<dynamic, dynamic> map = snapshot.value;
-
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
+      Navigator.pop(context);
+      Navigator.push(context, MaterialPageRoute(
           builder: (context) => CommentsPage(
                 auth: widget.auth, //user that will comment
                 map: map,
@@ -308,7 +308,8 @@ class CommentsPageState extends State<CommentsPage> {
             .once()
             .then((DataSnapshot snapshot) {
           Map<dynamic, dynamic> map = snapshot.value;
-          Navigator.of(context).pushReplacement(MaterialPageRoute(
+          Navigator.pop(context);
+          Navigator.pushReplacement(context, MaterialPageRoute(
               builder: (context) => CommentsPage(
                     auth: widget.auth,
                     //user that will comment

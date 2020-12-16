@@ -64,7 +64,6 @@ class _JoinAnEvent extends State<JoinAnEvent> {
           map.values.toList()[0][aux]; // current conference
       String nameConf = conf["name"]; // name of conference i
       String codeConf = conf["code"]; // code of conference i
-      conferenceIDs.add(aux);
 
       if (conf["users"] != null) {
         String user = conf["users"][widget.auth.currentUser.uid];
@@ -73,6 +72,7 @@ class _JoinAnEvent extends State<JoinAnEvent> {
           conferenceNames.add(nameConf); // append to list all conference names
           conferenceCodes.add(codeConf); // append to list all conference codes
           conferenceRoles.add(userRole); // append to list all roles
+          conferenceIDs.add(aux);
         }
       }
     }
@@ -83,6 +83,7 @@ class _JoinAnEvent extends State<JoinAnEvent> {
     SizeConfig().init(context);
     if (conferenceNames.isEmpty) {
       return WillPopScope(
+          key: Key('JoinAnEvent'),
           onWillPop: () async => false,
           child: Scaffold(
             floatingActionButton: Align(
@@ -186,6 +187,7 @@ class _JoinAnEvent extends State<JoinAnEvent> {
                             fixedWidth: true,
                             fixedHeight: true,
                             child: PageLink(
+                              key: Key("neweventcode"),
                               links: [
                                 PageLinkInfo(
                                   transition: LinkTransition.Fade,
@@ -252,6 +254,7 @@ class _JoinAnEvent extends State<JoinAnEvent> {
           ));
     } else {
       return WillPopScope(
+          key: Key('JoinAnEvent'),
           onWillPop: () async => false,
           child: Scaffold(
             floatingActionButton: Align(
@@ -423,6 +426,7 @@ class _JoinAnEvent extends State<JoinAnEvent> {
                             fixedWidth: true,
                             fixedHeight: true,
                             child: PageLink(
+                              key: Key("neweventcode"),
                               links: [
                                 PageLinkInfo(
                                   transition: LinkTransition.Fade,
