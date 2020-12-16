@@ -92,6 +92,7 @@ class _MyLogin extends State<MyLogin> {
                 child: Container(
                   width: 270.0,
                   child: TextField(
+                    key: Key("passwordfield"),
                     onChanged: (String value) async {
                       this.password = value;
                     },
@@ -118,6 +119,7 @@ class _MyLogin extends State<MyLogin> {
                 child: Container(
                   width: 270.0,
                   child: TextField(
+                    key: Key("emailfield"),
                     onChanged: (String value) async {
                       this.email = value.trim();
                     },
@@ -170,6 +172,7 @@ class _MyLogin extends State<MyLogin> {
                   offset: Offset(SizeConfig.screenWidth * 168.8,
                       SizeConfig.screenHeight * 520.0),
                   child: InkWell(
+                    key: Key("loginbutton"),
                     onTap: () {
                       check().then((value) {
                         if (value) {

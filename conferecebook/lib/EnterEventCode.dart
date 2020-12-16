@@ -209,6 +209,7 @@ class _EnterEventCode extends State<EnterEventCode> {
     previous = widget.previous;
     SizeConfig().init(context);
     return WillPopScope(
+      key: Key("EnterEventCode"),
         onWillPop: () async => false,
         child: Scaffold(
             resizeToAvoidBottomPadding: false,
@@ -285,6 +286,7 @@ class _EnterEventCode extends State<EnterEventCode> {
                           child: Container(
                             width: 270.0,
                             child: TextFormField(
+                              key: Key("eventcodefield"),
                               controller: _codeController,
                               onChanged: (String value) async {
                                 this.code = value.trimRight();
@@ -323,6 +325,7 @@ class _EnterEventCode extends State<EnterEventCode> {
                           padding: const EdgeInsets.symmetric(vertical: 16.0),
                           alignment: Alignment.center,
                           child: InkWell(
+                            key: Key("entereventcode"),
                             onTap: () async {
                               if (_formKey.currentState.validate()) {
                                 _register().then((value) {

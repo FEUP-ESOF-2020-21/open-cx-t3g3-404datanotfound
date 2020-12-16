@@ -264,6 +264,7 @@ class _Post extends State<Post> {
 
     SizeConfig().init(context);
     return WillPopScope(
+      key: Key("NewPost"),
         onWillPop: () async => false,
         child: Scaffold(
             resizeToAvoidBottomPadding: false,
@@ -399,6 +400,7 @@ class _Post extends State<Post> {
                       child: Container(
                         width: SizeConfig.screenWidth * 300.0,
                         child: TextFormField(
+                          key: Key("textfield"),
                           maxLines: 5,
                           keyboardType: TextInputType.multiline,
                           onChanged: (String value) async {
@@ -426,6 +428,7 @@ class _Post extends State<Post> {
                         SizeConfig.screenHeight * 350.0),
                     child: Container(
                       child: InkWell(
+                        key: Key("Post"),
                         onTap: () async {
                           if (text == "" && _multiFile == null) {
                             showAlertDialog(context);
