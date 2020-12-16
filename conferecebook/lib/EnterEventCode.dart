@@ -287,7 +287,7 @@ class _EnterEventCode extends State<EnterEventCode> {
                             child: TextFormField(
                               controller: _codeController,
                               onChanged: (String value) async {
-                                this.code = value;
+                                this.code = value.trimRight();
                               },
                               obscureText: false,
                               decoration: InputDecoration(
