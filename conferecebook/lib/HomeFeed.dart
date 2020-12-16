@@ -506,7 +506,7 @@ class _HomeFeed extends State<HomeFeed> {
                                 )));
                       });
                     }),
-                Container(width: 10,),
+                Container(width: 7,),
                 InkWell(
                     onTap: () async {
                       FirebaseDatabase.instance
@@ -555,6 +555,7 @@ class _HomeFeed extends State<HomeFeed> {
                       backgroundImage: NetworkImage(this.image),
                       radius: 22,
                     )),
+                Container(width: 3,),
               ],
               title: Text(
                 myMap.values.toList()[0][confId]["name"],
@@ -1035,7 +1036,7 @@ class _HomeFeed extends State<HomeFeed> {
                                                                             .aspectRatio,
                                                                     child: VideoPlayer(
                                                                         _controller[
-                                                                            0]),
+                                                                            postID]),
                                                                   ),
                                                                 );
                                                               } else {
@@ -1327,7 +1328,7 @@ class _HomeFeed extends State<HomeFeed> {
                                 )));
                       });
                     }),
-                Container(width: 10,),
+                Container(width: 7,),
                 InkWell(
                     onTap: () async {
                       FirebaseDatabase.instance
@@ -1376,6 +1377,7 @@ class _HomeFeed extends State<HomeFeed> {
                       backgroundImage: NetworkImage(this.image),
                       radius: 22,
                     )),
+                Container(width: 3,),
               ],
               title: Text(""),
               backgroundColor: const Color(0xff1A2677),
