@@ -341,6 +341,11 @@ The features to be tested are the following ones:
 * [Insert an Event Code](https://github.com/FEUP-ESOF-2020-21/open-cx-t3g3-404datanotfound/issues/29)
 * [Make a Post](https://github.com/FEUP-ESOF-2020-21/open-cx-t3g3-404datanotfound/issues/16)
 
+The reason why we decided to test these features is because we consider them to be among the most important ones in our application:
+- **Login** is the starting point of the app and the responsible one for the authentication of an user
+- **Insert an event code** represents the only way to access all functionalities of the app. 
+- **Making a post** represents one possible interaction with the app, and possible the most important one.
+
 The implementation of the acceptance tests for these features was done with **Gherkin**, with the aid of ```flutter_gherkin``` package for Flutter.
 
 The automation of these tests is the following:
@@ -370,6 +375,8 @@ User should be able to login using an email and password. Then, should be able t
      - When I fill the "textfield" field with "This is a test post"
      - Then I tap the "Post" button
      - Then I should see the "HomeFeed" screen
+     
+**Note:** The tests above only succeed when no user is logged in and the test account is not enrolled yet as a participant at the conference used for the test. In fact, if the app is launched directly in the JoinAnEvent screen (and not in the Login one), it will not allow a user to insert a code of a conference in which he is already a participant, which would determine the failure of the test.
 
 The results of the tests were the following:
 
