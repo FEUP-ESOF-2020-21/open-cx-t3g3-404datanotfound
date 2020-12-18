@@ -1,14 +1,14 @@
-import 'package:ConfereceBook/JoinAnEvent.dart';
-import 'package:ConfereceBook/ViewProfile1.dart';
+import 'package:ConfereceBook/Event_Specific/JoinAnEvent.dart';
+import 'package:ConfereceBook/Profile/ViewProfile1.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:flutter_search_bar/flutter_search_bar.dart';
-import './CreateProfile1.dart';
+import '../Create_Account/CreateProfile1.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:flutter/widgets.dart';
-import './HomeFeed.dart';
+import '../Feed/HomeFeed.dart';
 
 // Import the firebase_core plugin
 import 'package:firebase_core/firebase_core.dart';
@@ -19,7 +19,7 @@ import 'package:lite_rolling_switch/lite_rolling_switch.dart';
 import 'package:flutter_spinbox/flutter_spinbox.dart';
 
 import 'MyProfile1.dart';
-import 'SearchParticipants.dart';
+import '../Event_Specific/SearchParticipants.dart';
 
 class ConferenceHistory extends StatefulWidget {
   ConferenceHistory(

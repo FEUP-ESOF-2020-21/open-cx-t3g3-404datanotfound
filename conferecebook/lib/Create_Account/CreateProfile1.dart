@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:async';
 
-import 'package:ConfereceBook/CreateProfile2.dart';
+import 'package:ConfereceBook/Create_Account/CreateProfile2.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +10,7 @@ import 'package:image_picker/image_picker.dart';
 
 import 'package:material_tag_editor/tag_editor.dart';
 
-import './Login.dart';
+import '../Login/Login.dart';
 
 class CreateProfile1 extends StatefulWidget {
   CreateProfile1({Key key, this.auth}) : super(key: key);

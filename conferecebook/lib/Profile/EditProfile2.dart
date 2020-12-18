@@ -1,7 +1,7 @@
 import 'dart:core';
 
-import 'package:ConfereceBook/Login.dart';
-import 'package:ConfereceBook/MyProfile1.dart';
+import 'package:ConfereceBook/Login/Login.dart';
+import 'package:ConfereceBook/Profile/MyProfile1.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -10,7 +10,7 @@ import 'package:adobe_xd/page_link.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:material_tag_editor/tag_editor.dart';
-import './HomeFeed.dart';
+import '../Feed/HomeFeed.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/widgets.dart';
 import 'package:url_launcher/url_launcher.dart';

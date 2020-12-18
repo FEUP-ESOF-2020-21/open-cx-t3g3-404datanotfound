@@ -1,23 +1,26 @@
-import 'dart:core';
-
-import 'package:ConfereceBook/Login.dart';
-import 'package:ConfereceBook/MyProfile1.dart';
+import 'package:ConfereceBook/Event_Specific/EnterEventCode.dart';
+import 'package:ConfereceBook/Event_Specific/JoinAnEvent.dart';
+import 'package:ConfereceBook/Login/Login.dart';
+import 'package:ConfereceBook/Profile/MyProfile1.dart';
+import 'package:ConfereceBook/Feed/Post.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:adobe_xd/page_link.dart';
 import 'package:adobe_xd/pinned.dart';
+import 'package:adobe_xd/page_link.dart';
+import 'package:flutter/rendering.dart';
+import 'package:ConfereceBook/Event_Specific/ParticipantsList.dart';
+import 'package:flutter_tags/flutter_tags.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import './HomeFeed.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/widgets.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_tags/flutter_tags.dart';
+import 'package:video_player/video_player.dart';
+import 'package:video_player/video_player.dart';
+import 'package:flutter/material.dart';
 
-import 'package:page_transition/page_transition.dart';
-
-import 'EditProfile2.dart';
+import '../Feed/HomeFeed.dart';
+import 'ViewProfile1.dart';
 
 class SizeConfig {
   static MediaQueryData _mediaQueryData;
@@ -33,58 +36,35 @@ class SizeConfig {
   }
 }
 
-class MyProfile2 extends StatefulWidget {
-  MyProfile2(
-      {Key key,
-      this.auth,
-      this.image,
-      this.name,
-      this.job,
-      this.interests,
-      this.city,
-      this.bio,
-      this.area,
-      this.facebook,
-      this.instagram,
-      this.linkedin,
-      this.twitter,
-      this.github,
-      this.code})
+class ViewProfile2 extends StatefulWidget {
+  ViewProfile2({Key key, this.auth, this.userToSee, this.map, this.code})
       : super(key: key);
 
   final FirebaseAuth auth;
-  final String image;
-  final String name;
-  final String job;
-  final String interests;
-  final String city;
-  final String bio;
-  final String area;
-  final String facebook;
-  final String instagram;
-  final String linkedin;
-  final String twitter;
-  final String github;
+  final String userToSee;
+  final Map<dynamic, dynamic> map;
   final String code;
 
   @override
-  State<StatefulWidget> createState() => _MyProfile2();
+  State<StatefulWidget> createState() => _ViewProfile2();
 }
 
-class _MyProfile2 extends State<MyProfile2> {
+class _ViewProfile2 extends State<ViewProfile2> {
+  FirebaseAuth auth;
+  String userToSee;
+  Map<dynamic, dynamic> map;
   String image;
   String name;
-  String job;
-  String interests;
   String city;
-  String bio;
-  String area;
   String facebook;
   String instagram;
+  String github;
   String linkedin;
   String twitter;
-  String github;
+  String interests;
   List<String> myInterests;
+
+  String code;
 
   final GlobalKey<TagsState> _tagStateKey = GlobalKey<TagsState>();
 
@@ -93,6 +73,13 @@ class _MyProfile2 extends State<MyProfile2> {
     List<Item> lst = _tagStateKey.currentState?.getAllItem;
     if (lst != null)
       lst.where((a) => a.active == true).forEach((a) => print(a.title));
+  }
+
+  interestsToString() {
+    if (myInterests.length != 0) interests = "";
+    for (int i = 0; i < myInterests.length; i++) {
+      interests += myInterests[i] + ",";
+    }
   }
 
   showAlertDialog(BuildContext context, String text) {
@@ -122,20 +109,22 @@ class _MyProfile2 extends State<MyProfile2> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    image = widget.image;
-    name = widget.name;
-    job = widget.job;
-    interests = widget.interests;
-    city = widget.city;
-    bio = widget.bio;
-    area = widget.area;
-    facebook = widget.facebook == null ? "" : widget.facebook;
-    instagram = widget.instagram == null ? "" : widget.instagram;
-    linkedin = widget.linkedin == null ? "" : widget.linkedin;
-    twitter = widget.twitter == null ? "" : widget.twitter;
-    github = widget.github == null? "" : widget.github;
 
+    userToSee = widget.userToSee;
+    auth = widget.auth;
+    map = widget.map;
+    image = map.values.toList()[2][userToSee]["photo"];
+    name = map.values.toList()[2][userToSee]["name"];
+    city = map.values.toList()[2][userToSee]["city"];
+    facebook = map.values.toList()[2][userToSee]["facebook"] == null ? "" : map.values.toList()[2][userToSee]["facebook"];
+    instagram = map.values.toList()[2][userToSee]["instagram"] == null ? "" : map.values.toList()[2][userToSee]["instagram"];
+    github = map.values.toList()[2][userToSee]["github"] == null ? "" : map.values.toList()[2][userToSee]["github"];
+    twitter = map.values.toList()[2][userToSee]["twitter"] == null ? "" : map.values.toList()[2][userToSee]["twitter"];
+    linkedin = map.values.toList()[2][userToSee]["linkedin"] == null ? "" : map.values.toList()[2][userToSee]["linkedin"];
+    interests = map.values.toList()[2][userToSee]["interests"];
     myInterests = interests.split(',').toList();
+
+    String code;
 
     return WillPopScope(
         // ignore: missing_return
@@ -155,7 +144,7 @@ class _MyProfile2 extends State<MyProfile2> {
                   height: SizeConfig.screenHeight * 636.0,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30.0),
-                    color: const Color(0x80ececec),
+                    color: const Color(0xffeeeeee),
                   ),
                 ),
               ),
@@ -168,50 +157,10 @@ class _MyProfile2 extends State<MyProfile2> {
                   decoration: BoxDecoration(
                     borderRadius:
                         BorderRadius.all(Radius.elliptical(9999.0, 9999.0)),
-                    color: const Color(0xfff5f5f5),
+                    color: const Color(0xffeeeeee),
                   ),
                 ),
               ),
-              Transform.translate(
-                  offset: Offset(SizeConfig.screenWidth * 340,
-                      SizeConfig.screenHeight * 20 + 20),
-                  child: SizedBox.fromSize(
-                    size: Size(56, 56), // button width and height
-                    child: ClipOval(
-                      child: Material(
-                        color: const Color(0xff1A2677), // button color
-                        child: InkWell(
-                          splashColor: const Color(0xff1A2677), // splash color
-                          onTap: () async {
-                            Navigator.of(
-                              context,
-                            ).pushReplacement(
-                              MaterialPageRoute(
-                                  builder: (context) => EditProfile2(
-                                      auth: widget.auth,
-                                      image: image,
-                                      name: name,
-                                      job: job,
-                                      interests: interests,
-                                      city: city,
-                                      bio: bio,
-                                      area: area,
-                                      linkedin: linkedin,
-                                      facebook: facebook,
-                                      instagram: instagram,
-                                      twitter: twitter,
-                                      github: github,
-                                      code: widget.code)),
-                            );
-                          }, // button pressed
-                          child: Icon(
-                            FontAwesomeIcons.pencilAlt,
-                            color: Colors.white,
-                          ), // icon
-                        ),
-                      ),
-                    ),
-                  )),
               Transform.translate(
                 offset: Offset(SizeConfig.screenWidth * 158.5,
                     SizeConfig.screenHeight * 290.0),
@@ -222,15 +171,11 @@ class _MyProfile2 extends State<MyProfile2> {
                         ? 'Undefined city'
                         : this.city,
                     style: TextStyle(
-                      fontFamily: 'Roboto',
-                      fontSize: 12,
-                      color: this.city.trimRight().isEmpty
-                          ? const Color(0xffd3d3d3)
-                          : const Color(0xff1A2677),
-                      letterSpacing: 0.1875,
-                      fontWeight: FontWeight.w500,
-                      height: 1.2,
-                    ),
+                        fontFamily: 'Roboto',
+                        fontSize: 12,
+                        color: this.city.trimRight().isEmpty
+                            ? const Color(0xffd3d3d3)
+                            : const Color(0xff1A2677)),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -446,29 +391,6 @@ class _MyProfile2 extends State<MyProfile2> {
                   ),
                 ),
               ),
-              Container(),
-              Transform.translate(
-                offset: Offset(SizeConfig.screenWidth * 270,
-                    SizeConfig.screenHeight * 710.0),
-                child:
-                    // Adobe XD layer: 'NoPath' (shape)
-                    RaisedButton(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18.0),
-                      side: BorderSide(color: Colors.red)),
-                  onPressed: () {
-                    widget.auth.signOut();
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => MyLogin(
-                              auth: widget.auth,
-                            )));
-                  },
-                  color: Colors.red,
-                  textColor: Colors.white,
-                  child: Text("Logout".toUpperCase(),
-                      style: TextStyle(fontSize: 14)),
-                ),
-              ),
               Transform.translate(
                 offset: Offset(SizeConfig.screenWidth * 150,
                     SizeConfig.screenHeight * 100.0),
@@ -481,6 +403,45 @@ class _MyProfile2 extends State<MyProfile2> {
                   ),
                 ),
               ),
+              Container(
+                  child: Column(
+                children: <Widget>[
+                  Container(
+                    child: Expanded(
+                      child: Align(
+                        alignment: FractionalOffset.bottomLeft,
+                        child: Padding(
+                          padding: EdgeInsets.only(bottom: 75.0, left: 35.0),
+                          child: FloatingActionButton(
+                            onPressed: () async {
+                              FirebaseDatabase.instance
+                                  .reference()
+                                  .once()
+                                  .then((DataSnapshot snapshot) {
+                                Map<dynamic, dynamic> map = snapshot.value;
+                                Navigator.pop(context);
+                                Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                        builder: (context) => ViewProfile1(
+                                            auth: widget.auth,
+                                            userToSee: userToSee,
+                                            map: map,
+                                            code: widget.code)));
+                              });
+                            },
+                            backgroundColor: const Color(0xffdddddd),
+                            elevation: 0,
+                            child: Icon(
+                              FontAwesomeIcons.arrowLeft,
+                              color: const Color(0xff1A2677),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              )),
               Transform.translate(
                   offset: Offset(SizeConfig.screenWidth * 10,
                       SizeConfig.screenHeight * 20 + 20),
@@ -503,56 +464,8 @@ class _MyProfile2 extends State<MyProfile2> {
                       ),
                     ),
                   )),
-              Container(
-                child: Align(
-                  alignment: FractionalOffset.bottomLeft,
-                  child: Padding(
-                    padding: EdgeInsets.only(bottom: 75.0, left: 35.0),
-                    child: FloatingActionButton(
-                      onPressed: () async {
-                        Navigator.pop(context);
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (context) => MyProfile1(
-                                auth: widget.auth,
-                                image: image,
-                                name: name,
-                                job: job,
-                                interests: interests,
-                                city: city,
-                                bio: bio,
-                                area: area,
-                                linkedin: linkedin,
-                                facebook: facebook,
-                                instagram: instagram,
-                                twitter: twitter,
-                                github: github,
-                                code: widget.code)));
-                      },
-                      backgroundColor: const Color(0xffdddddd),
-                      elevation: 0,
-                      child: Icon(
-                        FontAwesomeIcons.arrowLeft,
-                        color: const Color(0xff1A2677),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
             ],
           ),
         ));
   }
 }
-
-const String _svg_2rnm7d =
-    '<svg viewBox="0.0 0.0 45.0 45.0" ><path  d="M 0 0 L 45 0 L 45 45 L 0 45 L 0 0 Z" fill="none" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
-const String _svg_35bab1 =
-    '<svg viewBox="7.5 7.5 30.0 30.0" ><path transform="translate(3.5, 3.5)" d="M 34 17.125 L 11.18124961853027 17.125 L 21.66250038146973 6.643749237060547 L 19 4 L 4 19 L 19 34 L 21.64374923706055 31.35625076293945 L 11.18124961853027 20.875 L 34 20.875 L 34 17.125 Z" fill="#680aee" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
-const String _svg_ieldpp =
-    '<svg viewBox="18.5 29.5 30.0 30.0" ><path transform="translate(14.5, 25.5)" d="M 34 17.125 L 11.18124961853027 17.125 L 21.66250038146973 6.643749237060547 L 19 4 L 4 19 L 19 34 L 21.64374923706055 31.35625076293945 L 11.18124961853027 20.875 L 34 20.875 L 34 17.125 Z" fill="#680aee" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
-const String _svg_1n72gt =
-    '<svg viewBox="335.0 181.0 21.0 21.0" ><path transform="translate(335.0, 181.0)" d="M 4.375298976898193 21.00270080566406 L 4.373642444610596 21.00104522705078 L 4.373980522155762 21.00070571899414 L 3.869628812935844e-07 21.00270080566406 L 3.869628812935844e-07 16.6274356842041 L 12.90329837799072 3.724238634109497 L 17.27859687805176 8.099503517150879 L 4.375298976898193 21.00270080566406 Z M 18.52598190307617 6.851066112518311 L 18.52515411376953 6.850249290466309 L 14.1517333984375 2.475812911987305 L 16.2863597869873 0.341204822063446 C 16.50623893737793 0.1213274374604225 16.79825019836426 0.0002298022736795247 17.10862731933594 0.0002298022736795247 C 17.41899108886719 0.0002298022736795247 17.71129608154297 0.1213274374604225 17.93168830871582 0.341204822063446 L 20.66165733337402 3.071151256561279 C 21.1147632598877 3.524240732192993 21.1147632598877 4.262330055236816 20.66165733337402 4.716469764709473 L 18.52680969238281 6.850249290466309 L 18.52598190307617 6.851066112518311 Z" fill="#680aee" stroke="none" stroke-width="1" stroke-miterlimit="10" stroke-linecap="butt" /></svg>';
-const String _svg_m4odhz =
-    '<svg viewBox="0.0 0.0 39.7 39.7" ><path  d="M 0 0 L 39.66665649414063 0 L 39.66665649414063 39.66665649414063 L 0 39.66665649414063 L 0 0 Z" fill="none" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
-const String _svg_lubbn0 =
-    '<svg viewBox="3.3 5.0 33.1 28.1" ><path transform="translate(1.31, 1.96)" d="M 15.22221851348877 31.09721374511719 L 15.22221851348877 21.18054962158203 L 21.83332633972168 21.18054962158203 L 21.83332633972168 31.09721374511719 L 30.09721374511719 31.09721374511719 L 30.09721374511719 17.87499618530273 L 35.05554580688477 17.87499618530273 L 18.52777290344238 3 L 1.99999988079071 17.87499618530273 L 6.95833158493042 17.87499618530273 L 6.95833158493042 31.09721374511719 L 15.22221851348877 31.09721374511719 Z" fill="#680aee" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';

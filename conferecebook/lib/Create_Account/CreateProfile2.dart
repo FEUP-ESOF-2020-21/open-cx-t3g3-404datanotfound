@@ -1,10 +1,10 @@
-import 'package:ConfereceBook/CreateProfile3.dart';
+import 'package:ConfereceBook/Create_Account/CreateProfile3.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:ConfereceBook/Login.dart';
+import 'package:ConfereceBook/Login/Login.dart';
 
 class CreateProfile2 extends StatefulWidget {
   CreateProfile2({Key key, this.auth, this.userId}) : super(key: key);

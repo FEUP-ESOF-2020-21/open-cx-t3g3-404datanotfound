@@ -1,9 +1,9 @@
-import 'package:ConfereceBook/EnterEventCode.dart';
-import 'package:ConfereceBook/JoinAnEvent.dart';
-import 'package:ConfereceBook/Login.dart';
-import 'package:ConfereceBook/MyProfile1.dart';
-import 'package:ConfereceBook/Post.dart';
-import 'package:ConfereceBook/ViewConferenceHistory.dart';
+import 'package:ConfereceBook/Event_Specific/EnterEventCode.dart';
+import 'package:ConfereceBook/Event_Specific/JoinAnEvent.dart';
+import 'package:ConfereceBook/Login/Login.dart';
+import 'package:ConfereceBook/Profile/MyProfile1.dart';
+import 'package:ConfereceBook/Feed/Post.dart';
+import 'package:ConfereceBook/Profile/ViewConferenceHistory.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/gestures.dart';
@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:flutter/rendering.dart';
-import 'package:ConfereceBook/ParticipantsList.dart';
+import 'package:ConfereceBook/Event_Specific/ParticipantsList.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/widgets.dart';
@@ -19,7 +19,7 @@ import 'package:video_player/video_player.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
 
-import 'HomeFeed.dart';
+import '../Feed/HomeFeed.dart';
 import 'ViewProfile2.dart';
 
 class SizeConfig {

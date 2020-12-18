@@ -1,5 +1,5 @@
-import 'package:ConfereceBook/HomeFeed.dart';
-import 'package:ConfereceBook/JoinAnEvent.dart';
+import 'package:ConfereceBook/Feed/HomeFeed.dart';
+import 'package:ConfereceBook/Event_Specific/JoinAnEvent.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +9,7 @@ import 'package:flutter/widgets.dart';
 
 import 'dart:async';
 
-import 'package:ConfereceBook/CreateProfile2.dart';
+import 'package:ConfereceBook/Create_Account/CreateProfile2.dart';
 
 class SizeConfig {
   static MediaQueryData _mediaQueryData;

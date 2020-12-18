@@ -1,6 +1,6 @@
-import 'package:ConfereceBook/ConferenceHistory.dart';
-import 'package:ConfereceBook/EditProfile.dart';
-import 'package:ConfereceBook/MyProfile2.dart';
+import 'package:ConfereceBook/Profile/ConferenceHistory.dart';
+import 'package:ConfereceBook/Profile/EditProfile.dart';
+import 'package:ConfereceBook/Profile/MyProfile2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/gestures.dart';
@@ -8,10 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'HomeFeed.dart';
+import '../Feed/HomeFeed.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/widgets.dart';
-import 'MyProfile2.dart';
 
 class SizeConfig {
   static MediaQueryData _mediaQueryData;

@@ -5,10 +5,10 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart';
 import "dart:async";
-import 'MyProfile1.dart';
-import 'ViewProfile1.dart';
-import "main.dart"; //for current user
-import "HomeFeed.dart";
+import '../Profile/MyProfile1.dart';
+import '../Profile/ViewProfile1.dart';
+import '../main.dart'; //for current user
+import 'HomeFeed.dart';
 import 'package:intl/intl.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 

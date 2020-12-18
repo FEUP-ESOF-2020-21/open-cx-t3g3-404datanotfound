@@ -1,16 +1,16 @@
-import 'package:ConfereceBook/EnterEventCode.dart';
+import 'package:ConfereceBook/Event_Specific/EnterEventCode.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
-import 'package:ConfereceBook/HomeFeed.dart';
+import 'package:ConfereceBook/Feed/HomeFeed.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart';
 
-import 'Login.dart';
+import '../Login/Login.dart';
 
 class SizeConfig {
   static MediaQueryData _mediaQueryData;

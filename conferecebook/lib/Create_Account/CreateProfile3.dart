@@ -2,13 +2,13 @@ import 'dart:io';
 import 'dart:async';
 import 'dart:math';
 
-import 'package:ConfereceBook/CreateProfile4.dart';
+import 'package:ConfereceBook/Create_Account/CreateProfile4.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:ConfereceBook/Login.dart';
+import 'package:ConfereceBook/Login/Login.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:material_tag_editor/tag_editor.dart';
 import 'package:path_provider/path_provider.dart';

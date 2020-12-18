@@ -1,16 +1,16 @@
 import 'dart:collection';
 
-import 'package:ConfereceBook/JoinAnEvent.dart';
-import 'package:ConfereceBook/ParticipantsList.dart';
-import 'package:ConfereceBook/ViewProfile1.dart';
+import 'package:ConfereceBook/Event_Specific/JoinAnEvent.dart';
+import 'package:ConfereceBook/Event_Specific/ParticipantsList.dart';
+import 'package:ConfereceBook/Profile/ViewProfile1.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
-import './CreateProfile1.dart';
+import '../Create_Account/CreateProfile1.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:flutter/widgets.dart';
-import './HomeFeed.dart';
+import '../Feed/HomeFeed.dart';
 
 // Import the firebase_core plugin
 import 'package:firebase_core/firebase_core.dart';
@@ -19,7 +19,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:async';
 import 'package:flutter_search_bar/flutter_search_bar.dart';
 
-import 'MyProfile1.dart';
+import '../Profile/MyProfile1.dart';
 
 class SearchParticipants extends StatefulWidget {
   SearchParticipants({Key key, this.auth, this.map, this.searchToDo, this.code})

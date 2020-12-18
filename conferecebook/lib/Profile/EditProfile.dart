@@ -2,8 +2,8 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:async';
 
-import 'package:ConfereceBook/MyProfile1.dart';
-import 'package:ConfereceBook/MyProfile2.dart';
+import 'package:ConfereceBook/Profile/MyProfile1.dart';
+import 'package:ConfereceBook/Profile/MyProfile2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -13,7 +13,7 @@ import 'package:adobe_xd/pinned.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
-import './HomeFeed.dart';
+import '../Feed/HomeFeed.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/widgets.dart';
 

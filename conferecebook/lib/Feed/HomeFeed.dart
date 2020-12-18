@@ -1,18 +1,18 @@
 import 'dart:collection';
 
-import 'package:ConfereceBook/ConferenceHistory.dart';
-import 'package:ConfereceBook/EnterEventCode.dart';
-import 'package:ConfereceBook/JoinAnEvent.dart';
-import 'package:ConfereceBook/Login.dart';
-import 'package:ConfereceBook/MyProfile1.dart';
-import 'package:ConfereceBook/Post.dart';
+import 'package:ConfereceBook/Profile/ConferenceHistory.dart';
+import 'package:ConfereceBook/Event_Specific/EnterEventCode.dart';
+import 'package:ConfereceBook/Event_Specific/JoinAnEvent.dart';
+import 'package:ConfereceBook/Login/Login.dart';
+import 'package:ConfereceBook/Profile/MyProfile1.dart';
+import 'package:ConfereceBook/Feed/Post.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:flutter/rendering.dart';
-import 'package:ConfereceBook/ParticipantsList.dart';
+import 'package:ConfereceBook/Event_Specific/ParticipantsList.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -20,8 +20,8 @@ import 'package:flutter/widgets.dart';
 import 'package:video_player/video_player.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
-import 'ModerationSettings.dart';
-import 'ViewProfile1.dart';
+import '../Event_Specific/ModerationSettings.dart';
+import '../Profile/ViewProfile1.dart';
 import 'CommentsPage.dart';
 import 'package:intl/intl.dart';
 
@@ -56,8 +56,12 @@ class HomeFeed extends StatefulWidget {
 }
 
 class _HomeFeed extends State<HomeFeed> {
-  Map<String, VideoPlayerController> _controller = new HashMap<String, VideoPlayerController>();
-  Map<String, Future<void>> _initializeVideoPlayerFuture = new HashMap<String, Future<void>>();
+  Map<String, VideoPlayerController> _controller = new HashMap<
+      String,
+      VideoPlayerController>();
+  Map<String, Future<void>> _initializeVideoPlayerFuture = new HashMap<
+      String,
+      Future<void>>();
 
   FirebaseAuth auth;
   String image;
@@ -118,10 +122,11 @@ class _HomeFeed extends State<HomeFeed> {
       for (int i = 0; i < numPosts; i++) {
         String post = confPosts.elementAt(i);
         String url =
-            widget.map.values.toList()[1][widget.code][post]["multimedia"];
+        widget.map.values.toList()[1][widget.code][post]["multimedia"];
         String type = widget.map.values.toList()[1][widget.code][post]["type"];
         if (type == "video") {
-          VideoPlayerController video = VideoPlayerController.network(url.trimRight());
+          VideoPlayerController video = VideoPlayerController.network(
+              url.trimRight());
           _initializeVideoPlayerFuture[post] = video.initialize();
           video.setLooping(true);
           video.setVolume(1.0);
@@ -172,7 +177,7 @@ class _HomeFeed extends State<HomeFeed> {
 
     // get the role of auth user
     String userRole =
-        myMap.values.toList()[0][confId]["users"][auth.currentUser.uid];
+    myMap.values.toList()[0][confId]["users"][auth.currentUser.uid];
 
     // for post moderation
     // get the reference to Firebase
@@ -226,7 +231,7 @@ class _HomeFeed extends State<HomeFeed> {
     else {
       // get map with postsControl values
       Map<dynamic, dynamic> postsControl =
-          myMap.values.toList()[0][confId]["postsControl"];
+      myMap.values.toList()[0][confId]["postsControl"];
       // get each individual value
       postsFromSponsors = postsControl["postsFromSponsors"];
       postsFromSpeakers = postsControl["postsFromSpeakers"];
@@ -355,7 +360,8 @@ class _HomeFeed extends State<HomeFeed> {
               .then((DataSnapshot snapshot) {
             Map<dynamic, dynamic> map = snapshot.value;
             Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (context) => HomeFeed(
+                builder: (context) =>
+                    HomeFeed(
                       auth: this.auth,
                       code: this.code,
                       map: map,
@@ -392,7 +398,9 @@ class _HomeFeed extends State<HomeFeed> {
 
     //function to see if post is liked by specific user
     bool postIsCommented(Map<dynamic, dynamic> comments, String user) {
-      for (int i = 0; i < comments.keys.toList().length; i++) {
+      for (int i = 0; i < comments.keys
+          .toList()
+          .length; i++) {
         if (comments.values.toList()[i]["author"].toString() == user)
           return true; //the user is on the list of users who commented the post
       }
@@ -418,7 +426,7 @@ class _HomeFeed extends State<HomeFeed> {
           {
             textToShow = "You have reached the limit for posts!";
             subTextToShow =
-                "The limit of posts for $userRole is now $limitForThisUser "
+            "The limit of posts for $userRole is now $limitForThisUser "
                 "and you have done $numPostsFromThisUser posts.";
           }
           break;
@@ -477,7 +485,8 @@ class _HomeFeed extends State<HomeFeed> {
                           .then((DataSnapshot snapshot) {
                         Map<dynamic, dynamic> map = snapshot.value;
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (context) => HomeFeed(
+                            builder: (context) =>
+                                HomeFeed(
                                   auth: auth,
                                   map: map,
                                   code: code,
@@ -496,7 +505,8 @@ class _HomeFeed extends State<HomeFeed> {
                           .then((DataSnapshot snapshot) {
                         Map<dynamic, dynamic> map = snapshot.value;
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (context) => ParticipantsList(
+                            builder: (context) =>
+                                ParticipantsList(
                                   auth: auth,
                                   map: map,
                                   code: code,
@@ -520,36 +530,37 @@ class _HomeFeed extends State<HomeFeed> {
                         this.name = map.values.toList()[2][user]["name"];
                         this.job = map.values.toList()[2][user]["job"];
                         this.interests =
-                            map.values.toList()[2][user]["interests"];
+                        map.values.toList()[2][user]["interests"];
                         this.city = map.values.toList()[2][user]["city"];
                         this.bio = map.values.toList()[2][user]["bio"];
                         this.area = map.values.toList()[2][user]["area"];
                         this.linkedin =
-                            map.values.toList()[2][user]["linkedin"];
+                        map.values.toList()[2][user]["linkedin"];
                         this.facebook =
-                            map.values.toList()[2][user]["facebook"];
+                        map.values.toList()[2][user]["facebook"];
                         this.instagram =
-                            map.values.toList()[2][user]["instagram"];
+                        map.values.toList()[2][user]["instagram"];
                         this.twitter = map.values.toList()[2][user]["twitter"];
                         this.github = map.values.toList()[2][user]["github"];
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => MyProfile1(
-                                    auth: auth,
-                                    image: image,
-                                    name: name,
-                                    job: job,
-                                    interests: interests,
-                                    city: city,
-                                    bio: bio,
-                                    area: area,
-                                    linkedin: linkedin,
-                                    facebook: facebook,
-                                    instagram: instagram,
-                                    twitter: twitter,
-                                    github: github,
-                                    code: code)));
+                                builder: (context) =>
+                                    MyProfile1(
+                                        auth: auth,
+                                        image: image,
+                                        name: name,
+                                        job: job,
+                                        interests: interests,
+                                        city: city,
+                                        bio: bio,
+                                        area: area,
+                                        linkedin: linkedin,
+                                        facebook: facebook,
+                                        instagram: instagram,
+                                        twitter: twitter,
+                                        github: github,
+                                        code: code)));
                       });
                     },
                     child: CircleAvatar(
@@ -594,35 +605,36 @@ class _HomeFeed extends State<HomeFeed> {
                         this.name = map.values.toList()[2][user]["name"];
                         this.job = map.values.toList()[2][user]["job"];
                         this.interests =
-                            map.values.toList()[2][user]["interests"];
+                        map.values.toList()[2][user]["interests"];
                         this.city = map.values.toList()[2][user]["city"];
                         this.bio = map.values.toList()[2][user]["bio"];
                         this.area = map.values.toList()[2][user]["area"];
                         this.linkedin =
-                            map.values.toList()[2][user]["linkedin"];
+                        map.values.toList()[2][user]["linkedin"];
                         this.facebook =
-                            map.values.toList()[2][user]["facebook"];
+                        map.values.toList()[2][user]["facebook"];
                         this.instagram =
-                            map.values.toList()[2][user]["instagram"];
+                        map.values.toList()[2][user]["instagram"];
                         this.twitter = map.values.toList()[2][user]["twitter"];
                         this.github = map.values.toList()[2][user]["github"];
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => MyProfile1(
-                                    auth: auth,
-                                    image: image,
-                                    name: name,
-                                    job: job,
-                                    interests: interests,
-                                    city: city,
-                                    bio: bio,
-                                    area: area,
-                                    linkedin: linkedin,
-                                    facebook: facebook,
-                                    instagram: instagram,
-                                    twitter: twitter,
-                                    github: github)));
+                                builder: (context) =>
+                                    MyProfile1(
+                                        auth: auth,
+                                        image: image,
+                                        name: name,
+                                        job: job,
+                                        interests: interests,
+                                        city: city,
+                                        bio: bio,
+                                        area: area,
+                                        linkedin: linkedin,
+                                        facebook: facebook,
+                                        instagram: instagram,
+                                        twitter: twitter,
+                                        github: github)));
                       });
                     },
                   ),
@@ -634,7 +646,8 @@ class _HomeFeed extends State<HomeFeed> {
                     title: Text("Enter Event Code"),
                     onTap: () {
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) => EnterEventCode(
+                          builder: (context) =>
+                              EnterEventCode(
                                 auth: widget.auth,
                                 previous: widget.code,
                               )));
@@ -653,7 +666,8 @@ class _HomeFeed extends State<HomeFeed> {
                           .then((DataSnapshot snapshot) {
                         Map<dynamic, dynamic> map = snapshot.value;
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (context) => JoinAnEvent(
+                            builder: (context) =>
+                                JoinAnEvent(
                                   auth: widget.auth,
                                   map: map,
                                 )));
@@ -673,7 +687,8 @@ class _HomeFeed extends State<HomeFeed> {
                           .then((DataSnapshot snapshot) {
                         Map<dynamic, dynamic> map = snapshot.value;
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (context) => ParticipantsList(
+                            builder: (context) =>
+                                ParticipantsList(
                                   auth: auth,
                                   map: map,
                                   code: code,
@@ -700,11 +715,12 @@ class _HomeFeed extends State<HomeFeed> {
                           Map<dynamic, dynamic> map = snapshot.value;
                           Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
-                                  builder: (context) => ModerationSettings(
-                                      auth: auth,
-                                      code: code,
-                                      confId: confId,
-                                      map: map)));
+                                  builder: (context) =>
+                                      ModerationSettings(
+                                          auth: auth,
+                                          code: code,
+                                          confId: confId,
+                                          map: map)));
                         });
                       },
                     ),
@@ -717,7 +733,8 @@ class _HomeFeed extends State<HomeFeed> {
                     onTap: () {
                       auth.signOut();
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) => MyLogin(
+                          builder: (context) =>
+                              MyLogin(
                                 auth: auth,
                               )));
                     },
@@ -744,16 +761,16 @@ class _HomeFeed extends State<HomeFeed> {
 
                         String postID = postsIDs[position];
                         String userUID =
-                            myMap.values.toList()[1][confId][postID]["user"];
+                        myMap.values.toList()[1][confId][postID]["user"];
                         String text =
-                            myMap.values.toList()[1][confId][postID]["text"];
+                        myMap.values.toList()[1][confId][postID]["text"];
                         String multimedia = myMap.values.toList()[1][confId]
-                            [postID]["multimedia"];
+                        [postID]["multimedia"];
                         String subtype = myMap.values.toList()[1][confId]
                         [postID]["type"];
                         String name = myMap.values.toList()[2][userUID]["name"];
                         String userPhoto =
-                            myMap.values.toList()[2][userUID]["photo"];
+                        myMap.values.toList()[2][userUID]["photo"];
                         Uri uri = Uri.parse(multimedia);
                         String typeString = uri.path
                             .substring(uri.path.length - 3)
@@ -774,10 +791,10 @@ class _HomeFeed extends State<HomeFeed> {
                         }
 
                         if (myMap.values.toList()[1][confId][postID]
-                                ["comments"] !=
+                        ["comments"] !=
                             null) {
                           comments = myMap.values.toList()[1][confId][postID]
-                              ["comments"];
+                          ["comments"];
                           numComments = myMap.values
                               .toList()[1][confId][postID]["comments"]
                               .length;
@@ -821,7 +838,7 @@ class _HomeFeed extends State<HomeFeed> {
                                 color: const Color(0xffD3D3D3),
                               ),
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
+                              BorderRadius.all(Radius.circular(10)),
                             ),
                             child: SizedBox(
                                 width: multimedia != " "
@@ -829,11 +846,11 @@ class _HomeFeed extends State<HomeFeed> {
                                     : SizeConfig.screenWidth * 200,
                                 height: multimedia != " "
                                     ? (text != null
-                                        ? SizeConfig.screenHeight * 500 +
-                                            (text.length / 30) * 10
-                                        : SizeConfig.screenHeight * 500)
+                                    ? SizeConfig.screenHeight * 500 +
+                                    (text.length / 30) * 10
+                                    : SizeConfig.screenHeight * 500)
                                     : SizeConfig.screenHeight * 150 +
-                                        (text.length / 30) * 10,
+                                    (text.length / 30) * 10,
                                 child: Stack(
                                   children: <Widget>[
                                     if (userRole == "Organizer")
@@ -854,13 +871,13 @@ class _HomeFeed extends State<HomeFeed> {
                                             SizeConfig.screenHeight * 6.0),
                                         child: Row(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.end,
+                                          MainAxisAlignment.end,
                                           children: <Widget>[
                                             Text(
                                               trimName(name) + "  ",
                                               style: TextStyle(
                                                   color:
-                                                      const Color(0xff000000),
+                                                  const Color(0xff000000),
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             InkWell(
@@ -871,93 +888,95 @@ class _HomeFeed extends State<HomeFeed> {
                                                       .reference()
                                                       .once()
                                                       .then((DataSnapshot
-                                                          snapshot) {
+                                                  snapshot) {
                                                     Map<dynamic, dynamic> map =
                                                         snapshot.value;
                                                     String user =
                                                         auth.currentUser.uid;
                                                     String image =
-                                                        map.values.toList()[2]
-                                                            [user]["photo"];
+                                                    map.values.toList()[2]
+                                                    [user]["photo"];
                                                     String name =
-                                                        map.values.toList()[2]
-                                                            [user]["name"];
+                                                    map.values.toList()[2]
+                                                    [user]["name"];
                                                     String job =
-                                                        map.values.toList()[2]
-                                                            [user]["job"];
+                                                    map.values.toList()[2]
+                                                    [user]["job"];
                                                     String interests =
-                                                        map.values.toList()[2]
-                                                            [user]["interests"];
+                                                    map.values.toList()[2]
+                                                    [user]["interests"];
                                                     String city =
-                                                        map.values.toList()[2]
-                                                            [user]["city"];
+                                                    map.values.toList()[2]
+                                                    [user]["city"];
                                                     String bio =
-                                                        map.values.toList()[2]
-                                                            [user]["bio"];
+                                                    map.values.toList()[2]
+                                                    [user]["bio"];
                                                     String area =
-                                                        map.values.toList()[2]
-                                                            [user]["area"];
+                                                    map.values.toList()[2]
+                                                    [user]["area"];
                                                     String linkedin =
-                                                        map.values.toList()[2]
-                                                            [user]["linkedin"];
+                                                    map.values.toList()[2]
+                                                    [user]["linkedin"];
                                                     String facebook =
-                                                        map.values.toList()[2]
-                                                            [user]["facebook"];
+                                                    map.values.toList()[2]
+                                                    [user]["facebook"];
                                                     String instagram =
-                                                        map.values.toList()[2]
-                                                            [user]["instagram"];
+                                                    map.values.toList()[2]
+                                                    [user]["instagram"];
                                                     String twitter =
-                                                        map.values.toList()[2]
-                                                            [user]["twitter"];
+                                                    map.values.toList()[2]
+                                                    [user]["twitter"];
                                                     String github =
-                                                        map.values.toList()[2]
-                                                            [user]["github"];
+                                                    map.values.toList()[2]
+                                                    [user]["github"];
                                                     Navigator.push(
                                                         context,
                                                         MaterialPageRoute(
-                                                            builder: (context) =>
+                                                            builder: (
+                                                                context) =>
                                                                 MyProfile1(
                                                                     auth: auth,
                                                                     image:
-                                                                        image,
+                                                                    image,
                                                                     name: name,
                                                                     job: job,
                                                                     interests:
-                                                                        interests,
+                                                                    interests,
                                                                     city: city,
                                                                     bio: bio,
                                                                     area: area,
                                                                     linkedin:
-                                                                        linkedin,
+                                                                    linkedin,
                                                                     facebook:
-                                                                        facebook,
+                                                                    facebook,
                                                                     instagram:
-                                                                        instagram,
+                                                                    instagram,
                                                                     twitter:
-                                                                        twitter,
+                                                                    twitter,
                                                                     github:
-                                                                        github,
+                                                                    github,
                                                                     code:
-                                                                        code)));
+                                                                    code)));
                                                   });
                                                 } else {
                                                   FirebaseDatabase.instance
                                                       .reference()
                                                       .once()
                                                       .then((DataSnapshot
-                                                          snapshot) {
+                                                  snapshot) {
                                                     Map<dynamic, dynamic> map =
                                                         snapshot.value;
 
                                                     Navigator.push(
                                                         context,
                                                         MaterialPageRoute(
-                                                            builder: (context) =>
+                                                            builder: (
+                                                                context) =>
                                                                 ViewProfile1(
                                                                     auth: widget
                                                                         .auth,
                                                                     userToSee:
-                                                                        userUID,
+                                                                    userUID,
                                                                     map: map,
                                                                     code: widget
                                                                         .code)));
@@ -967,7 +986,7 @@ class _HomeFeed extends State<HomeFeed> {
                                               child: CircleAvatar(
                                                 radius: 20.0,
                                                 backgroundImage:
-                                                    NetworkImage(userPhoto),
+                                                NetworkImage(userPhoto),
                                                 //default image
                                               ),
                                             )
@@ -986,21 +1005,21 @@ class _HomeFeed extends State<HomeFeed> {
                                               : 0,
                                           child: text != null
                                               ? Text(
-                                                  text,
-                                                  style: TextStyle(
-                                                      color: const Color(
-                                                          0xff000000)),
-                                                )
+                                            text,
+                                            style: TextStyle(
+                                                color: const Color(
+                                                    0xff000000)),
+                                          )
                                               : Container()),
                                     ),
                                     Transform.translate(
                                       offset: text != null
                                           ? Offset(
-                                              SizeConfig.screenWidth * 10,
-                                              SizeConfig.screenHeight * 80.0 +
-                                                  (text.length / 30) * 10)
+                                          SizeConfig.screenWidth * 10,
+                                          SizeConfig.screenHeight * 80.0 +
+                                              (text.length / 30) * 10)
                                           : Offset(SizeConfig.screenWidth * 10,
-                                              SizeConfig.screenHeight * 80.0),
+                                          SizeConfig.screenHeight * 80.0),
                                       child: SizedBox(
                                         width: multimedia != " "
                                             ? SizeConfig.screenWidth * 350
@@ -1011,77 +1030,77 @@ class _HomeFeed extends State<HomeFeed> {
                                         child: Container(
                                           child: multimedia != " "
                                               ? (type == "image")
-                                                  ? Image(
-                                                      image: NetworkImage(
-                                                          multimedia))
-                                                  : Stack(
-                                                      alignment: Alignment
-                                                          .bottomCenter,
-                                                      children: <Widget>[
-                                                        type=="video" ?
-                                                          FutureBuilder(
-                                                            future:
-                                                                _initializeVideoPlayerFuture[postID],
-                                                            builder: (context,
-                                                                snapshot) {
-                                                              if (snapshot
-                                                                      .connectionState ==
-                                                                  ConnectionState
-                                                                      .done) {
-                                                                return Center(
-                                                                  child:
-                                                                      AspectRatio(
-                                                                    aspectRatio:
-                                                                        _controller[postID]
-                                                                            .value
-                                                                            .aspectRatio,
-                                                                    child: VideoPlayer(
-                                                                        _controller[
-                                                                            postID]),
-                                                                  ),
-                                                                );
-                                                              } else {
-                                                                return Center(
-                                                                  child:
-                                                                      CircularProgressIndicator(),
-                                                                );
-                                                              }
-                                                            },
-                                                          ) : Container(),
-                                                          type=="video" ? RaisedButton(
-                                                            shape: RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            18.0),
-                                                                side: BorderSide(
-                                                                    color: const Color(
-                                                                        0xff1A2677))),
-                                                            onPressed: () {
-                                                              setState(() {
-                                                                if (_controller[postID]
-                                                                    .value
-                                                                    .isPlaying) {
-                                                                  _controller[postID]
-                                                                      .pause();
-                                                                } else {
-                                                                  _controller[postID]
-                                                                      .play();
-                                                                }
-                                                              });
-                                                            },
-                                                            child: Icon(
-                                                              _controller[postID]
-                                                                      .value
-                                                                      .isPlaying
-                                                                  ? Icons.pause
-                                                                  : Icons
-                                                                      .play_arrow,
-                                                              color: const Color(
-                                                                  0xff1A2677),
-                                                            ),
-                                                          ) : Container()
-                                                        ])
+                                              ? Image(
+                                              image: NetworkImage(
+                                                  multimedia))
+                                              : Stack(
+                                              alignment: Alignment
+                                                  .bottomCenter,
+                                              children: <Widget>[
+                                                type == "video" ?
+                                                FutureBuilder(
+                                                  future:
+                                                  _initializeVideoPlayerFuture[postID],
+                                                  builder: (context,
+                                                      snapshot) {
+                                                    if (snapshot
+                                                        .connectionState ==
+                                                        ConnectionState
+                                                            .done) {
+                                                      return Center(
+                                                        child:
+                                                        AspectRatio(
+                                                          aspectRatio:
+                                                          _controller[postID]
+                                                              .value
+                                                              .aspectRatio,
+                                                          child: VideoPlayer(
+                                                              _controller[
+                                                              postID]),
+                                                        ),
+                                                      );
+                                                    } else {
+                                                      return Center(
+                                                        child:
+                                                        CircularProgressIndicator(),
+                                                      );
+                                                    }
+                                                  },
+                                                ) : Container(),
+                                                type == "video" ? RaisedButton(
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                      BorderRadius
+                                                          .circular(
+                                                          18.0),
+                                                      side: BorderSide(
+                                                          color: const Color(
+                                                              0xff1A2677))),
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      if (_controller[postID]
+                                                          .value
+                                                          .isPlaying) {
+                                                        _controller[postID]
+                                                            .pause();
+                                                      } else {
+                                                        _controller[postID]
+                                                            .play();
+                                                      }
+                                                    });
+                                                  },
+                                                  child: Icon(
+                                                    _controller[postID]
+                                                        .value
+                                                        .isPlaying
+                                                        ? Icons.pause
+                                                        : Icons
+                                                        .play_arrow,
+                                                    color: const Color(
+                                                        0xff1A2677),
+                                                  ),
+                                                ) : Container()
+                                              ])
                                               : Container(),
                                         ),
                                       ),
@@ -1091,7 +1110,7 @@ class _HomeFeed extends State<HomeFeed> {
                                         //offset: Offset(SizeConfig.screenWidth *  0.0, multimedia != " " ? SizeConfig.screenHeight *  470.0 : SizeConfig.screenHeight * 190.0),
                                         child: Row(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.end,
+                                          MainAxisAlignment.end,
                                           children: <Widget>[
                                             Text(
                                               "      " + checkSameDay(postID),
@@ -1106,45 +1125,45 @@ class _HomeFeed extends State<HomeFeed> {
                                             IconButton(
                                                 icon: isCommented
                                                     ? Icon(
-                                                        FontAwesomeIcons
-                                                            .commentAlt,
-                                                        color: Colors.black)
+                                                    FontAwesomeIcons
+                                                        .commentAlt,
+                                                    color: Colors.black)
                                                     : Icon(
-                                                        FontAwesomeIcons
-                                                            .commentAlt,
-                                                        color: Colors.grey),
+                                                    FontAwesomeIcons
+                                                        .commentAlt,
+                                                    color: Colors.grey),
                                                 onPressed: () async {
                                                   FirebaseDatabase.instance
                                                       .reference()
                                                       .once()
                                                       .then((DataSnapshot
-                                                          snapshot) {
+                                                  snapshot) {
                                                     Map<dynamic, dynamic> map =
                                                         snapshot.value;
                                                     Map<dynamic, dynamic>
-                                                        postInfo =
-                                                        map.values.toList()[1]
-                                                            [widget.code];
+                                                    postInfo =
+                                                    map.values.toList()[1]
+                                                    [widget.code];
 
                                                     Navigator.push(context,
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        CommentsPage(
-                                                                          auth:
-                                                                              widget.auth,
-                                                                          //user that will comment
-                                                                          map:
-                                                                              map,
-                                                                          postID:
-                                                                              postID,
-                                                                          confId:
-                                                                              confId,
-                                                                          userRole:
-                                                                              userRole,
-                                                                          code:
-                                                                              code,
-                                                                        )));
+                                                        MaterialPageRoute(
+                                                            builder:
+                                                                (context) =>
+                                                                CommentsPage(
+                                                                  auth:
+                                                                  widget.auth,
+                                                                  //user that will comment
+                                                                  map:
+                                                                  map,
+                                                                  postID:
+                                                                  postID,
+                                                                  confId:
+                                                                  confId,
+                                                                  userRole:
+                                                                  userRole,
+                                                                  code:
+                                                                  code,
+                                                                )));
                                                   });
 
                                                   //Navigator.push(context, MaterialPageRoute(builder: (context) => CommentsPage()));
@@ -1154,11 +1173,11 @@ class _HomeFeed extends State<HomeFeed> {
                                             IconButton(
                                               icon: isLiked
                                                   ? Icon(
-                                                      FontAwesomeIcons
-                                                          .solidHeart,
-                                                      color: Colors.red)
+                                                  FontAwesomeIcons
+                                                      .solidHeart,
+                                                  color: Colors.red)
                                                   : Icon(FontAwesomeIcons.heart,
-                                                      color: Colors.grey),
+                                                  color: Colors.grey),
                                               onPressed: () {
                                                 setState(() {
                                                   likes = null;
@@ -1167,42 +1186,42 @@ class _HomeFeed extends State<HomeFeed> {
                                                       .reference()
                                                       .once()
                                                       .then((DataSnapshot
-                                                          snapshot) {
+                                                  snapshot) {
                                                     Map<dynamic, dynamic> map =
                                                         snapshot.value;
                                                     Map<dynamic, dynamic>
-                                                        postInfo =
-                                                        map.values.toList()[1]
-                                                            [widget.code];
+                                                    postInfo =
+                                                    map.values.toList()[1]
+                                                    [widget.code];
                                                   });
                                                   if (myMap.values.toList()[1]
-                                                              [confId][postID]
-                                                          ["likes"] !=
+                                                  [confId][postID]
+                                                  ["likes"] !=
                                                       null) {
                                                     this.likes = myMap.values
                                                         .toList()[1][confId]
-                                                            [postID]["likes"]
+                                                    [postID]["likes"]
                                                         .keys;
                                                   }
 
                                                   isLiked = postIsLiked(likes,
                                                       user); //get current state of like
                                                   isLiked =
-                                                      !isLiked; //change like state
+                                                  !isLiked; //change like state
                                                   if (isLiked) {
                                                     //add to firebase
                                                     DatabaseReference
-                                                        firebaseDatabaseRef =
-                                                        FirebaseDatabase
-                                                            .instance
-                                                            .reference()
-                                                            .child('Posts')
-                                                            .child(code)
-                                                            .child(postID);
+                                                    firebaseDatabaseRef =
+                                                    FirebaseDatabase
+                                                        .instance
+                                                        .reference()
+                                                        .child('Posts')
+                                                        .child(code)
+                                                        .child(postID);
                                                     firebaseDatabaseRef
                                                         .child("likes")
                                                         .child(widget.auth
-                                                            .currentUser.uid)
+                                                        .currentUser.uid)
                                                         .set(1);
                                                   } else {
                                                     FirebaseDatabase
@@ -1213,7 +1232,7 @@ class _HomeFeed extends State<HomeFeed> {
                                                         .child(postID)
                                                         .child("likes")
                                                         .child(widget.auth
-                                                            .currentUser.uid)
+                                                        .currentUser.uid)
                                                         .remove();
                                                   }
                                                   //rebuild home feed
@@ -1221,12 +1240,14 @@ class _HomeFeed extends State<HomeFeed> {
                                                       .reference()
                                                       .once()
                                                       .then((DataSnapshot
-                                                          snapshot) {
+                                                  snapshot) {
                                                     Map<dynamic, dynamic> map =
                                                         snapshot.value;
-                                                    Navigator.of(context).pushReplacement(
+                                                    Navigator.of(context)
+                                                        .pushReplacement(
                                                         MaterialPageRoute(
-                                                            builder: (context) =>
+                                                            builder: (
+                                                                context) =>
                                                                 HomeFeed(
                                                                     auth: auth,
                                                                     code: widget
@@ -1246,44 +1267,45 @@ class _HomeFeed extends State<HomeFeed> {
             ),
             floatingActionButton: Container(
                 child: Column(
-              children: <Widget>[
-                Container(
-                  child: Expanded(
-                    child: Align(
-                      alignment: FractionalOffset.bottomLeft,
-                      child: Padding(
-                        padding: EdgeInsets.only(bottom: 10.0, left: 20.0),
-                        child: FloatingActionButton(
-                            key: Key("addpost"),
-                          onPressed: () {
-                            if (canPost) {
-                              Navigator.of(context)
-                                  .pushReplacement(MaterialPageRoute(
-                                      builder: (context) => Post(
+                  children: <Widget>[
+                    Container(
+                      child: Expanded(
+                        child: Align(
+                          alignment: FractionalOffset.bottomLeft,
+                          child: Padding(
+                            padding: EdgeInsets.only(bottom: 10.0, left: 20.0),
+                            child: FloatingActionButton(
+                              key: Key("addpost"),
+                              onPressed: () {
+                                if (canPost) {
+                                  Navigator.of(context)
+                                      .pushReplacement(MaterialPageRoute(
+                                      builder: (context) =>
+                                          Post(
                                             auth: widget.auth,
                                             postsLeft: numPostsLeft,
                                             userRole: userRole,
                                             code: widget.code,
                                           )));
-                            } else // posts are not allowed
-                              showLimitDialog(context);
-                          },
-                          backgroundColor: const Color(0xff1A2677),
-                          child: Icon(
-                            FontAwesomeIcons.plus,
-                            color: const Color(0xffffffff),
+                                } else // posts are not allowed
+                                  showLimitDialog(context);
+                              },
+                              backgroundColor: const Color(0xff1A2677),
+                              child: Icon(
+                                FontAwesomeIcons.plus,
+                                color: const Color(0xffffffff),
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                )
-              ],
-            )),
+                    )
+                  ],
+                )),
           ));
     } else {
       return WillPopScope(
-        key: Key("HomeFeed"),
+          key: Key("HomeFeed"),
           onWillPop: () async => false,
           child: Scaffold(
             key: _scaffoldState,
@@ -1301,11 +1323,12 @@ class _HomeFeed extends State<HomeFeed> {
                           .then((DataSnapshot snapshot) {
                         Map<dynamic, dynamic> map = snapshot.value;
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (context) => HomeFeed(
-                              auth: auth,
-                              map: map,
-                              code: code,
-                            )));
+                            builder: (context) =>
+                                HomeFeed(
+                                  auth: auth,
+                                  map: map,
+                                  code: code,
+                                )));
                       });
                     }),
                 IconButton(
@@ -1320,7 +1343,8 @@ class _HomeFeed extends State<HomeFeed> {
                           .then((DataSnapshot snapshot) {
                         Map<dynamic, dynamic> map = snapshot.value;
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (context) => ParticipantsList(
+                            builder: (context) =>
+                                ParticipantsList(
                                   auth: auth,
                                   map: map,
                                   code: code,
@@ -1344,36 +1368,37 @@ class _HomeFeed extends State<HomeFeed> {
                         this.name = map.values.toList()[2][user]["name"];
                         this.job = map.values.toList()[2][user]["job"];
                         this.interests =
-                            map.values.toList()[2][user]["interests"];
+                        map.values.toList()[2][user]["interests"];
                         this.city = map.values.toList()[2][user]["city"];
                         this.bio = map.values.toList()[2][user]["bio"];
                         this.area = map.values.toList()[2][user]["area"];
                         this.linkedin =
-                            map.values.toList()[2][user]["linkedin"];
+                        map.values.toList()[2][user]["linkedin"];
                         this.facebook =
-                            map.values.toList()[2][user]["facebook"];
+                        map.values.toList()[2][user]["facebook"];
                         this.instagram =
-                            map.values.toList()[2][user]["instagram"];
+                        map.values.toList()[2][user]["instagram"];
                         this.twitter = map.values.toList()[2][user]["twitter"];
                         this.github = map.values.toList()[2][user]["github"];
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => MyProfile1(
-                                    auth: auth,
-                                    image: image,
-                                    name: name,
-                                    job: job,
-                                    interests: interests,
-                                    city: city,
-                                    bio: bio,
-                                    area: area,
-                                    linkedin: linkedin,
-                                    facebook: facebook,
-                                    instagram: instagram,
-                                    twitter: twitter,
-                                    github: github,
-                                    code: code)));
+                                builder: (context) =>
+                                    MyProfile1(
+                                        auth: auth,
+                                        image: image,
+                                        name: name,
+                                        job: job,
+                                        interests: interests,
+                                        city: city,
+                                        bio: bio,
+                                        area: area,
+                                        linkedin: linkedin,
+                                        facebook: facebook,
+                                        instagram: instagram,
+                                        twitter: twitter,
+                                        github: github,
+                                        code: code)));
                       });
                     },
                     child: CircleAvatar(
@@ -1415,35 +1440,36 @@ class _HomeFeed extends State<HomeFeed> {
                         this.name = map.values.toList()[2][user]["name"];
                         this.job = map.values.toList()[2][user]["job"];
                         this.interests =
-                            map.values.toList()[2][user]["interests"];
+                        map.values.toList()[2][user]["interests"];
                         this.city = map.values.toList()[2][user]["city"];
                         this.bio = map.values.toList()[2][user]["bio"];
                         this.area = map.values.toList()[2][user]["area"];
                         this.linkedin =
-                            map.values.toList()[2][user]["linkedin"];
+                        map.values.toList()[2][user]["linkedin"];
                         this.facebook =
-                            map.values.toList()[2][user]["facebook"];
+                        map.values.toList()[2][user]["facebook"];
                         this.instagram =
-                            map.values.toList()[2][user]["instagram"];
+                        map.values.toList()[2][user]["instagram"];
                         this.twitter = map.values.toList()[2][user]["twitter"];
                         this.github = map.values.toList()[2][user]["github"];
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => MyProfile1(
-                                    auth: auth,
-                                    image: image,
-                                    name: name,
-                                    job: job,
-                                    interests: interests,
-                                    city: city,
-                                    bio: bio,
-                                    area: area,
-                                    linkedin: linkedin,
-                                    facebook: facebook,
-                                    instagram: instagram,
-                                    twitter: twitter,
-                                    github: github)));
+                                builder: (context) =>
+                                    MyProfile1(
+                                        auth: auth,
+                                        image: image,
+                                        name: name,
+                                        job: job,
+                                        interests: interests,
+                                        city: city,
+                                        bio: bio,
+                                        area: area,
+                                        linkedin: linkedin,
+                                        facebook: facebook,
+                                        instagram: instagram,
+                                        twitter: twitter,
+                                        github: github)));
                       });
                     },
                   ),
@@ -1455,7 +1481,8 @@ class _HomeFeed extends State<HomeFeed> {
                     title: Text("Enter Event Code"),
                     onTap: () {
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) => EnterEventCode(
+                          builder: (context) =>
+                              EnterEventCode(
                                 auth: widget.auth,
                                 previous: widget.code,
                               )));
@@ -1474,7 +1501,8 @@ class _HomeFeed extends State<HomeFeed> {
                           .then((DataSnapshot snapshot) {
                         Map<dynamic, dynamic> map = snapshot.value;
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (context) => JoinAnEvent(
+                            builder: (context) =>
+                                JoinAnEvent(
                                   auth: widget.auth,
                                   map: map,
                                 )));
@@ -1494,7 +1522,8 @@ class _HomeFeed extends State<HomeFeed> {
                           .then((DataSnapshot snapshot) {
                         Map<dynamic, dynamic> map = snapshot.value;
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (context) => ParticipantsList(
+                            builder: (context) =>
+                                ParticipantsList(
                                   auth: auth,
                                   map: map,
                                   code: code,
@@ -1521,11 +1550,12 @@ class _HomeFeed extends State<HomeFeed> {
                           Map<dynamic, dynamic> map = snapshot.value;
                           Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
-                                  builder: (context) => ModerationSettings(
-                                      auth: auth,
-                                      code: code,
-                                      confId: confId,
-                                      map: map)));
+                                  builder: (context) =>
+                                      ModerationSettings(
+                                          auth: auth,
+                                          code: code,
+                                          confId: confId,
+                                          map: map)));
                         });
                       },
                     ),
@@ -1538,7 +1568,8 @@ class _HomeFeed extends State<HomeFeed> {
                     onTap: () {
                       auth.signOut();
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) => MyLogin(
+                          builder: (context) =>
+                              MyLogin(
                                 auth: auth,
                               )));
                     },
@@ -1550,50 +1581,58 @@ class _HomeFeed extends State<HomeFeed> {
             body: Stack(
               children: <Widget>[
                 Container(
-                    child: Expanded(
-                        child: Align(
-                            alignment: FractionalOffset.center,
-                            child: Text(
-                                  "There's no post for this conference",
-                                  textAlign: TextAlign.center,
-                              style: TextStyle(fontWeight: FontWeight.bold, color: const Color(0xff1A2677)),
-                                )))),
+                    child: Column(
+                        children: <Widget>[
+                          Expanded(
+                              child: Align(
+                                  alignment: FractionalOffset.center,
+                                  child: Text(
+                                    "There's no post for this conference",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(fontWeight: FontWeight
+                                        .bold, color: const Color(0xff1A2677)),
+                                  )))
+                        ]
+                    )
+                ),
                 Center(
                     child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      child: Expanded(
-                        child: Align(
-                          alignment: FractionalOffset.bottomRight,
-                          child: Padding(
-                            padding: EdgeInsets.only(bottom: 10.0, right: 10.0),
-                            child: FloatingActionButton(
-                              onPressed: () {
-                                if (canPost) {
-                                  Navigator.of(context)
-                                      .pushReplacement(MaterialPageRoute(
-                                          builder: (context) => Post(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          child: Expanded(
+                            child: Align(
+                              alignment: FractionalOffset.bottomRight,
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                    bottom: 10.0, right: 10.0),
+                                child: FloatingActionButton(
+                                  onPressed: () {
+                                    if (canPost) {
+                                      Navigator.of(context)
+                                          .pushReplacement(MaterialPageRoute(
+                                          builder: (context) =>
+                                              Post(
                                                 auth: widget.auth,
                                                 postsLeft: numPostsLeft,
                                                 userRole: userRole,
                                                 code: widget.code,
                                               )));
-                                } else // posts are not allowed
-                                  showLimitDialog(context);
-                              },
-                              backgroundColor: const Color(0xff1A2677),
-                              child: Icon(
-                                FontAwesomeIcons.plus,
-                                color: const Color(0xffffffff),
+                                    } else // posts are not allowed
+                                      showLimitDialog(context);
+                                  },
+                                  backgroundColor: const Color(0xff1A2677),
+                                  child: Icon(
+                                    FontAwesomeIcons.plus,
+                                    color: const Color(0xffffffff),
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
-                    )
-                  ],
-                )),
+                        )
+                      ],
+                    )),
               ],
             ),
           ));
