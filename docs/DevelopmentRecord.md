@@ -300,8 +300,9 @@ The best approach towards the simplification of the project structure is the MVC
 
 #### Package Diagram
 
-The Feed Package depends on both the Event-Specific and the Profile packages.
-Profile package, on its turn, depends on Login and Create_Account packages.
+The Event_Specific package includes items for event management and moderation.
+The Profile package contains the files regarding the profile information management and as such depends on the Login and the Create_Account packages, which are, respectively, responsible for the files relating the login and the account creation actions.
+The Feed Package includes items related with the display and storing of the home feed information. It depends on both the Event-Specific and the Profile packages, as information regarding the profile and relative to event characteristics (for example, the event moderation settings) are crucial for the home feed publications.
 
 ![Package Diagram](PackageDiagram.png)
 
