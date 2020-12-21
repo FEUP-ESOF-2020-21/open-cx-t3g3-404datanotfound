@@ -8,9 +8,28 @@ Future<void> main() {
   final config = FlutterTestConfiguration()
     ..features = [Glob(r"test_driver/features/**.feature")]
     ..reporters = [ProgressReporter()]
-    ..stepDefinitions = [CheckGivenWidgets(),ClickButton(),CheckIfPageIsPresent(),ClickButton(),CheckIfPageIsPresent(),CheckGivenWidget(),ClickButton(),CheckIfPageIsPresent(), ClickButton(),CheckIfPageIsPresent(),CheckGivenWidget(), ClickButton(),CheckIfPageIsPresent()]
-    ..restartAppBetweenScenarios = true
+    ..stepDefinitions = [
+      //Login
+      CheckGivenWidgets(),
+      ClickButton(),
+      CheckIfPageIsPresent(),
+      //Event
+      CheckGivenWidget(),
+      ClickButton(),
+      CheckIfPageIsPresent(),
+      ClickButton(),
+      CheckIfPageIsPresent(),
+      //Post
+      CheckGivenWidget(),
+      ClickButton(),
+      CheckIfPageIsPresent(),
+      ClickButton(),
+      CheckIfPageIsPresent()
+    ]
+    ..restartAppBetweenScenarios = false
     ..targetAppPath = "test_driver/app.dart"
+    ..order = ExecutionOrder.sequential
     ..exitAfterTestRun = true;
+
   return GherkinRunner().execute(config);
 }

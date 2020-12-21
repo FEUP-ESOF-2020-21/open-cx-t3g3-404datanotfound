@@ -353,33 +353,53 @@ The implementation of the acceptance tests for these features was done with **Gh
 
 The automation of these tests is the following:
 
-**Feature: Login, New Event and Post**
+**Feature: Login**
 
-User should be able to login using an email and password. Then, should be able to enter in a new event by inserting a code. Finally, should be able to access the HomeFeed of that event and make a new post.
+User should be able to login using an email and password.
 
-**Scenario: User do a successful login with an email and password, enter in a new event and make a post**
+**Scenario: User do a successful login with an email and password**
      
      - Given I have "emailfield" and "passwordfield" and "loginbutton"
      - When I fill the "emailfield" field with "teste@gherkin.com"
      - And I fill the "passwordfield" field with "123456"
      - Then I tap the "loginbutton" button
      - Then I should see the "JoinAnEvent" screen
-     - Then I pause for 3 seconds
+
+**Feature: New Event**
+
+User should be able to enter in a new event by inserting a valid code.
+
+**Scenario: Enter in a new event**
+     
+     - Given I have "JoinAnEvent"
      - Then I tap the "neweventcode" button
      - Then I should see the "EnterEventCode" screen
-     - Given I have "eventcodefield"
      - When I fill the "eventcodefield" field with "WS2020Attendee"
      - Then I tap the "entereventcode" button
      - Then I should see the "HomeFeed" screen
-     - Then I pause for 3 seconds
+
+**Feature: Post**
+
+User should be able to make a new post from the HomeFeed of some event.
+
+**Scenario: Make a post**
+     
+     - Given I have "HomeFeed"
      - Then I tap the "addpost" button
      - Then I should see the "NewPost" screen
-     - Given I have "textfield"
      - When I fill the "textfield" field with "This is a test post"
      - Then I tap the "Post" button
      - Then I should see the "HomeFeed" screen
      
-**Note:** The tests above only succeed when no user is logged in and the test account is not enrolled yet as a participant at the conference used for the test. In fact, if the app is launched directly in the JoinAnEvent screen (and not in the Login one), it will not allow a user to insert a code of a conference in which he is already a participant, which would determine the failure of the test.
+**Notes** 
+
+The tests above only succeed if...
+
+- ...no user is logged in.
+
+- ...the test account is not enrolled yet as a participant at the conference used for the test.
+
+- ...the organizers of the conference used for the test didn't block new posts.
 
 The results of the tests were the following:
 
