@@ -359,11 +359,11 @@ User should be able to login using an email and password.
 
 **Scenario: User do a successful login with an email and password**
      
-     - Given I have "emailfield" and "passwordfield" and "loginbutton"
+     - Given I'm in the "Login" screen
      - When I fill the "emailfield" field with "teste@gherkin.com"
      - And I fill the "passwordfield" field with "123456"
-     - Then I tap the "loginbutton" button
-     - Then I should see the "JoinAnEvent" screen
+     - And I tap the "loginbutton" button
+     - Then I see the "JoinAnEvent" screen
 
 **Feature: New Event**
 
@@ -371,12 +371,12 @@ User should be able to enter in a new event by inserting a valid code.
 
 **Scenario: Enter in a new event**
      
-     - Given I have "JoinAnEvent"
-     - Then I tap the "neweventcode" button
-     - Then I should see the "EnterEventCode" screen
+     - Given I'm the user test@gherkin.com, I'm logged in and I see the "JoinAnEvent" screen
+     - When I tap the "neweventcode" button
+     - Then I see the "EnterEventCode" screen
      - When I fill the "eventcodefield" field with "WS2020Attendee"
-     - Then I tap the "entereventcode" button
-     - Then I should see the "HomeFeed" screen
+     - And I tap the "entereventcode" button
+     - Then I see the "HomeFeed" screen
 
 **Feature: Post**
 
@@ -384,30 +384,26 @@ User should be able to make a new post from the HomeFeed of some event.
 
 **Scenario: Make a post**
      
-     - Given I have "HomeFeed"
-     - Then I tap the "addpost" button
-     - Then I should see the "NewPost" screen
+     - Given I'm the user test@gherkin.com, I'm logged in, I'm as a participant at WebSummit2020 and I see the "HomeFeed" screen
+     - When I tap the "addpost" button
+     - Then I see the "NewPost" screen
      - When I fill the "textfield" field with "This is a test post"
-     - Then I tap the "Post" button
-     - Then I should see the "HomeFeed" screen
+     - And I tap the "Post" button
+     - Then I see the "HomeFeed" screen
      
-**Notes** 
-
-The tests above only succeed if...
-
-- ...no user is logged in.
-
-- ...the test account is not enrolled yet as a participant at the conference used for the test.
-
-- ...the organizers of the conference used for the test didn't block new posts.
+Note: The test above only succeed if the organizers of the conference used for the test didn't block new posts.
 
 The results of the tests were the following:
 
-![Report of Tests](ReportTests.jpg)
+![Report of Login Test](ReportTestLogin.jpg)
+![Report of Code Test](ReportTestCode.jpg)
+![Report of Post Test](ReportTestPost.jpg)
 
 The demo of the tests is the following:
 
 ![Gherkin Tests Demo](GherkinTests.gif)
+
+Note: The above GIF is the composition of all the tests, which were runned independently.
 
 ---
 

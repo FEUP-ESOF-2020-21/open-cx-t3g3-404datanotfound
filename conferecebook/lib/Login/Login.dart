@@ -79,6 +79,7 @@ class _MyLogin extends State<MyLogin> {
     auth = widget.auth;
     SizeConfig().init(context);
     return WillPopScope(
+        key: Key("Login"),
         onWillPop: () async => false,
         child: Scaffold(
           backgroundColor: const Color(0xffffffff),
