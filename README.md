@@ -71,7 +71,7 @@ Start by contextualizing your module, describing the main concepts, terms, roles
 
 ### Use case diagram 
 
-![Use Case Diagram](use_case_diagram.png)
+![Use Case Diagram](docs/use_case_diagram.png)
 
 #### Login:
 
@@ -265,7 +265,7 @@ This roll will belong to representatives of organizations or institutions that w
 
 #### User Story Map
 
-![User Story Map](US_Map.png)
+![User Story Map](docs/US_Map.png)
 
 ### Domain model
 
@@ -279,7 +279,7 @@ Conferencebook is built on top of the well-known concept of social network. Howe
 
 * Associated to each post, and unlimited number of **comments** can exist. Similarly to what happens for posts, each comment can be created by a single user, responding to a single post, and has a date and time, a number of Likes, and a text, containg the message.
 
-![Domain Model](ProblemDomain.png)
+![Domain Model](docs/ProblemDomain.png)
 
 <!--To better understand the context of the software system, it is very useful to have a simple UML class diagram with all the key concepts (names, attributes) and relationships involved of the problem domain addressed by your module.-->
 
@@ -306,7 +306,7 @@ The Profile package contains the files regarding the profile information managem
 
 The Feed Package includes items related with the display and storing of the home feed information. It depends on both the Event-Specific and the Profile packages, as information regarding the profile and relative to event characteristics (for example, the event moderation settings) are crucial for the home feed publications.
 
-![Package Diagram](PackageDiagram.png)
+![Package Diagram](docs/PackageDiagram.png)
 
 ### Physical Architecture
 
@@ -318,7 +318,7 @@ Our project was fully developed using Flutter - an emerging framework for mobile
 
 #### Deployment Diagram
 
-![Deployment Diagram](DeploymentDiagram.png)
+![Deployment Diagram](docs/DeploymentDiagram.png)
 
 
 
@@ -395,13 +395,13 @@ Note: The test above only succeed if the organizers of the conference used for t
 
 The results of the tests were the following:
 
-![Report of Login Test](ReportTestLogin.jpg)
-![Report of Code Test](ReportTestCode.jpg)
-![Report of Post Test](ReportTestPost.jpg)
+![Report of Login Test](docs/ReportTestLogin.jpg)
+![Report of Code Test](docs/ReportTestCode.jpg)
+![Report of Post Test](docs/ReportTestPost.jpg)
 
 The demo of the tests is the following:
 
-![Gherkin Tests Demo](GherkinTests.gif)
+![Gherkin Tests Demo](docs/GherkinTests.gif)
 
 Note: The above GIF is the composition of all the tests, which were runned independently.
 
